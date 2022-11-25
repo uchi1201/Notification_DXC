@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.notification.NotificationManageFragment"
+    >
+
+    <include android:id="@+id/title_setting"
+        layout="@layout/title_layout"/>
+    <TextView
+        android:id="@+id/notification_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/title_setting"
+        android:textSize="30dp"
+        android:textColor="@color/blue"
+        android:text="@string/notification_setting"
+        />
+    <RelativeLayout
+        android:id="@+id/setting_rl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
+        android:layout_below="@id/notification_tv"
+        android:layout_marginTop="10dp">
+        <TextView
+            android:id="@+id/pay_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20dp"
+            android:layout_alignBaseline="@id/pay_switch"
+            android:text="@string/pay_notify"
+            android:textColor="@color/blue"/>
+
+        <ToggleButton
+            android:id="@+id/pay_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:checked="false"
+            android:switchMinWidth="70dp"
+            android:textOff="OFF"
+            android:textOn="ON" />
+        <TextView
+            android:id="@+id/other_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20dp"
+            android:layout_alignBaseline="@id/other_switch"
+            android:layout_below="@id/pay_txt"
+            android:text="@string/other_notify"
+            android:textColor="@color/blue"/>
+
+        <ToggleButton
+            android:id="@+id/other_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@id/pay_switch"
+            android:checked="false"
+            android:switchMinWidth="70dp"
+            android:textOff="OFF"
+            android:textOn="ON" />
+        <TextView
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20dp"
+            android:layout_alignBaseline="@id/o_switch"
+            android:layout_below="@id/other_txt"
+            android:text="XX通知"
+            android:textColor="@color/blue"/>
+
+        <ToggleButton
+            android:id="@+id/o_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@id/other_switch"
+            android:checked="false"
+            android:switchMinWidth="70dp"
+            android:textOff="OFF"
+            android:textOn="ON" />
+    </RelativeLayout>
+    <TextView
+        android:id="@+id/list_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_centerHorizontal="true"
+        android:textSize="30dp"
+        android:layout_below="@id/setting_rl"
+        android:textColor="@color/blue"
+        android:text="@string/notification_list_title"
+        />
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/refresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/list_tv"
+        >
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/notification_List"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="60dp"
+            android:visibility="gone" />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+    <TextView
+        android:id="@+id/errorMsg"
+        android:layout_below="@id/list_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="50dp"
+        android:gravity="center"
+        android:visibility="gone"
+        android:text="お知らせは何もないのですが、\nネットワークをチェックしてください。" />
+</RelativeLayout>

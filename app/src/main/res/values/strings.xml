@@ -1,3 +1,26 @@
 <resources>
-    <string name="app_name">Notification_DXC</string>
+    <string name="app_name">Notification</string>
+    <string name="title_home">ホーム</string>
+    <string name="title_schedule">定期</string>
+    <string name="title_point">ポイント</string>
+    <string name="title_budget">予算</string>
+    <string name="title_setting">設定</string>
+
+    <string name="content_budget">予算</string>
+    <string name="content_expenditure">支出</string>
+    <string name="button_edit">編集</string>
+    <string name="category_tx">カテゴリ名</string>
+    <string name="budget_tx">予算額</string>
+    <string name="pay_total_tx">支出総額</string>
+    <string name="use_tx">利用額</string>
+    <string name="percentage_tx">割合</string>
+    <string name="category_btn">カテゴリ管理</string>
+    <string name="notification_btn">通知管理</string>
+    <string name="notification_setting">通知設定</string>
+    <string name="notification_list_title">通知一覧</string>
+    <string name="pay_notify">支払い通知</string>
+    <string name="other_notify">その他通知</string>
+    <string name="frequency_tx">頻度</string>
+    <string name="time_tx">時間</string>
+    <string name="setting_btn">設定</string>
 </resources>

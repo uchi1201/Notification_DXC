@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_home">
+
+    <fragment
+        android:id="@+id/navigation_home"
+        android:name="com.android.example.notification.ui.home.HomeFragment"
+        android:label="@string/title_home"
+        tools:layout="@layout/fragment_home" />
+
+    <fragment
+        android:id="@+id/navigation_schedule"
+        android:name="com.android.example.notification.ui.schedule.ScheduleFragment"
+        android:label="@string/title_schedule"
+        tools:layout="@layout/fragment_schedule" />
+
+    <fragment
+        android:id="@+id/navigation_point"
+        android:name="com.android.example.notification.ui.point.PointFragment"
+        android:label="@string/title_point"
+        tools:layout="@layout/fragment_point" />
+
+    <fragment
+        android:id="@+id/navigation_budget"
+        android:name="com.android.example.notification.ui.budget.BudgetPagerFragment"
+        android:label="@string/title_budget"
+        tools:layout="@layout/fragment_budget_pager" />
+    <fragment
+        android:id="@+id/navigation_manage"
+        android:name="com.android.example.notification.ui.notification.NotificationManageFragment"
+        tools:layout="@layout/fragment_notification_manage"/>
+    <fragment
+        android:id="@+id/navigation_setting"
+        android:name="com.android.example.notification.ui.setting.SettingFragment"
+        android:label="@string/title_setting"
+        tools:layout="@layout/fragment_setting">
+    <action
+        android:id="@+id/action"
+        app:destination="@id/navigation_manage" />
+    </fragment>
+</navigation>
