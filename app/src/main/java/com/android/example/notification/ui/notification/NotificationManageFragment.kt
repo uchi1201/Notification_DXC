@@ -1,24 +1,29 @@
 package com.android.example.notification.ui.notification
 
 import android.app.Dialog
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.Context
+import android.content.Context.NOTIFICATION_SERVICE
+import android.content.Intent
+import android.content.SharedPreferences
+import android.os.Build
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.app.NotificationManagerCompat
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.android.example.notification.R
-import com.android.example.notification.data.BudgetData
+import com.android.example.notification.constant.MyConstant.Companion.CHANNEL_ID
 import com.android.example.notification.data.NotificationData
-import com.android.example.notification.databinding.FragmentBudgetBinding
 import com.android.example.notification.databinding.FragmentNotificationManageBinding
-import com.android.example.notification.databinding.FragmentSettingBinding
-import com.android.example.notification.ui.budget.BudgetListViewAdapter
 import com.android.example.notification.utils.CustomDialog
 import com.android.example.notification.utils.LoadingDialogUtils
 
@@ -45,8 +50,18 @@ class NotificationManageFragment : Fragment() {
         val root: View = binding.root
         initData()
         initView()
-
+        notificationChannelCreate()
         return root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val isNotificationChannelEnable = checkNotificationsChannelEnabled(requireContext(),CHANNEL_ID)
+        if(isNotificationChannelEnable){
+            binding.paySwitch.textOn="ON"
+        } else{
+            binding.paySwitch.textOff="OFF"
+        }
     }
 
     private fun initData(){
@@ -113,8 +128,63 @@ class NotificationManageFragment : Fragment() {
             swipeRefreshLayout.isRefreshing = it
         }
      }
+
+    private fun notificationChannelCreate(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            // Create the NotificationChannel
+            val name = getString(R.string.channel_name)
+            val descriptionText = getString(R.string.channel_description)
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val mChannel = NotificationChannel(CHANNEL_ID, name, importance)
+            mChannel.description = descriptionText
+            val notificationManager = context?.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(mChannel)
+            val isNotificationEnable = checkNotificationsEnabled()
+            val isNotificationChannelEnable = checkNotificationsChannelEnabled(requireContext(),CHANNEL_ID)
+            if(isNotificationChannelEnable){
+                binding.paySwitch.textOn="ON"
+            } else{
+                binding.paySwitch.textOff="OFF"
+            }
+            binding.paySwitch.setOnClickListener {
+                if (!isNotificationEnable || !isNotificationChannelEnable) {
+                    val intent = Intent(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS).apply {
+                        putExtra(Settings.EXTRA_APP_PACKAGE, "com.android.example.notification")
+                        putExtra(Settings.EXTRA_CHANNEL_ID, CHANNEL_ID)
+                    }
+                    startActivity(intent)
+                }
+            }
+        }
+    }
+    /**
+     * 通知が有効かどうかを判断する（単一のメッセージチャネルではない）
+     * @return true 開ける
+     */
+    private fun checkNotificationsEnabled(): Boolean {
+        val notificationManagerCompat =
+            NotificationManagerCompat.from(requireContext())
+        return notificationManagerCompat.areNotificationsEnabled()
+    }
+      /**
+     * 通知チャネルがオープンしているかどうかを判断する（単一のメッセージチャネル）
+     * @param context
+     * @param channelID チャネル id
+     * @return true 開ける
+     */
+    private fun checkNotificationsChannelEnabled(context: Context, channelID: String?): Boolean {
+        val manager = context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+        val channel = manager.getNotificationChannel(channelID)
+        return channel.importance != NotificationManager.IMPORTANCE_NONE
+    }
+
     private fun dialogShow(context:Context){
-        CustomDialog(context,R.style.CustomDialog).createDialog(R.style.CustomDialog,frequencylist,frequencylistSub)
+        var customDialog = CustomDialog()
+        val sp: SharedPreferences = context.getSharedPreferences("sp_name", Context.MODE_PRIVATE)
+        val freqIndex = sp.getInt("freqIndex", 0)
+        val freqIndexSub = sp.getInt("freqIndexSub", 0)
+        val frequencyDialog = customDialog.createDialog(freqIndex,freqIndexSub,context,R.style.CustomDialog)
+        customDialog.settingInfo(context,frequencyDialog)
     }
 
     override fun onDestroyView() {

@@ -23,4 +23,7 @@
     <string name="frequency_tx">頻度</string>
     <string name="time_tx">時間</string>
     <string name="setting_btn">設定</string>
+
+    <string name="channel_name">支払通知</string>
+    <string name="channel_description">通知種類は：支払通知</string>
 </resources>

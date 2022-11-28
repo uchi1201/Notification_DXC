@@ -17,4 +17,5 @@
     <color name="chart_purple">#9287e7</color>
     <color name="chart_yellow">#ffd700</color>
     <color name="chart_gray">#a9a9a9</color>
+    <color name="spinner_gray">#F0F0F0</color>
 </resources>
