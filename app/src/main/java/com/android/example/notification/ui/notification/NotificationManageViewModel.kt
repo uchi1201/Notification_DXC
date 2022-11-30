@@ -12,6 +12,7 @@ class NotificationManageViewModel: ViewModel() {
     val loadingLiveData = MutableLiveData<Boolean>()
     val pullToRefreshLiveData = MutableLiveData<Boolean>()
 
+
     fun getNotificationsList() {
         loadingLiveData.postValue(true)
         viewModelScope.launch {

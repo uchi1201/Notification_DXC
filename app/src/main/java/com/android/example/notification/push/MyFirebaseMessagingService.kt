@@ -19,30 +19,35 @@ import com.google.gson.Gson
 
 class MyFirebaseMessagingService : FirebaseMessagingService() {
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
-        Log.d(TAG, "From: " + remoteMessage.from)
+        var messageData:Map<String, String>? = null
 
         Log.d(TAG, "From: ${remoteMessage?.from}")
 
         // Check if message contains a data payload.
         remoteMessage?.data?.isNotEmpty()?.let {
             Log.d(TAG, "Message data payload: " + remoteMessage.data)
+            messageData = remoteMessage.data
         }
 
         // Check if message contains a notification payload.
         remoteMessage?.notification?.let {
             Log.d(TAG, "Message Notification Body: ${it.body}")
-            sendNotification(it.body.toString())
+            sendNotification(messageData,it.body.toString())
         }
     }
-    private fun getPendingIntent(context: Context, message: String): PendingIntent? {
+    private fun getPendingIntent(context: Context, messageData:Map<String, String>?): PendingIntent? {
 
-        // String type = noticeType.type;
         val destId: Int = R.id.navigation_manage
-//        val bundle = Bundle()
-//        bundle.putString(ArticleDetailFragment.ID, noticeType.id)
+        val bundle = Bundle()
+        bundle.putString("money",messageData?.get("money").toString())
+        bundle.putString("date",messageData?.get("date").toString())
+        bundle.putString("address",messageData?.get("address").toString())
+        bundle.putString("category",messageData?.get("category").toString())
+
         return NavDeepLinkBuilder(context)
             .setGraph(R.navigation.mobile_navigation)
             .setDestination(destId)
+            .setArguments(bundle)
             .createPendingIntent()
     }
     override fun onNewToken(token: String) {
@@ -55,9 +60,9 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     }
     private fun sendRegistrationToServer(token: String?) {
     }
-    private fun sendNotification(messageBody: String) {
+    private fun sendNotification(messageData:Map<String, String>?,messageBody:String) {
 
-        val penIntent =getPendingIntent(this,messageBody)
+        val penIntent =getPendingIntent(this,messageData)
         val notificationBuilder = NotificationCompat.Builder(this, MyConstant.CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_notifications_black_24dp)
             .setContentTitle(getString(R.string.fcm_message))

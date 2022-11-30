@@ -4,6 +4,7 @@ import android.app.*
 import android.content.Context
 import android.content.Context.NOTIFICATION_SERVICE
 import android.content.Intent
+import android.content.Intent.getIntent
 import android.content.SharedPreferences
 import android.os.Build
 import android.os.Bundle
@@ -14,6 +15,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.app.NotificationManagerCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -21,6 +23,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.android.example.notification.MainActivity
 import com.android.example.notification.R
 import com.android.example.notification.constant.MyConstant.Companion.CHANNEL_ID
+import com.android.example.notification.data.NotificationBean
 import com.android.example.notification.data.NotificationData
 import com.android.example.notification.databinding.FragmentNotificationManageBinding
 import com.android.example.notification.utils.CustomDialog
@@ -40,7 +43,7 @@ class NotificationManageFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var frequencylist: Array<String>
     private lateinit var frequencylistSub: Array<String>
-
+    val notificationsListData = mutableListOf<NotificationData>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -51,6 +54,7 @@ class NotificationManageFragment : Fragment() {
         initData()
         initView()
         notificationChannelCreate()
+
         return root
     }
 
@@ -58,6 +62,7 @@ class NotificationManageFragment : Fragment() {
         super.onResume()
         val isNotificationChannelEnable = checkNotificationsChannelEnabled(requireContext(),CHANNEL_ID)
         binding.paySwitch.isChecked = isNotificationChannelEnable
+        notificationDataSet()
     }
 
     private fun initData(){
@@ -80,36 +85,36 @@ class NotificationManageFragment : Fragment() {
             context?.let { it1 -> dialogShow(it1) }
         }
         title.title.text = getString(R.string.notification_btn)
-        notificationsViewModel.notificationsListLiveData.observe(viewLifecycleOwner) {
-            var init: (View, NotificationData) -> Unit = { v: View, d: NotificationData ->
-                var dateView = v.findViewById<TextView>(R.id.date)
-                var shopNameView = v.findViewById<TextView>(
-                    R.id.shop_name_txt
-                )
-                var categoryView = v.findViewById<TextView>(R.id.category_tx)
-                var moneyView = v.findViewById<TextView>(R.id.money_tx)
-
-                dateView.text = d.date
-                shopNameView.text = d.shopName
-                categoryView.text = d.category
-                moneyView.text = d.money
-            }
-            if (it.getOrNull() != null) {
-                binding.notificationList.visibility = View.VISIBLE
-                binding.errorMsg.visibility = View.GONE
-                var adapter = it.getOrNull()?.let { it1 ->
-                    NotificationListViewAdapter(
-                        R.layout.notification_item,
-                        it1.notificationList, init
-                    )
-                }
-                recycleView.layoutManager = LinearLayoutManager(activity)
-                recycleView.adapter = adapter
-            } else {
-                binding.notificationList.visibility = View.GONE
-                binding.errorMsg.visibility = View.VISIBLE
-            }
-        }
+//        notificationsViewModel.notificationsListLiveData.observe(viewLifecycleOwner) {
+//            var init: (View, NotificationData) -> Unit = { v: View, d: NotificationData ->
+//                var dateView = v.findViewById<TextView>(R.id.date)
+//                var shopNameView = v.findViewById<TextView>(
+//                    R.id.shop_name_txt
+//                )
+//                var categoryView = v.findViewById<TextView>(R.id.category_tx)
+//                var moneyView = v.findViewById<TextView>(R.id.money_tx)
+//
+//                dateView.text = d.date
+//                shopNameView.text = d.shopName
+//                categoryView.text = d.category
+//                moneyView.text = d.money
+//            }
+//            if (it.getOrNull() != null) {
+//                binding.notificationList.visibility = View.VISIBLE
+//                binding.errorMsg.visibility = View.GONE
+//                var adapter = it.getOrNull()?.let { it1 ->
+//                    NotificationListViewAdapter(
+//                        R.layout.notification_item,
+//                        it1.notificationList, init
+//                    )
+//                }
+//                recycleView.layoutManager = LinearLayoutManager(activity)
+//                recycleView.adapter = adapter
+//            } else {
+//                binding.notificationList.visibility = View.GONE
+//                binding.errorMsg.visibility = View.VISIBLE
+//            }
+//        }
         notificationsViewModel.loadingLiveData.observe(viewLifecycleOwner) {
             if (it) {
                 mLoadingDialog = loadingDialog.createLoadingDialog(activity, "Loading")
@@ -156,6 +161,46 @@ class NotificationManageFragment : Fragment() {
 
         }
     }
+    private fun notificationDataSet(){
+        val money = arguments?.getString("money")
+        val date1 = arguments?.getString("date")
+        val address = arguments?.getString("address")
+        val category = arguments?.getString("category")
+
+        if(arguments!=null){
+            notificationsListData.clear()
+            binding.notificationList.visibility = View.VISIBLE
+            binding.errorMsg.visibility = View.GONE
+            var notificationData = NotificationData(date = date1!!, shopName = address!!,category = category!!,money = money!!)
+            notificationsListData.add(notificationData)
+            var init: (View, NotificationData) -> Unit = { v: View, d: NotificationData ->
+                var dateView = v.findViewById<TextView>(R.id.date)
+                var shopNameView = v.findViewById<TextView>(
+                    R.id.shop_name_txt
+                )
+                var categoryView = v.findViewById<TextView>(R.id.category_tx)
+                var moneyView = v.findViewById<TextView>(R.id.money_tx)
+
+                dateView.text = d.date
+                shopNameView.text = d.shopName
+                categoryView.text = d.category
+                moneyView.text = d.money
+            }
+            binding.notificationList.visibility = View.VISIBLE
+            binding.errorMsg.visibility = View.GONE
+            var adapter =
+                NotificationListViewAdapter(
+                    R.layout.notification_item,
+                    notificationsListData, init
+                )
+
+            binding.notificationList.layoutManager = LinearLayoutManager(activity)
+            binding.notificationList.adapter = adapter
+        } else{
+            binding.notificationList.visibility = View.GONE
+            binding.errorMsg.visibility = View.VISIBLE
+        }
+    }
     /**
      * 通知が有効かどうかを判断する（単一のメッセージチャネルではない）
      * @return true 開ける
@@ -177,23 +222,6 @@ class NotificationManageFragment : Fragment() {
         return channel.importance != NotificationManager.IMPORTANCE_NONE
     }
 
-    fun sendNotification(channelId: String?, title: String?, content: String?, intent: Intent?) {
-        var pendingIntent: PendingIntent? = null
-        val notificationManager = context?.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-        if (intent != null) {
-            pendingIntent =
-                PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT)
-        }
-        val notification: Notification = Notification.Builder(context, channelId)
-            .setContentTitle(title)
-            .setContentText(content)
-            .setSmallIcon(R.mipmap.ic_launcher)
-            .setWhen(System.currentTimeMillis())
-            .setAutoCancel(true)
-            .setContentIntent(pendingIntent)
-            .build()
-        notificationManager.notify(1, notification)
-    }
 
     private fun dialogShow(context:Context){
         var customDialog = CustomDialog()
