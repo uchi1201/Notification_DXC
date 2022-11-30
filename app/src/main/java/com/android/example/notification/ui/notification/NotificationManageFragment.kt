@@ -1,8 +1,6 @@
 package com.android.example.notification.ui.notification
 
-import android.app.Dialog
-import android.app.NotificationChannel
-import android.app.NotificationManager
+import android.app.*
 import android.content.Context
 import android.content.Context.NOTIFICATION_SERVICE
 import android.content.Intent
@@ -20,12 +18,14 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.android.example.notification.MainActivity
 import com.android.example.notification.R
 import com.android.example.notification.constant.MyConstant.Companion.CHANNEL_ID
 import com.android.example.notification.data.NotificationData
 import com.android.example.notification.databinding.FragmentNotificationManageBinding
 import com.android.example.notification.utils.CustomDialog
 import com.android.example.notification.utils.LoadingDialogUtils
+
 
 
 /**
@@ -57,11 +57,7 @@ class NotificationManageFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         val isNotificationChannelEnable = checkNotificationsChannelEnabled(requireContext(),CHANNEL_ID)
-        if(isNotificationChannelEnable){
-            binding.paySwitch.textOn="ON"
-        } else{
-            binding.paySwitch.textOff="OFF"
-        }
+        binding.paySwitch.isChecked = isNotificationChannelEnable
     }
 
     private fun initData(){
@@ -79,7 +75,7 @@ class NotificationManageFragment : Fragment() {
         val recycleView: RecyclerView = binding.notificationList
         val title = binding.titleSetting
         val payText = binding.payTxt
-
+        //通知名クリックで設定用ポップアップ表示
         payText.setOnClickListener{
             context?.let { it1 -> dialogShow(it1) }
         }
@@ -130,31 +126,34 @@ class NotificationManageFragment : Fragment() {
      }
 
     private fun notificationChannelCreate(){
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            // Create the NotificationChannel
-            val name = getString(R.string.channel_name)
-            val descriptionText = getString(R.string.channel_description)
-            val importance = NotificationManager.IMPORTANCE_DEFAULT
-            val mChannel = NotificationChannel(CHANNEL_ID, name, importance)
-            mChannel.description = descriptionText
-            val notificationManager = context?.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-            notificationManager.createNotificationChannel(mChannel)
-            val isNotificationEnable = checkNotificationsEnabled()
-            val isNotificationChannelEnable = checkNotificationsChannelEnabled(requireContext(),CHANNEL_ID)
-            if(isNotificationChannelEnable){
-                binding.paySwitch.textOn="ON"
-            } else{
-                binding.paySwitch.textOff="OFF"
+        // Create the NotificationChannel
+        val name = getString(R.string.channel_name)
+        val descriptionText = getString(R.string.channel_description)
+        val importance = NotificationManager.IMPORTANCE_DEFAULT
+        val mChannel = NotificationChannel(CHANNEL_ID, name, importance)
+        mChannel.description = descriptionText
+        val notificationManager = context?.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.createNotificationChannel(mChannel)
+        //通知権限を有効にするかどうか
+        val isNotificationEnable = checkNotificationsEnabled()
+        if(!isNotificationEnable){
+            val intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
+                putExtra(Settings.EXTRA_APP_PACKAGE, "com.android.example.notification")
+                putExtra(Settings.EXTRA_CHANNEL_ID, CHANNEL_ID)
             }
-            binding.paySwitch.setOnClickListener {
-                if (!isNotificationEnable || !isNotificationChannelEnable) {
-                    val intent = Intent(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS).apply {
-                        putExtra(Settings.EXTRA_APP_PACKAGE, "com.android.example.notification")
-                        putExtra(Settings.EXTRA_CHANNEL_ID, CHANNEL_ID)
-                    }
-                    startActivity(intent)
-                }
+            startActivity(intent)
+        }
+        val isNotificationChannelEnable = checkNotificationsChannelEnabled(requireContext(),CHANNEL_ID)
+        //スイッチ設定
+        binding.paySwitch.isChecked = isNotificationChannelEnable
+        binding.paySwitch.setOnClickListener {
+        //通知権限がなし場合、システムに設定いく
+            val intent = Intent(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS).apply {
+                putExtra(Settings.EXTRA_APP_PACKAGE, "com.android.example.notification")
+                putExtra(Settings.EXTRA_CHANNEL_ID, CHANNEL_ID)
             }
+            startActivity(intent)
+
         }
     }
     /**
@@ -176,6 +175,24 @@ class NotificationManageFragment : Fragment() {
         val manager = context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         val channel = manager.getNotificationChannel(channelID)
         return channel.importance != NotificationManager.IMPORTANCE_NONE
+    }
+
+    fun sendNotification(channelId: String?, title: String?, content: String?, intent: Intent?) {
+        var pendingIntent: PendingIntent? = null
+        val notificationManager = context?.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+        if (intent != null) {
+            pendingIntent =
+                PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT)
+        }
+        val notification: Notification = Notification.Builder(context, channelId)
+            .setContentTitle(title)
+            .setContentText(content)
+            .setSmallIcon(R.mipmap.ic_launcher)
+            .setWhen(System.currentTimeMillis())
+            .setAutoCancel(true)
+            .setContentIntent(pendingIntent)
+            .build()
+        notificationManager.notify(1, notification)
     }
 
     private fun dialogShow(context:Context){

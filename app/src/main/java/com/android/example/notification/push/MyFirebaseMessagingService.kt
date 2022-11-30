@@ -1,13 +1,20 @@
 package com.android.example.notification.push
 
-import android.app.NotificationChannel
+
 import android.app.NotificationManager
 import android.app.PendingIntent
+import android.content.Context
 import android.content.Intent
+import android.os.Bundle
 import android.util.Log
 import androidx.core.app.NotificationCompat
+import androidx.navigation.NavDeepLinkBuilder
+import com.android.example.notification.MainActivity
+import com.android.example.notification.R
+import com.android.example.notification.constant.MyConstant
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
+import com.google.gson.Gson
 
 
 class MyFirebaseMessagingService : FirebaseMessagingService() {
@@ -27,7 +34,17 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             sendNotification(it.body.toString())
         }
     }
+    private fun getPendingIntent(context: Context, message: String): PendingIntent? {
 
+        // String type = noticeType.type;
+        val destId: Int = R.id.navigation_manage
+//        val bundle = Bundle()
+//        bundle.putString(ArticleDetailFragment.ID, noticeType.id)
+        return NavDeepLinkBuilder(context)
+            .setGraph(R.navigation.mobile_navigation)
+            .setDestination(destId)
+            .createPendingIntent()
+    }
     override fun onNewToken(token: String) {
         Log.d(TAG, "Refreshed token: $token")
 
@@ -39,32 +56,19 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     private fun sendRegistrationToServer(token: String?) {
     }
     private fun sendNotification(messageBody: String) {
-//        val intent = Intent(this, PushTestActivity::class.java)
-//        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-//        intent.putExtra("title",getString(R.string.fcm_message))
-//        intent.putExtra("msg",messageBody)
-//        val penIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
-//
-//        val channelId = getString(R.string.default_notification_channel_id)
-//        val notificationBuilder = NotificationCompat.Builder(this, channelId)
-//            .setSmallIcon(R.drawable.ic_notifications_black_24dp)
-//            .setContentTitle(getString(R.string.fcm_message))
-//            .setContentText(messageBody)
-//            .setAutoCancel(true)
-//            .setContentIntent(penIntent)
+
+        val penIntent =getPendingIntent(this,messageBody)
+        val notificationBuilder = NotificationCompat.Builder(this, MyConstant.CHANNEL_ID)
+            .setSmallIcon(R.drawable.ic_notifications_black_24dp)
+            .setContentTitle(getString(R.string.fcm_message))
+            .setContentText(messageBody)
+            .setAutoCancel(true)
+            .setContentIntent(penIntent)
 
 
-//        val notificationManager = getSystemService(NotificationManager::class.java)
-//
-//        // Since android Oreo notification channel is needed.
-//        val channel = NotificationChannel(
-//            channelId,
-//            "Channel human readable title",
-//            NotificationManager.IMPORTANCE_DEFAULT
-//        )
-//        notificationManager.createNotificationChannel(channel)
-//
-//        notificationManager.notify(channelId, 1, notificationBuilder.build())
+        val notificationManager = getSystemService(NotificationManager::class.java)
+        // Since android Oreo notification channel is needed.
+        notificationManager.notify(MyConstant.CHANNEL_ID, 1, notificationBuilder.build())
     }
 
     companion object {

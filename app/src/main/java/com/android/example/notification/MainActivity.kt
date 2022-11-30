@@ -1,17 +1,19 @@
 package com.android.example.notification
 
-import android.content.Context
+
 import android.os.Bundle
+import android.text.TextUtils
 import android.view.Window
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.AndroidViewModel
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.android.example.notification.databinding.ActivityMainBinding
+import com.android.example.notification.ui.notification.NotificationManageFragment
 import com.android.example.notification.ui.setting.SettingFragment
+import com.google.android.material.bottomnavigation.BottomNavigationView
+
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -41,4 +43,5 @@ class MainActivity : AppCompatActivity() {
 //        setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
     }
+
 }

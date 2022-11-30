@@ -18,12 +18,13 @@ class CustomDialog{
     var settingButton : Button? = null
     var freqIndex: Int = 0
     var freqIndexSub: Int = 0
+    private var freqSpinnerSub: Spinner? = null
 
     fun createDialog(frequencyIndex:Int,frequencySubIndex:Int,context: Context,themeResId: Int): Dialog{
         val inflater = LayoutInflater.from(context)
         val v: View = inflater.inflate(R.layout.dialog_custom_frequency, null)
         val layout = v.findViewById<View>(R.id.dialog_custom_view) as LinearLayout
-        val frequencySub = v.findViewById<View>(R.id.frequency_sub) as Spinner
+        freqSpinnerSub = v.findViewById<View>(R.id.frequency_sub) as Spinner
         val frequency =  v.findViewById<View>(R.id.frequency_spinner) as Spinner
         settingButton = v.findViewById<View>(R.id.setting_btn) as Button
         val timePicker =  v.findViewById<View>(R.id.time_picker) as TimePicker
@@ -39,8 +40,12 @@ class CustomDialog{
         frequency.setSelection(frequencyIndex)
          frequency.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
              override fun onItemSelected(parent: AdapterView<*>?, view: View, pos: Int, id: Long) {
+                 if(freqIndex != pos ){
+                     frequencySubCreate(context,pos,0)
+                 } else {
+                     frequencySubCreate(context,pos,frequencySubIndex)
+                 }
                  freqIndex = pos
-                 frequencySubCreate(context,frequencySub,pos,frequencySubIndex)
 //                 when (pos){
 //                     0 ->
 //                     {
@@ -111,8 +116,8 @@ class CustomDialog{
         return dialog
     }
 
-    private fun  frequencySubCreate(context: Context,frequencySub:Spinner,pos:Int,frequencySubIndex:Int){
-        frequencyListSub = when(pos){
+    private fun  frequencySubCreate(context: Context,position:Int,frequencySubIndex:Int){
+        frequencyListSub = when(position){
             0-> context.resources.getStringArray(R.array.day)
             1-> context.resources.getStringArray(R.array.week)
             else-> emptyArray()
@@ -122,10 +127,10 @@ class CustomDialog{
         //配列アダプタのレイアウトスタイルを設定する
         frequencySubAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         //ドロップダウンボックスの配列アダプタの設定
-        frequencySub.adapter = frequencySubAdapter
+        freqSpinnerSub?.adapter = frequencySubAdapter
         //ドロップダウン・ボックスのデフォルトの表示の最初の項目の設定
-        frequencySub.setSelection(frequencySubIndex)
-        frequencySub.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        freqSpinnerSub?.setSelection(frequencySubIndex)
+        freqSpinnerSub?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View, pos: Int, id: Long) {
                 freqIndexSub = pos
             }
