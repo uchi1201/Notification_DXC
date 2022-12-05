@@ -61,4 +61,9 @@
         <item>木曜日</item>
         <item>金曜日</item>
     </string-array>
+    <string-array name="frequency">
+        <item>毎月</item>
+        <item>毎週 </item>
+        <item>毎日</item>
+    </string-array>
 </resources>

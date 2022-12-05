@@ -98,6 +98,14 @@
         android:textColor="@color/blue"
         android:text="@string/notification_list_title"
         />
+    <ImageView
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_toRightOf="@id/list_tv"
+        android:src="@mipmap/icon_filter"
+        android:layout_alignBottom="@id/list_tv"
+        android:layout_alignParentRight="true"/>
+
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/refresh"
         android:layout_width="match_parent"

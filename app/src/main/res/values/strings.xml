@@ -10,6 +10,7 @@
     <string name="content_expenditure">支出</string>
     <string name="button_edit">編集</string>
     <string name="category_tx">カテゴリ名</string>
+    <string name="category">カテゴリ</string>
     <string name="budget_tx">予算額</string>
     <string name="pay_total_tx">支出総額</string>
     <string name="use_tx">利用額</string>
@@ -22,9 +23,11 @@
     <string name="other_notify">その他通知</string>
     <string name="frequency_tx">頻度</string>
     <string name="time_tx">時間</string>
+    <string name="types_tx">種類</string>
     <string name="setting_btn">設定</string>
     <string name="msg_token_fmt">Get new FCM registration token</string>
     <string name="channel_name">支払通知</string>
     <string name="channel_description">通知種類は：支払通知</string>
     <string name="fcm_message">支払通知</string>
+    <string name="period">期間</string>
 </resources>

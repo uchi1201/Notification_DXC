@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
 import androidx.navigation.NavDeepLinkBuilder
 import com.android.example.notification.MainActivity
@@ -32,7 +33,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         // Check if message contains a notification payload.
         remoteMessage?.notification?.let {
             Log.d(TAG, "Message Notification Body: ${it.body}")
-            sendNotification(messageData,it.body.toString())
+            sendNotification(messageData,it.title.toString(),it.body.toString())
         }
     }
     private fun getPendingIntent(context: Context, messageData:Map<String, String>?): PendingIntent? {
@@ -60,13 +61,19 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     }
     private fun sendRegistrationToServer(token: String?) {
     }
-    private fun sendNotification(messageData:Map<String, String>?,messageBody:String) {
+    private fun sendNotification(messageData:Map<String, String>?,messageTitle:String,messageBody:String) {
 
+        val views = RemoteViews(packageName, R.layout.layout_notification)
+        views.setTextViewText(R.id.date,messageData?.get("date"))
+        views.setTextViewText(R.id.shop_name_txt,messageData?.get("address"))
+        views.setTextViewText(R.id.category_tx,messageData?.get("category"))
+        views.setTextViewText(R.id.money_tx,messageData?.get("money"))
         val penIntent =getPendingIntent(this,messageData)
         val notificationBuilder = NotificationCompat.Builder(this, MyConstant.CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_notifications_black_24dp)
-            .setContentTitle(getString(R.string.fcm_message))
+            .setContentTitle(messageTitle)
             .setContentText(messageBody)
+            .setCustomBigContentView(views)
             .setAutoCancel(true)
             .setContentIntent(penIntent)
 

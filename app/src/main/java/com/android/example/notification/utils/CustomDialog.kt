@@ -46,50 +46,7 @@ class CustomDialog{
                      frequencySubCreate(context,pos,frequencySubIndex)
                  }
                  freqIndex = pos
-//                 when (pos){
-//                     0 ->
-//                     {
-//
-//
-//                     }
-//                     1 ->
-//                     {
-//                         frequencyListSub = context.resources.getStringArray(R.array.week)
-//                         //ドロップダウンリストの配列アダプタを宣言する
-//                         var frequencySubAdapter: ArrayAdapter<String> = ArrayAdapter(context,android.R.layout.simple_spinner_item,frequencyListSub)
-//                         //配列アダプタのレイアウトスタイルを設定する
-//                         frequencySubAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-//                         //ドロップダウンボックスの配列アダプタの設定
-//                         frequencySub.adapter = frequencySubAdapter
-//                         //ドロップダウン・ボックスのデフォルトの表示の最初の項目の設定
-//                         frequencySub.setSelection(frequencySubIndex)
-//                     }
-//                     2 ->
-//                     {
-//                         frequencyListSub = emptyArray()
-//                         //ドロップダウンリストの配列アダプタを宣言する
-//                         var frequencySubAdapter: ArrayAdapter<String> = ArrayAdapter(context,android.R.layout.simple_spinner_item,frequencyListSub)
-//                         //配列アダプタのレイアウトスタイルを設定する
-//                         frequencySubAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-//                         //ドロップダウンボックスの配列アダプタの設定
-//                         frequencySub.adapter = frequencySubAdapter
-//                         //ドロップダウン・ボックスのデフォルトの表示の最初の項目の設定
-//                         frequencySub.setSelection(frequencySubIndex)
-//                     }
-//                     3 -> {
-//                         frequencyListSub = emptyArray()
-//                         //ドロップダウンリストの配列アダプタを宣言する
-//                         var frequencySubAdapter: ArrayAdapter<String> = ArrayAdapter(context,android.R.layout.simple_spinner_item,frequencyListSub)
-//                         //配列アダプタのレイアウトスタイルを設定する
-//                         frequencySubAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-//                         //ドロップダウンボックスの配列アダプタの設定
-//                         frequencySub.adapter = frequencySubAdapter
-//                         //ドロップダウン・ボックスのデフォルトの表示の最初の項目の設定
-//                         frequencySub.setSelection(frequencySubIndex)
-//
-//                     }
-//
-//                 }
+
              }
              override fun onNothingSelected(parent: AdapterView<*>?) {
                  //Todo
