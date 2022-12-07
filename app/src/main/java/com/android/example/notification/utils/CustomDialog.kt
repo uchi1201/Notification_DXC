@@ -38,7 +38,7 @@ class CustomDialog{
         frequency.adapter = frequencyAdapter
         //ドロップダウン・ボックスのデフォルトの表示の最初の項目の設定
         frequency.setSelection(frequencyIndex)
-         frequency.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        frequency.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
              override fun onItemSelected(parent: AdapterView<*>?, view: View, pos: Int, id: Long) {
                  if(freqIndex != pos ){
                      frequencySubCreate(context,pos,0)
@@ -56,7 +56,7 @@ class CustomDialog{
         val dialog = Dialog(context!!,themeResId)
          dialog.setCancelable(true)
          dialog.setCanceledOnTouchOutside(true)
-        dialog.setContentView(
+         dialog.setContentView(
             layout, LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.MATCH_PARENT

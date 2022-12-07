@@ -61,9 +61,22 @@
         <item>木曜日</item>
         <item>金曜日</item>
     </string-array>
-    <string-array name="frequency">
-        <item>毎月</item>
-        <item>毎週 </item>
-        <item>毎日</item>
+    <string-array name="date_start_list">
+        <item>2022/10/10</item>
+        <item>2022/11/12</item>
+        <item>2022/12/12</item>
+    </string-array>
+    <string-array name="date_end_list">
+        <item>2022/11/10</item>
+        <item>2022/11/30</item>
+        <item>2022/12/16</item>
+    </string-array>
+    <string-array name="types_list">
+        <item>支払通知</item>
+    </string-array>
+    <string-array name="category_list">
+        <item>食費</item>
+        <item>水道</item>
+        <item>その他</item>
     </string-array>
 </resources>

@@ -17,9 +17,12 @@ class FilterDialog {
     private lateinit var typesSpList: Array<String>
     private lateinit var categorySpList: Array<String>
     var settingButton : Button? = null
+    var startIndex: Int = 0
+    var endIndex: Int = 0
+    var typesIndex: Int = 0
+    var categoryIndex: Int = 0
 
-
-    fun createDialog(index:Array<Map<String, Int>>,context: Context,themeResId: Int): Dialog{
+    fun createDialog(index:ArrayList<Map<String, Int>>,context: Context,themeResId: Int,isPayCheck:Boolean): Dialog{
         val inflater = LayoutInflater.from(context)
         val v: View = inflater.inflate(R.layout.dialog_custom_filter, null)
         val layout = v.findViewById<View>(R.id.dialog_custom_filter_view) as LinearLayout
@@ -38,8 +41,17 @@ class FilterDialog {
         dateStartSp.adapter = dateStartAdapter
         //ドロップダウン・ボックスのデフォルトの表示の最初の項目の設定
         index[0]["dateStart"]?.let { dateStartSp.setSelection(it) }
+        dateStartSp.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View, pos: Int, id: Long) {
+                startIndex = pos
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                //Todo
+            }
+        }
         //期間の結束時間のアダプター
-        dateEndSpList = emptyArray()
+        dateEndSpList = getDataEndList(context)
         var dateEndAdapter: ArrayAdapter<String> = ArrayAdapter(context,android.R.layout.simple_list_item_1,dateEndSpList)
         //配列アダプタのレイアウトスタイルを設定する
         dateEndAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
@@ -47,25 +59,59 @@ class FilterDialog {
         dateEndSp.adapter = dateEndAdapter
         //ドロップダウン・ボックスのデフォルトの表示の最初の項目の設定
         index[1]["dateEnd"]?.let { dateEndSp.setSelection(it) }
+        dateEndSp.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View, pos: Int, id: Long) {
+                endIndex = pos
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                //Todo
+            }
+        }
         //期間の種類のアダプター
-        typesSpList = emptyArray()
+        typesSp.isEnabled = isPayCheck
+        typesSpList = if(isPayCheck){
+            getTypeList(context)
+        } else {
+            emptyArray()
+        }
+
         var typesSpAdapter: ArrayAdapter<String> = ArrayAdapter(context,android.R.layout.simple_list_item_1,typesSpList)
         //配列アダプタのレイアウトスタイルを設定する
         typesSpAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         //ドロップダウンボックスの配列アダプタの設定
         typesSp.adapter = typesSpAdapter
+
         //ドロップダウン・ボックスのデフォルトの表示の最初の項目の設定
         index[2]["type"]?.let { typesSp.setSelection(it) }
+        typesSp.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View, pos: Int, id: Long) {
+                typesIndex = pos
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                //Todo
+            }
+        }
+
         //期間のカテゴリーのアダプター
-        categorySpList = emptyArray()
+        categorySpList = getCategoryList(context)
         var categorySpAdapter: ArrayAdapter<String> = ArrayAdapter(context,android.R.layout.simple_list_item_1,categorySpList)
         //配列アダプタのレイアウトスタイルを設定する
         categorySpAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         //ドロップダウンボックスの配列アダプタの設定
         categorySp.adapter = categorySpAdapter
         //ドロップダウン・ボックスのデフォルトの表示の最初の項目の設定
-        index[3]["category"]?.let { typesSp.setSelection(it) }
+        index[3]["category"]?.let { categorySp.setSelection(it) }
+        categorySp.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View, pos: Int, id: Long) {
+                categoryIndex = pos
+            }
 
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                //Todo
+            }
+        }
 
         val dialog = Dialog(context!!,themeResId)
         dialog.setCancelable(true)
@@ -90,9 +136,23 @@ class FilterDialog {
     private fun getDataStartList(context: Context): Array<String> {
         //Todo サーバー側からもらうか
         //一旦仮データ
-        return context.resources.getStringArray(R.array.frequency)
+        return context.resources.getStringArray(R.array.date_start_list)
     }
-
+    private fun getDataEndList(context: Context): Array<String> {
+        //Todo サーバー側からもらうか
+        //一旦仮データ
+        return context.resources.getStringArray(R.array.date_end_list)
+    }
+    private fun getTypeList(context: Context): Array<String> {
+        //Todo サーバー側からもらうか
+        //一旦仮データ
+        return context.resources.getStringArray(R.array.types_list)
+    }
+    private fun getCategoryList(context: Context): Array<String> {
+        //Todo サーバー側からもらうか
+        //一旦仮データ
+        return context.resources.getStringArray(R.array.category_list)
+    }
     fun settingInfo(context: Context,dialog: Dialog?){
         settingButton?.setOnClickListener {
             //SharedPreferencesインスタンスを取得 sp_filter：ファイル名
@@ -100,8 +160,10 @@ class FilterDialog {
             //Editorインスタンスを取得
             val editor = sp.edit()
             //key-valueによりデータを保存
-//            editor.putInt("dateStartIndex",freqIndex)
-//            editor.putInt("freqIndexSub",freqIndexSub)
+            editor.putInt("dateStart",startIndex)
+            editor.putInt("dateEnd",endIndex)
+            editor.putInt("type",typesIndex)
+            editor.putInt("category",categoryIndex)
             //apply()は非同期書き込みデータです
             editor.apply()
             closeDialog(dialog)

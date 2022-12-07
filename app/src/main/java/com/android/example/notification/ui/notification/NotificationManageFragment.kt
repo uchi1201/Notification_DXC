@@ -27,6 +27,7 @@ import com.android.example.notification.data.NotificationBean
 import com.android.example.notification.data.NotificationData
 import com.android.example.notification.databinding.FragmentNotificationManageBinding
 import com.android.example.notification.utils.CustomDialog
+import com.android.example.notification.utils.FilterDialog
 import com.android.example.notification.utils.LoadingDialogUtils
 
 
@@ -44,6 +45,7 @@ class NotificationManageFragment : Fragment() {
     private lateinit var frequencylist: Array<String>
     private lateinit var frequencylistSub: Array<String>
     val notificationsListData = mutableListOf<NotificationData>()
+    var isNotificationChannelEnable: Boolean = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -60,7 +62,7 @@ class NotificationManageFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        val isNotificationChannelEnable = checkNotificationsChannelEnabled(requireContext(),CHANNEL_ID)
+        isNotificationChannelEnable = checkNotificationsChannelEnabled(requireContext(),CHANNEL_ID)
         binding.paySwitch.isChecked = isNotificationChannelEnable
         notificationDataSet()
     }
@@ -80,9 +82,14 @@ class NotificationManageFragment : Fragment() {
         val recycleView: RecyclerView = binding.notificationList
         val title = binding.titleSetting
         val payText = binding.payTxt
+        val filterImage = binding.filterIv
         //通知名クリックで設定用ポップアップ表示
         payText.setOnClickListener{
             context?.let { it1 -> dialogShow(it1) }
+        }
+        //押下でフィルタ用ポップアップ表示
+        filterImage.setOnClickListener{
+            context?.let { it1 -> filterDialogShow(it1,isNotificationChannelEnable) }
         }
         title.title.text = getString(R.string.notification_btn)
 //        notificationsViewModel.notificationsListLiveData.observe(viewLifecycleOwner) {
@@ -230,6 +237,27 @@ class NotificationManageFragment : Fragment() {
         val freqIndexSub = sp.getInt("freqIndexSub", 0)
         val frequencyDialog = customDialog.createDialog(freqIndex,freqIndexSub,context,R.style.CustomDialog)
         customDialog.settingInfo(context,frequencyDialog)
+    }
+
+    private fun filterDialogShow(context:Context,isPayCheck:Boolean){
+        var filterDialog = FilterDialog()
+        var indexList= arrayListOf <Map<String, Int>>()
+        var index = mutableMapOf <String, Int>()
+        val sp: SharedPreferences = context.getSharedPreferences("sp_filter", Context.MODE_PRIVATE)
+        val startIndex = sp.getInt("dateStart", 0)
+        index["dateStart"] = startIndex
+        indexList.add(index)
+        val endIndex = sp.getInt("dateEnd", 0)
+        index["dateEnd"] = endIndex
+        indexList.add(index)
+        val typesIndex = sp.getInt("type", 0)
+        index["type"] = typesIndex
+        indexList.add(index)
+        val categoryIndex = sp.getInt("category", 0)
+        index["category"] = categoryIndex
+        indexList.add(index)
+        val frequencyDialog = filterDialog.createDialog(indexList,context,R.style.CustomDialog,isPayCheck)
+        filterDialog.settingInfo(context,frequencyDialog)
     }
 
     override fun onDestroyView() {
