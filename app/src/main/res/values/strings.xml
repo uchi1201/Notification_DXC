@@ -30,4 +30,5 @@
     <string name="channel_description">通知種類は：支払通知</string>
     <string name="fcm_message">支払通知</string>
     <string name="period">期間</string>
+    <string name="category_list">カテゴリ一覧</string>
 </resources>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.category.CategoryManagementFragment">
+
+    <include android:id="@+id/title_setting"
+        layout="@layout/title_layout"/>
+
+    <TextView
+        android:id="@+id/category_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/title_setting"
+        android:textSize="30dp"
+        android:textColor="@color/blue"
+        android:text="@string/category_list"
+        />
+    <ImageView
+        android:layout_width="35dp"
+        android:layout_height="40dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="30dp"
+        android:layout_alignBottom="@id/category_tv"
+        android:src="@mipmap/icon_plus"/>
+    <View
+        android:id="@+id/line1_v"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/category_tv"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="16dp"
+        android:background="@color/gray"
+        />
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/category_List"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_below="@id/line1_v"
+        />
+</RelativeLayout>
