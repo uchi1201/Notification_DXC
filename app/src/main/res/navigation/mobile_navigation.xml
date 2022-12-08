@@ -33,6 +33,10 @@
         android:name="com.android.example.notification.ui.notification.NotificationManageFragment"
         tools:layout="@layout/fragment_notification_manage"/>
     <fragment
+        android:id="@+id/navigation_category_manage"
+        android:name="com.android.example.notification.ui.category.CategoryManagementFragment"
+        tools:layout="@layout/fragment_category_management"/>
+    <fragment
         android:id="@+id/navigation_setting"
         android:name="com.android.example.notification.ui.setting.SettingFragment"
         android:label="@string/title_setting"
@@ -40,5 +44,8 @@
     <action
         android:id="@+id/action"
         app:destination="@id/navigation_manage" />
+        <action
+            android:id="@+id/category_action"
+            app:destination="@id/navigation_category_manage" />
     </fragment>
 </navigation>

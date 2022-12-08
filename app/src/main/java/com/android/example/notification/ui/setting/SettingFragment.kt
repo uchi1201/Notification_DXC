@@ -54,6 +54,10 @@ class SettingFragment : Fragment() {
         notification.setOnClickListener {
             findNavController().navigate(R.id.action)
         }
+        val categoryBtn: Button = binding.category
+        categoryBtn.setOnClickListener{
+            findNavController().navigate(R.id.category_action)
+        }
 
     }
 

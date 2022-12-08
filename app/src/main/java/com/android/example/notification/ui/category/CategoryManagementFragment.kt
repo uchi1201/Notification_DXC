@@ -28,7 +28,8 @@ class CategoryManagementFragment : Fragment() {
     }
 
     private fun initView(){
-
+        val title = binding.titleSetting
+        title.title.text = getString(R.string.category_btn)
     }
 
 }

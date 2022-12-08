@@ -81,6 +81,7 @@ class NotificationManageFragment : Fragment() {
         frequencylistSub= resources.getStringArray(R.array.week)
         val recycleView: RecyclerView = binding.notificationList
         val title = binding.titleSetting
+        title.title.text = getString(R.string.notification_btn)
         val payText = binding.payTxt
         val filterImage = binding.filterIv
         //通知名クリックで設定用ポップアップ表示
@@ -91,7 +92,7 @@ class NotificationManageFragment : Fragment() {
         filterImage.setOnClickListener{
             context?.let { it1 -> filterDialogShow(it1,isNotificationChannelEnable) }
         }
-        title.title.text = getString(R.string.notification_btn)
+
 //        notificationsViewModel.notificationsListLiveData.observe(viewLifecycleOwner) {
 //            var init: (View, NotificationData) -> Unit = { v: View, d: NotificationData ->
 //                var dateView = v.findViewById<TextView>(R.id.date)
