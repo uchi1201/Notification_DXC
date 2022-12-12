@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:id="@+id/ll_item"
+    >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        >
+        <View
+            android:id="@+id/line1_v"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_above="@id/color_tv"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+           android:layout_marginBottom="10dp"
+            android:background="@color/gray"
+            />
+        <TextView
+            android:id="@+id/category_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="10dp"
+            android:textSize="20dp"/>
+
+        <TextView
+            android:id="@+id/color_tv"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginRight="10dp"
+            android:layout_alignParentRight="true"
+            android:background="@color/gray" />
+        <View
+            android:id="@+id/line2_v"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@id/color_tv"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/gray"
+            />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_hidden"
+        android:layout_width="80dp"
+        android:layout_height="match_parent"
+        android:background="#ff0000"
+        android:gravity="center"
+        >
+
+        <TextView
+            android:id="@+id/tv_item_delete"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="削除"
+            android:textColor="#ffffff"
+            android:textSize="20sp"
+            />
+    </LinearLayout>
+</LinearLayout>

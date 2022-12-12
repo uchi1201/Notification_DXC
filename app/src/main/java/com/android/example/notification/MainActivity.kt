@@ -64,7 +64,7 @@ class MainActivity : AppCompatActivity() {
 
         //set content area
         builder.setMessage("通知権限が開かれていないので、クリックして開く")
-        
+
         //set negative button
         builder.setPositiveButton(
             "開ける") { dialog, _ ->
