@@ -62,11 +62,9 @@ class MainActivity : AppCompatActivity() {
         // set title
         builder.setTitle("系統通知権限")
 
-
         //set content area
         builder.setMessage("通知権限が開かれていないので、クリックして開く")
-
-
+        
         //set negative button
         builder.setPositiveButton(
             "開ける") { dialog, _ ->
@@ -94,10 +92,6 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-//        //set neutral button
-//        builder.setNeutralButton("Reminder me latter") {dialog, id->
-//            // User Click on reminder me latter
-//        }
         builder.show()
     }
 
