@@ -1,7 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/work/DXC/Notification_DXC/app/src/main/res/drawable/ic_dashboard_black_24dp.xml" value="0.107" />
+        <entry key="..\:/work/DXC/Notification_DXC/app/src/main/res/drawable/ic_home_black_24dp.xml" value="0.107" />
+        <entry key="..\:/work/DXC/Notification_DXC/app/src/main/res/layout/activity_main.xml" value="0.1" />
+        <entry key="..\:/work/DXC/Notification_DXC/app/src/main/res/layout/budget_list_item.xml" value="0.1078125" />
+        <entry key="..\:/work/DXC/Notification_DXC/app/src/main/res/layout/dialog_custom_frequency.xml" value="0.1078125" />
+        <entry key="..\:/work/DXC/Notification_DXC/app/src/main/res/layout/dialog_loading.xml" value="0.1796875" />
+        <entry key="..\:/work/DXC/Notification_DXC/app/src/main/res/layout/fragment_budget.xml" value="0.1078125" />
+        <entry key="..\:/work/DXC/Notification_DXC/app/src/main/res/layout/fragment_budget_horizontal_chart.xml" value="0.22" />
+        <entry key="..\:/work/DXC/Notification_DXC/app/src/main/res/layout/fragment_budget_pager.xml" value="0.1078125" />
+        <entry key="..\:/work/DXC/Notification_DXC/app/src/main/res/layout/fragment_schedule.xml" value="0.1078125" />
+        <entry key="..\:/work/DXC/Notification_DXC/app/src/main/res/layout/item_dropdown_layout.xml" value="0.1078125" />
+        <entry key="..\:/work/DXC/Notification_DXC/app/src/main/res/layout/item_select_layout.xml" value="0.1078125" />
+        <entry key="..\:/work/DXC/Notification_DXC/app/src/main/res/layout/title_layout.xml" value="0.1078125" />
+        <entry key="..\:/work/DXC/Notification_DXC/app/src/main/res/menu/bottom_nav_menu.xml" value="0.1796875" />
+        <entry key="..\:/work/JEIS/Notification/app/src/main/res/layout/activity_main.xml" value="0.15806159420289856" />
+        <entry key="..\:/work/JEIS/Notification/app/src/main/res/menu/bottom_nav_menu.xml" value="0.1796875" />
+      </map>
+    </option>
+  </component>
   <component name="ExternalStorageConfigurationManager" enabled="true" />
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="11" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />
   </component>
 </project>
