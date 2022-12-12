@@ -24,6 +24,8 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.android.example.notification.MainActivity
 import com.android.example.notification.R
 import com.android.example.notification.constant.MyConstant.Companion.CHANNEL_ID
+import com.android.example.notification.constant.MyConstant.Companion.CHANNEL_OTHER_ID
+import com.android.example.notification.constant.MyConstant.Companion.CHANNEL_X_ID
 import com.android.example.notification.data.NotificationBean
 import com.android.example.notification.data.NotificationData
 import com.android.example.notification.databinding.FragmentNotificationManageBinding
@@ -57,7 +59,8 @@ class NotificationManageFragment : Fragment() {
         initData()
         initView()
         notificationChannelCreate()
-
+        notificationOtherChannelCreate()
+        notificationXChannelCreate()
         return root
     }
 
@@ -172,9 +175,71 @@ class NotificationManageFragment : Fragment() {
                 putExtra(Settings.EXTRA_CHANNEL_ID, CHANNEL_ID)
             }
             startActivity(intent)
-
         }
     }
+
+    private fun notificationOtherChannelCreate(){
+        // Create the NotificationOtherChannel
+        val name = getString(R.string.other_notify)
+        val descriptionText = getString(R.string.channel_other_description)
+        val importance = NotificationManager.IMPORTANCE_DEFAULT
+        val mChannel = NotificationChannel(CHANNEL_OTHER_ID, name, importance)
+        mChannel.description = descriptionText
+        val notificationManager = context?.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.createNotificationChannel(mChannel)
+        //通知権限を有効にするかどうか
+        val isNotificationEnable = checkNotificationsEnabled()
+        if(!isNotificationEnable){
+            val intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
+                putExtra(Settings.EXTRA_APP_PACKAGE, "com.android.example.notification")
+                putExtra(Settings.EXTRA_CHANNEL_ID, CHANNEL_OTHER_ID)
+            }
+            startActivity(intent)
+        }
+        val isNotificationChannelEnable = checkNotificationsChannelEnabled(requireContext(),CHANNEL_OTHER_ID)
+        //スイッチ設定
+        binding.otherSwitch.isChecked = isNotificationChannelEnable
+        binding.otherSwitch.setOnClickListener {
+            //通知権限がなし場合、システムに設定いく
+            val intent = Intent(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS).apply {
+                putExtra(Settings.EXTRA_APP_PACKAGE, "com.android.example.notification")
+                putExtra(Settings.EXTRA_CHANNEL_ID, CHANNEL_OTHER_ID)
+            }
+            startActivity(intent)
+        }
+    }
+
+    private fun notificationXChannelCreate(){
+        // Create the NotificationOtherChannel
+        val name = "XXX通知"
+        val descriptionText = getString(R.string.channel_other_description)
+        val importance = NotificationManager.IMPORTANCE_DEFAULT
+        val mChannel = NotificationChannel(CHANNEL_X_ID, name, importance)
+        mChannel.description = descriptionText
+        val notificationManager = context?.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.createNotificationChannel(mChannel)
+        //通知権限を有効にするかどうか
+        val isNotificationEnable = checkNotificationsEnabled()
+        if(!isNotificationEnable){
+            val intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
+                putExtra(Settings.EXTRA_APP_PACKAGE, "com.android.example.notification")
+                putExtra(Settings.EXTRA_CHANNEL_ID, CHANNEL_X_ID)
+            }
+            startActivity(intent)
+        }
+        val isNotificationChannelEnable = checkNotificationsChannelEnabled(requireContext(),CHANNEL_X_ID)
+        //スイッチ設定
+        binding.xSwitch.isChecked = isNotificationChannelEnable
+        binding.xSwitch.setOnClickListener {
+            //通知権限がなし場合、システムに設定いく
+            val intent = Intent(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS).apply {
+                putExtra(Settings.EXTRA_APP_PACKAGE, "com.android.example.notification")
+                putExtra(Settings.EXTRA_CHANNEL_ID, CHANNEL_X_ID)
+            }
+            startActivity(intent)
+        }
+    }
+
     private fun notificationDataSet(){
         val money = arguments?.getString("money")
         val date1 = arguments?.getString("date")

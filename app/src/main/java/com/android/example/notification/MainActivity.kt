@@ -57,8 +57,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun onAlertDialog(context: Context) {
         //Instantiate builder variable
-        val builder = AlertDialog.Builder(context)
 
+        val builder = AlertDialog.Builder(this)
         // set title
         builder.setTitle("系統通知権限")
 
@@ -69,14 +69,12 @@ class MainActivity : AppCompatActivity() {
 
         //set negative button
         builder.setPositiveButton(
-            "開ける") { dialog, id ->
+            "開ける") { dialog, _ ->
             val intent = Intent()
             try {
                 intent.action = Settings.ACTION_APP_NOTIFICATION_SETTINGS
-
                 intent.putExtra(Settings.EXTRA_APP_PACKAGE, packageName)
                 intent.putExtra(Settings.EXTRA_CHANNEL_ID, applicationInfo.uid)
-
                 startActivity(intent)
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -84,13 +82,13 @@ class MainActivity : AppCompatActivity() {
                 intent.putExtra("package", packageName)
                 startActivity(intent)
             }
-
+            dialog.cancel()
         }
 
 
         //set positive button
         builder.setNegativeButton(
-            "取消") { dialog, id ->
+            "取消") { dialog, _ ->
             // User cancelled the dialog
             dialog.cancel()
         }

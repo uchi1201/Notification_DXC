@@ -71,13 +71,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="20dp"
-            android:layout_alignBaseline="@id/o_switch"
+            android:layout_alignBaseline="@id/x_switch"
             android:layout_below="@id/other_txt"
             android:text="XX通知"
             android:textColor="@color/blue"/>
 
         <ToggleButton
-            android:id="@+id/o_switch"
+            android:id="@+id/x_switch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
