@@ -43,9 +43,10 @@
         tools:layout="@layout/fragment_setting">
     <action
         android:id="@+id/action"
-        app:destination="@id/navigation_manage" />
-        <action
-            android:id="@+id/category_action"
-            app:destination="@id/navigation_category_manage" />
+        app:destination="@id/navigation_manage"
+        />
+    <action
+        android:id="@+id/category_action"
+        app:destination="@id/navigation_category_manage" />
     </fragment>
 </navigation>

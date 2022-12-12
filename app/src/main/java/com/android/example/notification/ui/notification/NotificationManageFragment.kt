@@ -14,6 +14,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
@@ -82,6 +83,11 @@ class NotificationManageFragment : Fragment() {
         val recycleView: RecyclerView = binding.notificationList
         val title = binding.titleSetting
         title.title.text = getString(R.string.notification_btn)
+//        title.titleBtn.visibility = View.VISIBLE
+//        title.titleBtn.setImageResource(R.mipmap.white_back)
+//        title.titleBtn.setOnClickListener{
+//            parentFragmentManager.popBackStack()
+//        }
         val payText = binding.payTxt
         val filterImage = binding.filterIv
         //通知名クリックで設定用ポップアップ表示
