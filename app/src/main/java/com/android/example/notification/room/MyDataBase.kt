@@ -6,7 +6,7 @@ import androidx.room.RoomDatabase
 import com.android.example.notification.room.dao.CategoryDao
 import com.android.example.notification.room.data.CategoryData
 
-@Database(entities = [CategoryData::class], version = 1)
+@Database(entities = [CategoryData::class], version = 1,exportSchema = false)
 abstract class MyDataBase : RoomDatabase() {
-    abstract fun cardLoginDao(): CategoryDao
+    abstract fun categoryDao(): CategoryDao
 }
