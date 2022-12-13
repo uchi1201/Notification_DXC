@@ -7,20 +7,12 @@
     >
 
     <RelativeLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
         android:layout_marginTop="10dp"
         >
-        <View
-            android:id="@+id/line1_v"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_above="@id/color_tv"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-           android:layout_marginBottom="10dp"
-            android:background="@color/gray"
-            />
+
         <TextView
             android:id="@+id/category_tv"
             android:layout_width="wrap_content"
@@ -48,21 +40,20 @@
             />
     </RelativeLayout>
 
-    <LinearLayout
-        android:id="@+id/ll_hidden"
-        android:layout_width="80dp"
-        android:layout_height="match_parent"
-        android:background="#ff0000"
-        android:gravity="center"
-        >
 
         <TextView
             android:id="@+id/tv_item_delete"
-            android:layout_width="wrap_content"
+            android:layout_width="80dp"
             android:layout_height="match_parent"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
             android:text="削除"
             android:textColor="#ffffff"
             android:textSize="20sp"
+            android:background="#ff0000"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:visibility="gone"
             />
-    </LinearLayout>
+
 </LinearLayout>

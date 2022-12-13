@@ -52,7 +52,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        checkPushSwitchStatus()
+//        checkPushSwitchStatus()
     }
 
     private fun onAlertDialog(context: Context) {

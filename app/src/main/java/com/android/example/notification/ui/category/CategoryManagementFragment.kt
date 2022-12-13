@@ -54,7 +54,7 @@ class CategoryManagementFragment : Fragment() {
                 categoryView.text = d.category
                 colorView.setBackgroundColor(d.color.toColorInt())
             }
-            var adapter = CategoryListViewAdapter(R.layout.item_category_layout,it.data.dataList,init)
+            var adapter = context?.let { it1 -> CategoryListViewAdapter(it1,R.layout.item_category_layout,it.data.dataList,init) }
             categoryListView.layoutManager= LinearLayoutManager(activity)
             categoryListView.adapter=adapter
 
