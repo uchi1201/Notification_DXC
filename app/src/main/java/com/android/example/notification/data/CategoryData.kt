@@ -1,16 +1,13 @@
 package com.android.example.notification.data
 
-data class CategoryData(
+import com.android.example.notification.room.data.CategoryData
+
+data class CategoryListData(
     val code: Int,
     val `data`: Data,
     val msg: String
 )
 
 data class Data(
-    val dataList: List<DataX>
-)
-
-data class DataX(
-    val category: String,
-    val color: String
+    val dataList: List<CategoryData>
 )

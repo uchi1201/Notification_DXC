@@ -21,4 +21,7 @@ interface CategoryDao {
 
     @Update
     fun update(categoryData: CategoryData)
+
+    @Delete
+    fun delete( categoryData: CategoryData?):Int
 }

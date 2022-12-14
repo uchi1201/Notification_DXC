@@ -11,9 +11,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.room.Room
 import com.android.example.notification.R
-import com.android.example.notification.data.DataX
 import com.android.example.notification.databinding.FragmentCategoryManagementBinding
+import com.android.example.notification.room.MyDataBase
 import com.android.example.notification.room.data.CategoryData
 import com.android.example.notification.utils.LoadingDialogUtils
 import java.util.*
@@ -27,8 +28,8 @@ import kotlin.collections.ArrayList
 class CategoryManagementFragment : Fragment() {
     private var _binding: FragmentCategoryManagementBinding? = null
     private val binding get() = _binding!!
-    private lateinit var categoryManagementViewModel: CategoryManagementViewModel
-
+    private var categoryManagementViewModel: CategoryManagementViewModel?= null
+    private var dataBase: MyDataBase? = null
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -41,27 +42,36 @@ class CategoryManagementFragment : Fragment() {
     }
 
     private fun initData(){
-        categoryManagementViewModel = ViewModelProvider(this)[CategoryManagementViewModel::class.java]
-        activity?.let { categoryManagementViewModel.getCategoryDataList(it.applicationContext) }
+        dataBase = context?.let { Room.databaseBuilder(it, MyDataBase::class.java,"myCategory.db").allowMainThreadQueries().build() }
+        categoryManagementViewModel = dataBase?.let { CategoryManagementViewModel(it) }
+        if(categoryManagementViewModel?.getAllCategoryData()==null){
+            //DBのデータがない時データ追加
+            activity?.let { categoryManagementViewModel?.insertDataBaseData(it.applicationContext) }
+        }
+        categoryManagementViewModel?.getAllCategoryData()
     }
 
     private fun initView(){
         val title = binding.titleSetting
         title.title.text = getString(R.string.category_btn)
         val categoryListView: RecyclerView = binding.categoryList
-        categoryManagementViewModel.categoryData.observe(viewLifecycleOwner) {
-            var init: (View, DataX) -> Unit = { v:View, d:DataX ->
+
+            var init: (View, CategoryData) -> Unit = { v:View, d:CategoryData ->
                 var categoryView = v.findViewById<TextView>(R.id.category_tv)
                 var colorView=v.findViewById<TextView>(R.id.color_tv)
                 categoryView.text = d.category
                 colorView.setBackgroundColor(d.color.toColorInt())
             }
-            var adapter = context?.let { it1 -> CategoryListViewAdapter(it1,R.layout.item_category_layout,
-                it.data.dataList as ArrayList<DataX>,init) }
+            var adapter = context?.let { it1 ->
+                categoryManagementViewModel?.categoryDbData?.let {
+                    CategoryListViewAdapter(it1,dataBase,R.layout.item_category_layout,
+                        it,init)
+                }
+            }
             categoryListView.layoutManager= LinearLayoutManager(activity)
             categoryListView.adapter=adapter
 
-        }
+
     }
 
 

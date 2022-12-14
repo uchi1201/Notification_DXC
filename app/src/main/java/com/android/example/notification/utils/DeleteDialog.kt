@@ -12,7 +12,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.liveData
 import com.android.example.notification.R
-import com.android.example.notification.data.DataX
 import com.android.example.notification.ui.base.list.BaseRecycleViewAdapter
 import java.text.FieldPosition
 

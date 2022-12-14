@@ -12,27 +12,28 @@ import android.widget.TextView
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
 import com.android.example.notification.R
-import com.android.example.notification.data.DataX
 import com.android.example.notification.ui.base.list.BaseRecycleViewAdapter
 import com.android.example.notification.utils.DeleteDialog
 import com.android.example.notification.utils.LoadingDialogUtils
 import kotlin.math.abs
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.LifecycleOwner
+import com.android.example.notification.room.MyDataBase
+import com.android.example.notification.room.data.CategoryData
 
-class CategoryListViewAdapter(context: Context, layoutResourceId: Int, items: ArrayList<DataX>, init: (View, DataX) -> Unit) :
-    BaseRecycleViewAdapter<DataX>(layoutResourceId, items, init)  {
+class CategoryListViewAdapter(context: Context, dataBase: MyDataBase?,
+                              layoutResourceId: Int, items: ArrayList<CategoryData>, init: (View, CategoryData) -> Unit) :
+    BaseRecycleViewAdapter<CategoryData>(layoutResourceId, items, init)  {
     private var downX:Float=0.0f
     private var upX:Float=0.0f
     private var view: View? = null
     private var deleteTv: TextView? = null
     private var animation: Animation? = null
     private val  mContext = context
-    private  var mDeleteDialog: Dialog? = null
-    private lateinit var  categoryList: ArrayList<DataX>
-        override fun onBindViewHolder(holder: BaseViewHolder<DataX>, position: Int) {
-
-            categoryList = items
+    private var mDeleteDialog: Dialog? = null
+    private val  mDataBase =  dataBase
+    val categoryDao = mDataBase?.categoryDao()
+        override fun onBindViewHolder(holder: BaseViewHolder<CategoryData>, position: Int) {
             holder.bindHolder(items[position])
             holder.itemView.setOnTouchListener OnTouchListener@{ v, event ->  // 为每个item设置setOnTouchListener事件
                 val delBtn = holder.itemView.findViewById<TextView>(R.id.tv_item_delete)
@@ -87,6 +88,8 @@ class CategoryListViewAdapter(context: Context, layoutResourceId: Int, items: Ar
             deleteDialog.setDeleteButtonClickListener(object :
                 DeleteDialog.OnDeleteButtonClickListener {
                 override fun onDeleteButtonClick(view:View,Position: Int){
+                    //DBのデータを削除
+                    categoryDao?.delete(items[position])
                     //viewにアニメーションを設定する
                     view.startAnimation(animation)
                     animation?.setAnimationListener(object : AnimationListener {
