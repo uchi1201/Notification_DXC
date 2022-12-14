@@ -21,7 +21,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.LifecycleOwner
 
 class CategoryListViewAdapter(context: Context, layoutResourceId: Int, items: ArrayList<DataX>, init: (View, DataX) -> Unit) :
-    BaseRecycleViewAdapter<DataX>(layoutResourceId, items, init),LifecycleOwner  {
+    BaseRecycleViewAdapter<DataX>(layoutResourceId, items, init)  {
     private var downX:Float=0.0f
     private var upX:Float=0.0f
     private var view: View? = null
@@ -39,35 +39,41 @@ class CategoryListViewAdapter(context: Context, layoutResourceId: Int, items: Ar
 
                 when (event.action) {
                     MotionEvent.ACTION_DOWN -> {
-                        downX = event.x // 获取手指x坐标
+                        //指x座標の取得
+                        downX = event.x
                         deleteTv?.visibility = View.GONE
                     }
-                    MotionEvent.ACTION_UP -> upX = event.x // 获取x坐标值
+
+                    MotionEvent.ACTION_UP -> upX = event.x //x座標値の取得
                 }
                 if (delBtn != null) {
-                    if (abs(downX - upX) > 80 && upX < downX) { //向左滑动，删除item
-                        delBtn.visibility = View.VISIBLE // 显示删除button
+                    //左にスライドしてitemを削除
+                    if (abs(downX - upX) > 80 && upX < downX) {
+                        //削除buttonを表示
+                        delBtn.visibility = View.VISIBLE
                         deleteTv = delBtn
-                        view = v // 得到itemview，在上面加动画
-                        return@OnTouchListener true // 终止事件
+                        //itemviewを手に入れ、そこに動画を加える
+                        view = v
+                        return@OnTouchListener true //終了イベント
                     }
-                    if (abs(downX - upX) > 80 && upX > downX) { //撤销删除操作
-                        if (delBtn.visibility === View.VISIBLE) { //此时Button可见
+                    //削除操作を元に戻す
+                    if (abs(downX - upX) > 80 && upX > downX) {
+                        if (delBtn.visibility === View.VISIBLE) {
                             delBtn.visibility = View.GONE
                         }
-                        return@OnTouchListener true // 终止事件
+                        return@OnTouchListener true //終了イベント
                     }
-                    return@OnTouchListener false // 释放事件，使onitemClick可以执行
+                    return@OnTouchListener false //onitemClickが実行できるようにイベントを解放する
                 }
                 false
             }
             val delBtn = holder.itemView.findViewById<TextView>(R.id.tv_item_delete)
             delBtn.setOnClickListener {
-                // 为button绑定事件
-
                     if (deleteTv != null) {
-                        deleteTv!!.visibility = View.GONE // 点击删除按钮后，影藏按钮
-                        view?.let { it1 -> deleteItem(it1, position) } // 删除数据，加动画
+                        //削除ボタンをクリックすると、ボタンを隠す
+                        deleteTv!!.visibility = View.GONE
+                        //データを削除し、アニメーションを追加
+                        view?.let { it1 -> deleteItem(it1, position) }
                     }
 
             }
@@ -77,25 +83,23 @@ class CategoryListViewAdapter(context: Context, layoutResourceId: Int, items: Ar
             val deleteDialog = DeleteDialog()
             mDeleteDialog = deleteDialog.createDeleteDialog(mContext)
             animation = AnimationUtils.loadAnimation(mContext, R.anim.push_out)
-            val result = deleteDialog.delete(mContext,view,position,categoryList,mDeleteDialog)
-            result.observe(this, Observer{
-                if(it){
-                    view.startAnimation(animation) // 给view设置动画
+            deleteDialog.delete(view,position,mDeleteDialog)
+            deleteDialog.setDeleteButtonClickListener(object :
+                DeleteDialog.OnDeleteButtonClickListener {
+                override fun onDeleteButtonClick(view:View,Position: Int){
+                    //viewにアニメーションを設定する
+                    view.startAnimation(animation)
                     animation?.setAnimationListener(object : AnimationListener {
                         override fun onAnimationStart(animation: Animation) {}
                         override fun onAnimationRepeat(animation: Animation) {}
-                        override fun onAnimationEnd(animation: Animation) { // 动画执行完毕
+                        override fun onAnimationEnd(animation: Animation) {
+                            //動画実行完了
                             items.removeAt(position)
                             notifyDataSetChanged()
                         }
                     })
-
                 }
             })
-
         }
 
-    override fun getLifecycle(): Lifecycle {
-        TODO("Not yet implemented")
-    }
 }

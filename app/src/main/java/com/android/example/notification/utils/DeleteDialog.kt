@@ -13,12 +13,16 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.liveData
 import com.android.example.notification.R
 import com.android.example.notification.data.DataX
+import com.android.example.notification.ui.base.list.BaseRecycleViewAdapter
 import java.text.FieldPosition
 
 
 class DeleteDialog {
     private var deleteButton : Button? = null
     var cancelButton : Button? = null
+
+    private var mDeleteButtonClickListener: OnDeleteButtonClickListener? = null
+
     fun createDeleteDialog(context: Context?): Dialog? {
         val inflater = LayoutInflater.from(context)
         val v: View = inflater.inflate(R.layout.dialog_delete, null)
@@ -26,6 +30,7 @@ class DeleteDialog {
             .findViewById<View>(R.id.dialog_delete_view) as LinearLayout
         deleteButton = v.findViewById<View>(R.id.delete_btn) as Button
         cancelButton = v.findViewById<View>(R.id.cancel_btn) as Button
+
         val deleteDialog = Dialog(context!!)
         deleteDialog.setCancelable(true)
         deleteDialog.setCanceledOnTouchOutside(false)
@@ -46,18 +51,15 @@ class DeleteDialog {
         return deleteDialog
     }
 
-    fun delete(context: Context?,view:View,position: Int,items: ArrayList<DataX>,dialog: Dialog?): MutableLiveData<Boolean> {
-        var result = MutableLiveData<Boolean> ()
+    fun delete(view:View,position: Int,dialog: Dialog?) {
 
         deleteButton?.setOnClickListener{
-            result.value = true
+            mDeleteButtonClickListener?.onDeleteButtonClick(view,position)
             closeDialog(dialog)
         }
         cancelButton?.setOnClickListener{
             closeDialog(dialog)
-            result.value = false
         }
-        return result
     }
     /**
      * dialogを閉じる
@@ -69,4 +71,13 @@ class DeleteDialog {
             mDialogUtils.dismiss()
         }
     }
+
+    open fun setDeleteButtonClickListener(listener: OnDeleteButtonClickListener) {
+        mDeleteButtonClickListener = listener
+    }
+
+    interface OnDeleteButtonClickListener {
+        fun onDeleteButtonClick(view:View,Position: Int)
+    }
+
 }
