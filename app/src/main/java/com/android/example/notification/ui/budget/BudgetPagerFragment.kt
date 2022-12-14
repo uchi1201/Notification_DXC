@@ -34,7 +34,6 @@ class BudgetPagerFragment : Fragment() {
         // セット
         binding.fragmentHomePager.adapter = pagerAdapter
 
-
         TabLayoutMediator(binding.fragmentHomeTabLayout, binding.fragmentHomePager) { _, _ -> }.attach()
         return root
     }

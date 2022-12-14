@@ -51,8 +51,9 @@ class NotificationManageFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var frequencylist: Array<String>
     private lateinit var frequencylistSub: Array<String>
-    val notificationsListData = mutableListOf<NotificationData>()
+    private val notificationsListData = mutableListOf<NotificationData>()
     var isNotificationChannelEnable: Boolean = false
+
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isGranted: Boolean ->
@@ -113,14 +114,10 @@ class NotificationManageFragment : Fragment() {
         val swipeRefreshLayout: SwipeRefreshLayout = binding.refresh
         frequencylist = resources.getStringArray(R.array.frequency)
         frequencylistSub= resources.getStringArray(R.array.week)
-        val recycleView: RecyclerView = binding.notificationList
+
         val title = binding.titleSetting
         title.title.text = getString(R.string.notification_btn)
-//        title.titleBtn.visibility = View.VISIBLE
-//        title.titleBtn.setImageResource(R.mipmap.white_back)
-//        title.titleBtn.setOnClickListener{
-//            parentFragmentManager.popBackStack()
-//        }
+
         val payText = binding.payTxt
         val filterImage = binding.filterIv
         //通知名クリックで設定用ポップアップ表示
@@ -131,36 +128,6 @@ class NotificationManageFragment : Fragment() {
         filterImage.setOnClickListener{
             context?.let { it1 -> filterDialogShow(it1,isNotificationChannelEnable) }
         }
-//        notificationsViewModel.notificationsListLiveData.observe(viewLifecycleOwner) {
-//            var init: (View, NotificationData) -> Unit = { v: View, d: NotificationData ->
-//                var dateView = v.findViewById<TextView>(R.id.date)
-//                var shopNameView = v.findViewById<TextView>(
-//                    R.id.shop_name_txt
-//                )
-//                var categoryView = v.findViewById<TextView>(R.id.category_tx)
-//                var moneyView = v.findViewById<TextView>(R.id.money_tx)
-//
-//                dateView.text = d.date
-//                shopNameView.text = d.shopName
-//                categoryView.text = d.category
-//                moneyView.text = d.money
-//            }
-//            if (it.getOrNull() != null) {
-//                binding.notificationList.visibility = View.VISIBLE
-//                binding.errorMsg.visibility = View.GONE
-//                var adapter = it.getOrNull()?.let { it1 ->
-//                    NotificationListViewAdapter(
-//                        R.layout.notification_item,
-//                        it1.notificationList, init
-//                    )
-//                }
-//                recycleView.layoutManager = LinearLayoutManager(activity)
-//                recycleView.adapter = adapter
-//            } else {
-//                binding.notificationList.visibility = View.GONE
-//                binding.errorMsg.visibility = View.VISIBLE
-//            }
-//        }
         notificationsViewModel.loadingLiveData.observe(viewLifecycleOwner) {
             if (it) {
                 mLoadingDialog = loadingDialog.createLoadingDialog(activity, "Loading")
@@ -293,7 +260,7 @@ class NotificationManageFragment : Fragment() {
             var adapter =
                 NotificationListViewAdapter(
                     R.layout.notification_item,
-                    notificationsListData, init
+                    notificationsListData as ArrayList<NotificationData>, init
                 )
             binding.notificationList.layoutManager = LinearLayoutManager(activity)
             binding.notificationList.adapter = adapter

@@ -1,13 +1,12 @@
-package com.example.practice.base.list
+package com.android.example.notification.ui.base.list
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.practice.base.list.BaseRecycleViewAdapter.OnRecyclerItemClickListener
 
 
-abstract class BaseRecycleViewAdapter<T>(val layoutResourceId: Int, val items: List<T>, val init: (View, T) -> Unit) :
+abstract class BaseRecycleViewAdapter<T>(private val layoutResourceId: Int, val items: ArrayList<T>, val init: (View, T) -> Unit) :
     RecyclerView.Adapter<BaseRecycleViewAdapter.BaseViewHolder<T>>() {
     private var monItemClickListener: OnRecyclerItemClickListener? = null
     private var itemClick: T.() -> Unit = {}
@@ -16,7 +15,7 @@ abstract class BaseRecycleViewAdapter<T>(val layoutResourceId: Int, val items: L
         fun onRecyclerItemClick(view:View,Position: Int)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseRecycleViewAdapter.BaseViewHolder<T> {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<T> {
         val itemView = LayoutInflater.from(parent?.context).inflate(layoutResourceId, parent, false)
         return BaseViewHolder(itemView, init)
     }

@@ -15,7 +15,9 @@ import com.android.example.notification.R
 import com.android.example.notification.data.DataX
 import com.android.example.notification.databinding.FragmentCategoryManagementBinding
 import com.android.example.notification.room.data.CategoryData
+import com.android.example.notification.utils.LoadingDialogUtils
 import java.util.*
+import kotlin.collections.ArrayList
 
 /**
  * A simple [Fragment] subclass.
@@ -54,33 +56,14 @@ class CategoryManagementFragment : Fragment() {
                 categoryView.text = d.category
                 colorView.setBackgroundColor(d.color.toColorInt())
             }
-            var adapter = context?.let { it1 -> CategoryListViewAdapter(it1,R.layout.item_category_layout,it.data.dataList,init) }
+            var adapter = context?.let { it1 -> CategoryListViewAdapter(it1,R.layout.item_category_layout,
+                it.data.dataList as ArrayList<DataX>,init) }
             categoryListView.layoutManager= LinearLayoutManager(activity)
             categoryListView.adapter=adapter
 
         }
     }
 
-    private fun setupItemTouchHelper() {
-        val helper = ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(
-            ItemTouchHelper.UP or ItemTouchHelper.DOWN,
-            ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
-            override fun onMove(recyclerView: RecyclerView, selected: RecyclerView.ViewHolder,
-                                target: RecyclerView.ViewHolder): Boolean {
-//                val from = selected.adapterPosition
-//                val to = target.adapterPosition
-//                Collections.swap(list, from, to)
-//                recyclerView.adapter?.notifyItemMoved(from, to)
 
-                return true
-            }
-
-            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-//                list.removeAt(viewHolder.adapterPosition)
-//                recyclerView.adapter?.notifyItemRemoved(viewHolder.adapterPosition)
-            }
-        })
-//        helper.attachToRecyclerView(recyclerView)
-    }
 
 }

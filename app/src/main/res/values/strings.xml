@@ -31,5 +31,9 @@
     <string name="channel_other_description">通知種類は：その他通知</string>
     <string name="fcm_message">支払通知</string>
     <string name="period">期間</string>
+    <string name="del_btn">削除</string>
+    <string name="cancel_btn">取消</string>
     <string name="category_list">カテゴリ一覧</string>
+    <string name="delete_warning">カテゴリを削除するとグラフからも削除され分類されていた支払いはその他に振り分けられます
+</string>
 </resources>

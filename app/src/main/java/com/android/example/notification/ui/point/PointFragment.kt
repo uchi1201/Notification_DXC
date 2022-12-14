@@ -29,8 +29,6 @@ class PointFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-//        val pointViewModel =
-//            ViewModelProvider(this).get(PointViewModel::class.java)
         val pointViewModel: PointViewModel by lazy {
             ViewModelProvider(this)[PointViewModel::class.java]
         }

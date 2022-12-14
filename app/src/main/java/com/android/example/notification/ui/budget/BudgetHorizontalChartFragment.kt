@@ -45,7 +45,6 @@ class BudgetHorizontalChartFragment :  Fragment()  {
     private lateinit var totalCharView: HorizontalBarChart
     private lateinit var charView: HorizontalBarChart
     private lateinit var horizontalViewModel: BudgetHorizontalChartViewModel
-    private var budgetList = mutableListOf <BudgetValueBean>()
     private lateinit var month: String
 
     override fun onCreateView(
@@ -179,8 +178,6 @@ class BudgetHorizontalChartFragment :  Fragment()  {
     private fun initChartView() {
         charView = binding.categoryChar
         charView.setDrawBarShadow(true)
-//        charView.setExtraOffsets(0f, 0f, 120f, 0f)
-//        charView.setDrawValueAboveBar(true)
         charView.renderer = HorizontalBarChartCustomRenderer(charView, charView.animator, charView.viewPortHandler)
         charView.setTouchEnabled(false)
         charView.isDragEnabled = true

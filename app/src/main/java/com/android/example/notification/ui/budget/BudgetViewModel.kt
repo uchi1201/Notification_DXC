@@ -1,10 +1,8 @@
 package com.android.example.notification.ui.budget
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.android.example.notification.data.*
-import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
@@ -12,14 +10,7 @@ import com.github.mikephil.charting.utils.ColorTemplate
 
 class BudgetViewModel : ViewModel() {
 
-//    private val _budgetData= MutableLiveData<MutableList<BudgetData>>().apply {
-//        value = getBudgetData()
-//    }
-     val budgetData = MutableLiveData<MutableList<BudgetData>>()
-
-//    private val _pieData= MutableLiveData<PieData>().apply {
-//        value = createPieData()
-//    }
+    val budgetData = MutableLiveData<MutableList<BudgetData>>()
     val pieData = MutableLiveData<PieData>()
 
     fun getListData(month: String){
@@ -29,10 +20,8 @@ class BudgetViewModel : ViewModel() {
         }
     }
 
-    private fun getBudgetBean(month: String):MutableList<BudgetUsedBean> {
-        var results = mutableListOf<BudgetUsedBean>()
-        results = getBudgetData(month)
-        return results
+    private fun getBudgetBean(month: String): MutableList<BudgetUsedBean> {
+        return getBudgetData(month)
     }
 
     private fun getBudgetData(month: String):MutableList<BudgetUsedBean> {
@@ -135,7 +124,7 @@ class BudgetViewModel : ViewModel() {
         pieData.value = createPieData(month)
     }
     //仮データ
-    fun getPieDataList(month:String):MutableList<PieDataValueBean>{
+    private fun getPieDataList(month:String):MutableList<PieDataValueBean>{
         val results = mutableListOf<PieDataValueBean>()
         if(month == "1"){
             val data  = PieGraphData ("服飾費",3800f)
@@ -253,9 +242,6 @@ class BudgetViewModel : ViewModel() {
     private fun createPieData(month:String): PieData {
         //表示用サンプルデータの作成
         val pieDataList = getPieDataList(month)
-        val dimensions = listOf("服飾費", "食費", "交際費", "定期支払")//分割円の名称(String型)
-        val values = listOf(3800f, 2800f, 1000f, 3800f)//分割円の大きさ(Float型)
-
         //①Entryにデータ格納
         var entryList = mutableListOf<PieEntry>()
         for(i in pieDataList.indices){

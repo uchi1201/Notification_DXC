@@ -105,7 +105,7 @@ class BudgetFragment : Fragment() {
             }
             var adapter = BudgetListViewAdapter(
                 R.layout.budget_list_item,
-                it,init)
+                it as ArrayList<BudgetData>,init)
             recycleView.layoutManager= LinearLayoutManager(activity)
             recycleView.adapter=adapter
         }
@@ -118,8 +118,7 @@ class BudgetFragment : Fragment() {
             it.setValueTextColor(Color.WHITE)
             //labelの文字サイズ
             it.setValueTextSize(10f)
-            //⑥Chartのフォーマット指定
-            //pieChart.legend.isEnabled = false
+
             //descriptionラベルを非表示
             pieChart.description.isEnabled = false
             //画面に入ると円を描くアニメーション

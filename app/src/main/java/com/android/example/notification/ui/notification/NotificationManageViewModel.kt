@@ -8,7 +8,7 @@ import com.android.example.notification.network.NetworkApiTest
 import kotlinx.coroutines.launch
 
 class NotificationManageViewModel: ViewModel() {
-    val notificationsListLiveData = MutableLiveData<Result<NotificationBean>>()
+    private val notificationsListLiveData = MutableLiveData<Result<NotificationBean>>()
     val loadingLiveData = MutableLiveData<Boolean>()
     val pullToRefreshLiveData = MutableLiveData<Boolean>()
 
