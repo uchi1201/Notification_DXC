@@ -3,25 +3,23 @@ package com.android.example.notification.ui.category
 
 import android.app.Dialog
 import android.content.Context
+import android.graphics.Color
 import android.view.MotionEvent
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.Animation.AnimationListener
 import android.view.animation.AnimationUtils
 import android.widget.TextView
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.Observer
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.toColorInt
 import com.android.example.notification.R
-import com.android.example.notification.ui.base.list.BaseRecycleViewAdapter
-import com.android.example.notification.utils.DeleteDialog
-import com.android.example.notification.utils.LoadingDialogUtils
-import kotlin.math.abs
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.LifecycleOwner
 import com.android.example.notification.room.MyDataBase
 import com.android.example.notification.room.data.CategoryData
+import com.android.example.notification.ui.base.list.BaseRecycleViewAdapter
 import com.android.example.notification.utils.ColorChangeDialog
-import com.android.example.notification.utils.FilterDialog
+import com.android.example.notification.utils.DeleteDialog
+import kotlin.math.abs
+
 
 class CategoryListViewAdapter(context: Context, dataBase: MyDataBase?,
                               layoutResourceId: Int, items: ArrayList<CategoryData>, init: (View, CategoryData) -> Unit) :
@@ -30,6 +28,7 @@ class CategoryListViewAdapter(context: Context, dataBase: MyDataBase?,
     private var upX:Float=0.0f
     private var view: View? = null
     private var deleteTv: TextView? = null
+
     private var animation: Animation? = null
     private val  mContext = context
     private var mDeleteDialog: Dialog? = null
@@ -38,9 +37,9 @@ class CategoryListViewAdapter(context: Context, dataBase: MyDataBase?,
 
         override fun onBindViewHolder(holder: BaseViewHolder<CategoryData>, position: Int) {
             holder.bindHolder(items[position])
-            val colorChange =  holder.itemView.findViewById<TextView>(R.id.color_tv)
-            colorChange.setOnClickListener{
-                colorChangeDialogShow()
+            var colorChange =  holder.itemView.findViewById<TextView>(R.id.color_tv)
+            colorChange?.setOnClickListener{
+                colorChangeDialogShow(position)
             }
             val delBtn = holder.itemView.findViewById<TextView>(R.id.tv_item_delete)
             holder.itemView.setOnTouchListener OnTouchListener@{ v, event ->
@@ -110,9 +109,21 @@ class CategoryListViewAdapter(context: Context, dataBase: MyDataBase?,
         })
     }
 
-    private fun colorChangeDialogShow(){
+    private fun colorChangeDialogShow(colorPosition:Int){
         var colorChangeDialog = ColorChangeDialog()
-        colorChangeDialog.createDeleteDialog(mContext)
+        colorChangeDialog.createColorDialog(mContext)
+        colorChangeDialog.setChangeColorClickListener(object :
+            ColorChangeDialog.OnChangeColorClickListener {
+                override fun onChangeColorClick(view:View,position: Int,adapter: ColorChangeGridViewAdapter){
+                    val item = adapter.getItem(position)
+                    val colorString = item["colors"]
+                    if (colorString != null) {
+                        items[colorPosition].color=colorString
+                        categoryDao?.updateColorForCategoryData(colorString,items[colorPosition].category)
+                    }
+                    notifyDataSetChanged()
+                }
+        })
     }
 
 

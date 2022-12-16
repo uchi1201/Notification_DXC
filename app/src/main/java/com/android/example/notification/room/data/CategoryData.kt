@@ -9,5 +9,5 @@ data class CategoryData(
     @PrimaryKey
     val category:String,
     @ColumnInfo(name = "colorName")
-    val color:String
+    var color:String
 )

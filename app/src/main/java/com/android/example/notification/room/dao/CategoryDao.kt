@@ -22,6 +22,9 @@ interface CategoryDao {
     @Update
     fun update(categoryData: CategoryData)
 
+    @Query("update category_table set colorName = :color where category = :category")
+    fun updateColorForCategoryData(color:String,category:String)
+
     @Delete
     fun delete( categoryData: CategoryData?):Int
 }

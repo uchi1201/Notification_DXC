@@ -2,6 +2,8 @@ package com.android.example.notification.utils
 
 import android.app.Dialog
 import android.content.Context
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.view.*
 import android.widget.*
 import com.android.example.notification.R
@@ -9,23 +11,22 @@ import com.android.example.notification.ui.category.ColorChangeGridViewAdapter
 
 
 class ColorChangeDialog {
-    private var colorChangeTv : TextView? = null
 
     private var mChangeColorClickListener: OnChangeColorClickListener? = null
-    private var colors = intArrayOf(
-        R.color.gray, R.color.purple_500, R.color.dark_blue, R.color.other_blue,R.color.bright_blue,
-        R.color.green, R.color.grass_green, R.color.light_green, R.color.yellow, R.color.chart_orange,
-        R.color.dark_orange, R.color.red, R.color.brown,R.color.purple,R.color.gray_blue,
-        R.color.green_001, R.color.brown_001, R.color.blue_001,R.color.purple_001,R.color.brown_002
-   )
-    private val listItem: ArrayList<Map<String, Any>> = ArrayList()
-    fun createDeleteDialog(context: Context?): Dialog? {
+    private var colors :Array<String> =
+        arrayOf("#919191", "#FF6200EE", "#000080", "#00688B","#00EEEE",
+        "#05A724", "#5CAF5C", "#A1DA68", "#ffd700", "#ff8c00",
+        "#E78B02", "#E70219", "#692D19","#F20FEE","#3C4A5D",
+        "#37538B00", "#C05D4B1D", "#3B807A","#50344F","#C0513F19")
+
+    private val listItem: ArrayList<Map<String, String>> = ArrayList()
+    fun createColorDialog(context: Context?): Dialog? {
         val inflater = LayoutInflater.from(context)
         val v: View = inflater.inflate(R.layout.dialog_change_color, null)
         val gridView = v.findViewById<View>(R.id.grid) as GridView
 
         for (i in colors.indices) {
-            val map: MutableMap<String, Any> = HashMap()
+            val map: MutableMap<String, String> = HashMap()
             map["colors"] = colors[i]
             listItem.add(map)
         }
@@ -49,25 +50,20 @@ class ColorChangeDialog {
         window.attributes = lp
         window.setWindowAnimations(R.style.PopWindowAnimStyle)
         changeColorDialog.show()
-        gridView.onItemClickListener = object :AdapterView.OnItemClickListener {
-            override fun onItemClick(
-                parent: AdapterView<*>?,
-                view: View?,
-                position: Int,
-                id: Long
-            ) {
+        gridView.onItemClickListener =
+            AdapterView.OnItemClickListener { _, view, position, _ ->
                 changeColorDialog.dismiss()
+                if (view != null) {
+                    changeColor(context,view,position,adapter)
+                }
             }
-        }
         return changeColorDialog
     }
 
-    fun changeColor(view:View,position: Int,dialog: Dialog?) {
+    private fun changeColor(context: Context?,view:View, position: Int,adapter: ColorChangeGridViewAdapter) {
+        mChangeColorClickListener?.onChangeColorClick(view,position,adapter)
 
-        colorChangeTv?.setOnClickListener{
-            mChangeColorClickListener?.onChangeColorClick(view,position)
-            closeDialog(dialog)
-        }
+
     }
     /**
      * dialogを閉じる
@@ -85,7 +81,7 @@ class ColorChangeDialog {
     }
 
     interface OnChangeColorClickListener {
-        fun onChangeColorClick(view:View,Position: Int)
+        fun onChangeColorClick(view:View,Position: Int, adapter: ColorChangeGridViewAdapter)
     }
 
 
