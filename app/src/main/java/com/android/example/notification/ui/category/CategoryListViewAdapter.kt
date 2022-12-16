@@ -20,6 +20,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.LifecycleOwner
 import com.android.example.notification.room.MyDataBase
 import com.android.example.notification.room.data.CategoryData
+import com.android.example.notification.utils.ColorChangeDialog
+import com.android.example.notification.utils.FilterDialog
 
 class CategoryListViewAdapter(context: Context, dataBase: MyDataBase?,
                               layoutResourceId: Int, items: ArrayList<CategoryData>, init: (View, CategoryData) -> Unit) :
@@ -33,11 +35,15 @@ class CategoryListViewAdapter(context: Context, dataBase: MyDataBase?,
     private var mDeleteDialog: Dialog? = null
     private val  mDataBase =  dataBase
     val categoryDao = mDataBase?.categoryDao()
+
         override fun onBindViewHolder(holder: BaseViewHolder<CategoryData>, position: Int) {
             holder.bindHolder(items[position])
-            holder.itemView.setOnTouchListener OnTouchListener@{ v, event ->  // 为每个item设置setOnTouchListener事件
-                val delBtn = holder.itemView.findViewById<TextView>(R.id.tv_item_delete)
-
+            val colorChange =  holder.itemView.findViewById<TextView>(R.id.color_tv)
+            colorChange.setOnClickListener{
+                colorChangeDialogShow()
+            }
+            val delBtn = holder.itemView.findViewById<TextView>(R.id.tv_item_delete)
+            holder.itemView.setOnTouchListener OnTouchListener@{ v, event ->
                 when (event.action) {
                     MotionEvent.ACTION_DOWN -> {
                         //指x座標の取得
@@ -68,7 +74,6 @@ class CategoryListViewAdapter(context: Context, dataBase: MyDataBase?,
                 }
                 false
             }
-            val delBtn = holder.itemView.findViewById<TextView>(R.id.tv_item_delete)
             delBtn.setOnClickListener {
                     if (deleteTv != null) {
                         //削除ボタンをクリックすると、ボタンを隠す
@@ -80,29 +85,35 @@ class CategoryListViewAdapter(context: Context, dataBase: MyDataBase?,
             }
 
         }
-        private fun deleteItem(view: View, position: Int) {
-            val deleteDialog = DeleteDialog()
-            mDeleteDialog = deleteDialog.createDeleteDialog(mContext)
-            animation = AnimationUtils.loadAnimation(mContext, R.anim.push_out)
-            deleteDialog.delete(view,position,mDeleteDialog)
-            deleteDialog.setDeleteButtonClickListener(object :
-                DeleteDialog.OnDeleteButtonClickListener {
-                override fun onDeleteButtonClick(view:View,Position: Int){
-                    //DBのデータを削除
-                    categoryDao?.delete(items[position])
-                    //viewにアニメーションを設定する
-                    view.startAnimation(animation)
-                    animation?.setAnimationListener(object : AnimationListener {
-                        override fun onAnimationStart(animation: Animation) {}
-                        override fun onAnimationRepeat(animation: Animation) {}
-                        override fun onAnimationEnd(animation: Animation) {
-                            //動画実行完了
-                            items.removeAt(position)
-                            notifyDataSetChanged()
-                        }
-                    })
-                }
-            })
-        }
+    private fun deleteItem(view: View, position: Int) {
+        val deleteDialog = DeleteDialog()
+        mDeleteDialog = deleteDialog.createDeleteDialog(mContext)
+        animation = AnimationUtils.loadAnimation(mContext, R.anim.push_out)
+        deleteDialog.delete(view,position,mDeleteDialog)
+        deleteDialog.setDeleteButtonClickListener(object :
+            DeleteDialog.OnDeleteButtonClickListener {
+            override fun onDeleteButtonClick(view:View,Position: Int){
+                //DBのデータを削除
+                categoryDao?.delete(items[position])
+                //viewにアニメーションを設定する
+                view.startAnimation(animation)
+                animation?.setAnimationListener(object : AnimationListener {
+                    override fun onAnimationStart(animation: Animation) {}
+                    override fun onAnimationRepeat(animation: Animation) {}
+                    override fun onAnimationEnd(animation: Animation) {
+                        //動画実行完了
+                        items.removeAt(position)
+                        notifyDataSetChanged()
+                    }
+                })
+            }
+        })
+    }
+
+    private fun colorChangeDialogShow(){
+        var colorChangeDialog = ColorChangeDialog()
+        colorChangeDialog.createDeleteDialog(mContext)
+    }
+
 
 }

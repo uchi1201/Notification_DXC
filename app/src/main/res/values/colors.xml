@@ -18,4 +18,22 @@
     <color name="chart_yellow">#ffd700</color>
     <color name="chart_gray">#a9a9a9</color>
     <color name="spinner_gray">#F0F0F0</color>
-</resources>
+    <color name="dark_blue">#000080</color>
+    <color name="other_blue">#00688B</color>
+    <color name="bright_blue">#00EEEE</color>
+    <color name="green">#05A724</color>
+    <color name="grass_green">#5CAF5C</color>
+    <color name="light_green">#A1DA68</color>
+    <color name="yellow">#ffd700</color>
+    <color name="orange">#F5A62F</color>
+    <color name="dark_orange">#E78B02</color>
+    <color name="red">#E70219</color>
+    <color name="brown">#692D19</color>
+    <color name="purple">#F20FEE</color>
+    <color name="gray_blue">#3C4A5D</color>
+    <color name="green_001">#37538B00</color>
+    <color name="brown_001">#C05D4B1D</color>
+    <color name="blue_001">#3B807A</color>
+    <color name="purple_001">#50344F</color>
+    <color name="brown_002">#C0513F19</color>
+    </resources>
