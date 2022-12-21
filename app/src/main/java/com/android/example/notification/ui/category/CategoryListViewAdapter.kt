@@ -34,57 +34,60 @@ class CategoryListViewAdapter(context: Context, dataBase: MyDataBase?,
     private var mDeleteDialog: Dialog? = null
     private val  mDataBase =  dataBase
     val categoryDao = mDataBase?.categoryDao()
-    private var categoryList: ArrayList<CategoryData>? = null
 
-        override fun onBindViewHolder(holder: BaseViewHolder<CategoryData>, position: Int) {
-            holder.bindHolder(items[position])
-            var colorChange =  holder.itemView.findViewById<TextView>(R.id.color_tv)
-            colorChange?.setOnClickListener{
-                colorChangeDialogShow(position)
-            }
-            val delBtn = holder.itemView.findViewById<TextView>(R.id.tv_item_delete)
-            holder.itemView.setOnTouchListener OnTouchListener@{ v, event ->
-                when (event.action) {
-                    MotionEvent.ACTION_DOWN -> {
-                        //指x座標の取得
-                        downX = event.x
-                        deleteTv?.visibility = View.GONE
-                    }
 
-                    MotionEvent.ACTION_UP -> upX = event.x //x座標値の取得
+    override fun onBindViewHolder(holder: BaseViewHolder<CategoryData>, position: Int) {
+        holder.bindHolder(items[position])
+       var colorList: ArrayList<String> = arrayListOf()
+        for(i in items.indices){
+            colorList.add(items[i].color)
+        }
+        var colorChange =  holder.itemView.findViewById<TextView>(R.id.color_tv)
+        colorChange?.setOnClickListener{
+            colorChangeDialogShow(position,colorList)
+        }
+        val delBtn = holder.itemView.findViewById<TextView>(R.id.tv_item_delete)
+        holder.itemView.setOnTouchListener OnTouchListener@{ v, event ->
+            when (event.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    //指x座標の取得
+                    downX = event.x
+                    deleteTv?.visibility = View.GONE
                 }
-                if (delBtn != null) {
-                    //左にスライドしてitemを削除
-                    if (abs(downX - upX) > 80 && upX < downX) {
-                        //削除buttonを表示
-                        delBtn.visibility = View.VISIBLE
-                        deleteTv = delBtn
-                        //itemviewを手に入れ、そこに動画を加える
-                        view = v
-                        return@OnTouchListener true //終了イベント
-                    }
-                    //削除操作を元に戻す
-                    if (abs(downX - upX) > 80 && upX > downX) {
-                        if (delBtn.visibility === View.VISIBLE) {
-                            delBtn.visibility = View.GONE
-                        }
-                        return@OnTouchListener true //終了イベント
-                    }
-                    return@OnTouchListener false //onitemClickが実行できるようにイベントを解放する
-                }
-                false
-            }
-            delBtn.setOnClickListener {
-                    if (deleteTv != null) {
-                        //削除ボタンをクリックすると、ボタンを隠す
-                        deleteTv!!.visibility = View.GONE
-                        //データを削除し、アニメーションを追加
-                        view?.let { it1 -> deleteItem(it1, position) }
-                    }
 
+                MotionEvent.ACTION_UP -> upX = event.x //x座標値の取得
             }
+            if (delBtn != null) {
+                //左にスライドしてitemを削除
+                if (abs(downX - upX) > 80 && upX < downX) {
+                    //削除buttonを表示
+                    delBtn.visibility = View.VISIBLE
+                    deleteTv = delBtn
+                    //itemviewを手に入れ、そこに動画を加える
+                    view = v
+                    return@OnTouchListener true //終了イベント
+                }
+                //削除操作を元に戻す
+                if (abs(downX - upX) > 80 && upX > downX) {
+                    if (delBtn.visibility === View.VISIBLE) {
+                        delBtn.visibility = View.GONE
+                    }
+                    return@OnTouchListener true //終了イベント
+                }
+                return@OnTouchListener false //onitemClickが実行できるようにイベントを解放する
+            }
+            false
+        }
+        delBtn.setOnClickListener {
+                if (deleteTv != null) {
+                    //削除ボタンをクリックすると、ボタンを隠す
+                    deleteTv!!.visibility = View.GONE
+                    //データを削除し、アニメーションを追加
+                    view?.let { it1 -> deleteItem(it1, position) }
+                }
 
         }
+    }
     private fun deleteItem(view: View, position: Int) {
         val deleteDialog = DeleteDialog()
         mDeleteDialog = deleteDialog.createDeleteDialog(mContext)
@@ -110,9 +113,9 @@ class CategoryListViewAdapter(context: Context, dataBase: MyDataBase?,
         })
     }
 
-    private fun colorChangeDialogShow(colorPosition:Int){
+    private fun colorChangeDialogShow(colorPosition:Int,colorList: ArrayList<String>){
         var colorChangeDialog = ColorChangeDialog()
-        colorChangeDialog.createColorDialog(mContext)
+        colorChangeDialog.createColorDialog(mContext,colorList)
         colorChangeDialog.setChangeColorClickListener(object :
             ColorChangeDialog.OnChangeColorClickListener {
                 override fun onChangeColorClick(view:View,position: Int,adapter: ColorChangeGridViewAdapter){

@@ -42,11 +42,16 @@ class CategoryAddDialog {
         categoryEdt = v.findViewById<View>(R.id.category_edt) as EditText
         colorLl = v.findViewById<View>(R.id.color_change_ll) as LinearLayout
         colorText = v.findViewById<View>(R.id.color_change) as TextView
-        colorLl?.setOnClickListener {
-            colorChange(context)
-        }
         val colorTemp = colorText?.background as ColorDrawable
         colorString = "#" + colorTemp.color.toHexString()
+        var colorsList:ArrayList<String> = ArrayList()
+        if(colorString!=null){
+            colorsList.add(colorString!!)
+        }
+        colorLl?.setOnClickListener {
+            colorChange(context,colorsList)
+        }
+
         val addCategoryDaoDialog = Dialog(context!!)
         addCategoryDaoDialog.setCancelable(true)
         addCategoryDaoDialog.setCanceledOnTouchOutside(true)
@@ -84,9 +89,9 @@ class CategoryAddDialog {
         mAddCategoryButtonClickListener?.onAddCategoryButtonClick(categoryData)
     }
 
-    private fun colorChange(context: Context?){
+    private fun colorChange(context: Context?,colors: ArrayList<String>){
         var colorChangeDialog = ColorChangeDialog()
-        colorChangeDialog.createColorDialog(context)
+        colorChangeDialog.createColorDialog(context,colors)
         colorChangeDialog.setChangeColorClickListener(object :
             ColorChangeDialog.OnChangeColorClickListener {
             override fun onChangeColorClick(view:View,position: Int,adapter: ColorChangeGridViewAdapter){

@@ -7,27 +7,40 @@ import android.graphics.drawable.ColorDrawable
 import android.view.*
 import android.widget.*
 import com.android.example.notification.R
+import com.android.example.notification.room.data.CategoryData
 import com.android.example.notification.ui.category.ColorChangeGridViewAdapter
 
 
 class ColorChangeDialog {
 
     private var mChangeColorClickListener: OnChangeColorClickListener? = null
-    private var colors :Array<String> =
-        arrayOf("#919191", "#FF6200EE", "#000080", "#00688B","#00EEEE",
-        "#05A724", "#5CAF5C", "#A1DA68", "#ffd700", "#ff8c00",
-        "#E78B02", "#E70219", "#692D19","#F20FEE","#3C4A5D",
-        "#37538B00", "#C05D4B1D", "#3B807A","#50344F","#C0513F19")
 
     private val listItem: ArrayList<Map<String, String>> = ArrayList()
-    fun createColorDialog(context: Context?): Dialog? {
+
+    private fun getRandomColors(colors: ArrayList<String>):ArrayList<String>{
+        var colorsList:ArrayList<String> = ArrayList()
+        var colorUtils = ColorUtils()
+        for (i in 1..20) {
+            var color = colorUtils.getRandColor()
+            while (colors.contains(color)) {
+                color = colorUtils.getRandColor()
+            }
+            if (color != null) {
+                colorsList.add(color)
+            }
+        }
+
+        return colorsList
+    }
+
+    fun createColorDialog(context: Context?,colors: ArrayList<String>): Dialog? {
         val inflater = LayoutInflater.from(context)
         val v: View = inflater.inflate(R.layout.dialog_change_color, null)
         val gridView = v.findViewById<View>(R.id.grid) as GridView
-
-        for (i in colors.indices) {
+        val colorsList = getRandomColors(colors)
+        for (i in colorsList.indices) {
             val map: MutableMap<String, String> = HashMap()
-            map["colors"] = colors[i]
+            map["colors"] = colorsList[i]
             listItem.add(map)
         }
         val adapter = ColorChangeGridViewAdapter(context, gridView,listItem)
