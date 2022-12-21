@@ -34,6 +34,7 @@ class CategoryListViewAdapter(context: Context, dataBase: MyDataBase?,
     private var mDeleteDialog: Dialog? = null
     private val  mDataBase =  dataBase
     val categoryDao = mDataBase?.categoryDao()
+    private var categoryList: ArrayList<CategoryData>? = null
 
         override fun onBindViewHolder(holder: BaseViewHolder<CategoryData>, position: Int) {
             holder.bindHolder(items[position])
@@ -126,5 +127,8 @@ class CategoryListViewAdapter(context: Context, dataBase: MyDataBase?,
         })
     }
 
-
+    fun setCategoryData(categoryData: CategoryData){
+        items.add(categoryData)
+        notifyDataSetChanged()
+    }
 }

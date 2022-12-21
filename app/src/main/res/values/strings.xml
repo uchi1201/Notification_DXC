@@ -16,6 +16,7 @@
     <string name="use_tx">利用額</string>
     <string name="percentage_tx">割合</string>
     <string name="category_btn">カテゴリ管理</string>
+    <string name="category_name">カテゴリ名</string>
     <string name="notification_btn">通知管理</string>
     <string name="notification_setting">通知設定</string>
     <string name="notification_list_title">通知一覧</string>
@@ -34,6 +35,7 @@
     <string name="del_btn">削除</string>
     <string name="cancel_btn">取消</string>
     <string name="category_list">カテゴリ一覧</string>
+    <string name="add_btn">登録</string>
     <string name="delete_warning">カテゴリを削除するとグラフからも削除され分類されていた支払いはその他に振り分けられます
 </string>
 </resources>

@@ -15,7 +15,9 @@ import androidx.room.Room
 import com.android.example.notification.R
 import com.android.example.notification.databinding.FragmentCategoryManagementBinding
 import com.android.example.notification.room.MyDataBase
+import com.android.example.notification.room.dao.CategoryDao
 import com.android.example.notification.room.data.CategoryData
+import com.android.example.notification.utils.CategoryAddDialog
 import com.android.example.notification.utils.LoadingDialogUtils
 import java.util.*
 import kotlin.collections.ArrayList
@@ -30,6 +32,8 @@ class CategoryManagementFragment : Fragment() {
     private val binding get() = _binding!!
     private var categoryManagementViewModel: CategoryManagementViewModel?= null
     private var dataBase: MyDataBase? = null
+    private var categoryDao : CategoryDao? = null
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -49,6 +53,7 @@ class CategoryManagementFragment : Fragment() {
             activity?.let { categoryManagementViewModel?.insertDataBaseData(it.applicationContext) }
         }
         categoryManagementViewModel?.getAllCategoryData()
+       categoryDao = dataBase?.categoryDao()
     }
 
     private fun initView(){
@@ -56,23 +61,39 @@ class CategoryManagementFragment : Fragment() {
         title.title.text = getString(R.string.category_btn)
         val categoryListView: RecyclerView = binding.categoryList
 
-            var init: (View, CategoryData) -> Unit = { v:View, d:CategoryData ->
-                var categoryView = v.findViewById<TextView>(R.id.category_tv)
-                var colorView=v.findViewById<TextView>(R.id.color_tv)
-                categoryView.text = d.category
-                colorView.setBackgroundColor(d.color.toColorInt())
+        var init: (View, CategoryData) -> Unit = { v:View, d:CategoryData ->
+            var categoryView = v.findViewById<TextView>(R.id.category_tv)
+            var colorView=v.findViewById<TextView>(R.id.color_tv)
+            categoryView.text = d.category
+            colorView.setBackgroundColor(d.color.toColorInt())
+        }
+        var adapter = context?.let { it1 ->
+            categoryManagementViewModel?.categoryDbData?.let {
+                CategoryListViewAdapter(it1,dataBase,R.layout.item_category_layout,
+                    it,init)
             }
-            var adapter = context?.let { it1 ->
-                categoryManagementViewModel?.categoryDbData?.let {
-                    CategoryListViewAdapter(it1,dataBase,R.layout.item_category_layout,
-                        it,init)
-                }
-            }
-            categoryListView.layoutManager= LinearLayoutManager(activity)
-            categoryListView.adapter=adapter
+        }
+        categoryListView.layoutManager= LinearLayoutManager(activity)
+        categoryListView.adapter=adapter
 
+        val addBtn = binding.addImg
+        addBtn.setOnClickListener {
+            val addCategoryAddDialog = CategoryAddDialog()
+            addCategoryAddDialog.createAddCategoryDialog(context)
+            addCategoryAddDialog.setAddCategoryButtonClickListener(object :
+                CategoryAddDialog.OnAddCategoryButtonClickListener {
+                override fun onAddCategoryButtonClick(categoryData: CategoryData?) {
+                    if (categoryData != null) {
+                        categoryManagementViewModel?.insertCategoryData(categoryData)
+                        adapter?.setCategoryData(categoryData)
+                    }
+                }
+            })
+
+        }
 
     }
+
 
 
 

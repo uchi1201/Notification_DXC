@@ -35,6 +35,7 @@ import com.android.example.notification.constant.MyConstant.Companion.CHANNEL_X_
 import com.android.example.notification.data.NotificationBean
 import com.android.example.notification.data.NotificationData
 import com.android.example.notification.databinding.FragmentNotificationManageBinding
+
 import com.android.example.notification.utils.CustomDialog
 import com.android.example.notification.utils.FilterDialog
 import com.android.example.notification.utils.LoadingDialogUtils
@@ -202,6 +203,7 @@ class NotificationManageFragment : Fragment() {
             }
         }
     }
+
     private fun notificationXChannelCreate(){
         // Create the NotificationOtherChannel
         val name = "XXX通知"
