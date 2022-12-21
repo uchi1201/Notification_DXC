@@ -21,15 +21,15 @@ class ColorChangeDialog {
         var colorsList:ArrayList<String> = ArrayList()
         var colorUtils = ColorUtils()
         for (i in 1..20) {
+            //20個のランダム色値を取得
             var color = colorUtils.getRandColor()
+            //取得した色値が存在する場合は再取得
             while (colors.contains(color)) {
                 color = colorUtils.getRandColor()
             }
-            if (color != null) {
-                colorsList.add(color)
-            }
+            //色値が追加
+            colorsList.add(color)
         }
-
         return colorsList
     }
 
@@ -37,6 +37,7 @@ class ColorChangeDialog {
         val inflater = LayoutInflater.from(context)
         val v: View = inflater.inflate(R.layout.dialog_change_color, null)
         val gridView = v.findViewById<View>(R.id.grid) as GridView
+        //ランダム色値を取得
         val colorsList = getRandomColors(colors)
         for (i in colorsList.indices) {
             val map: MutableMap<String, String> = HashMap()
@@ -78,16 +79,7 @@ class ColorChangeDialog {
 
 
     }
-    /**
-     * dialogを閉じる
-     *
-     * @param mDialogUtils
-     */
-    private fun closeDialog(mDialogUtils: Dialog?) {
-        if (mDialogUtils != null && mDialogUtils.isShowing) {
-            mDialogUtils.dismiss()
-        }
-    }
+
 
     open fun setChangeColorClickListener(listener: OnChangeColorClickListener) {
         mChangeColorClickListener = listener

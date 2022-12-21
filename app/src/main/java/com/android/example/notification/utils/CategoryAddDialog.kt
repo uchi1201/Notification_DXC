@@ -42,6 +42,8 @@ class CategoryAddDialog {
         categoryEdt = v.findViewById<View>(R.id.category_edt) as EditText
         colorLl = v.findViewById<View>(R.id.color_change_ll) as LinearLayout
         colorText = v.findViewById<View>(R.id.color_change) as TextView
+        val colorInit = ColorUtils().getRandomColorInt()
+        colorText?.setBackgroundColor(colorInit)
         val colorTemp = colorText?.background as ColorDrawable
         colorString = "#" + colorTemp.color.toHexString()
         var colorsList:ArrayList<String> = ArrayList()
@@ -66,7 +68,6 @@ class CategoryAddDialog {
             var a = categoryEdt!!.text.toString()
             var b = colorString.toString()
             categoryData = CategoryData(a, b)
-
             mAddCategoryButtonClickListener?.onAddCategoryButtonClick(categoryData)
             addCategoryDaoDialog.dismiss()
         }
@@ -79,15 +80,10 @@ class CategoryAddDialog {
         window.attributes = lp
         window.setWindowAnimations(R.style.PopWindowAnimStyle)
 
-
-
         addCategoryDaoDialog.show()
         return addCategoryDaoDialog
     }
 
-    private fun addCategory(categoryData: CategoryData?) {
-        mAddCategoryButtonClickListener?.onAddCategoryButtonClick(categoryData)
-    }
 
     private fun colorChange(context: Context?,colors: ArrayList<String>){
         var colorChangeDialog = ColorChangeDialog()
@@ -104,16 +100,7 @@ class CategoryAddDialog {
             }
         })
     }
-    /**
-     * dialogを閉じる
-     *
-     * @param mDialogUtils
-     */
-    private fun closeDialog(mDialogUtils: Dialog?) {
-        if (mDialogUtils != null && mDialogUtils.isShowing) {
-            mDialogUtils.dismiss()
-        }
-    }
+
 
     open fun setAddCategoryButtonClickListener(listener: OnAddCategoryButtonClickListener) {
         mAddCategoryButtonClickListener = listener

@@ -4,14 +4,15 @@ import android.graphics.Color
 import java.util.*
 
 class ColorUtils {
-    fun randomColor(): Int {
+    fun getRandomColorInt(): Int {
         val random = Random()
-        val red: Int = random.nextInt(200)
-        val green: Int = random.nextInt(200)
-        val blue: Int = random.nextInt(200)
+        val red = random.nextInt(200)
+        val green = random.nextInt(200)
+        val blue = random.nextInt(200)
         return Color.rgb(red, green, blue)
     }
-    fun getRandColor(): String? {
+
+    fun getRandColor(): String {
         var R: String
         var G: String
         var B: String

@@ -132,6 +132,7 @@ class CategoryListViewAdapter(context: Context, dataBase: MyDataBase?,
 
     fun setCategoryData(categoryData: CategoryData){
         items.add(categoryData)
+        categoryDao?.insert(categoryData)
         notifyDataSetChanged()
     }
 }
