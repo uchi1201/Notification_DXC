@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginBottom="60dp"
     tools:context=".ui.category.CategoryManagementFragment">
 
     <include android:id="@+id/title_setting"
@@ -22,13 +23,14 @@
         />
     <ImageView
         android:id="@+id/add_img"
-        android:layout_width="35dp"
+        android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_alignParentRight="true"
         android:layout_marginRight="30dp"
         android:layout_alignBottom="@id/category_tv"
         android:src="@mipmap/icon_plus"
         android:background="@drawable/add_bg"/>
+
     <View
         android:id="@+id/line1_v"
         android:layout_width="match_parent"
@@ -47,5 +49,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_below="@id/line1_v"
+        android:scrollbars="vertical"
+        android:fadeScrollbars="true"
         />
 </RelativeLayout>

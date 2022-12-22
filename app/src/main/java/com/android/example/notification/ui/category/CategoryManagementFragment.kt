@@ -1,5 +1,6 @@
 package com.android.example.notification.ui.category
 
+import android.app.AlertDialog
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -18,6 +19,7 @@ import com.android.example.notification.room.MyDataBase
 import com.android.example.notification.room.dao.CategoryDao
 import com.android.example.notification.room.data.CategoryData
 import com.android.example.notification.utils.CategoryAddDialog
+import com.android.example.notification.utils.ColorChangeDialog
 import com.android.example.notification.utils.LoadingDialogUtils
 import java.util.*
 import kotlin.collections.ArrayList
@@ -84,17 +86,35 @@ class CategoryManagementFragment : Fragment() {
         categoryListView.adapter=adapter
 
         val addBtn = binding.addImg
+
         addBtn.setOnClickListener {
             val addCategoryAddDialog = CategoryAddDialog()
-            addCategoryAddDialog.createAddCategoryDialog(context)
-            addCategoryAddDialog.setAddCategoryButtonClickListener(object :
-                CategoryAddDialog.OnAddCategoryButtonClickListener {
-                override fun onAddCategoryButtonClick(categoryData: CategoryData?) {
-                    if (categoryData != null) {
-                        adapter?.setCategoryData(categoryData)
-                    }
+            var colorList: ArrayList<String> = arrayListOf()
+            if (adapter != null) {
+                for(item in adapter.items){
+                    colorList.add(item.color.uppercase())
                 }
-            })
+            }
+            val colors = ColorChangeDialog().getColors(colorList)
+            if (!colors.isNullOrEmpty()){
+                addCategoryAddDialog.createAddCategoryDialog(context,colorList)
+                addCategoryAddDialog.setAddCategoryButtonClickListener(object :
+                    CategoryAddDialog.OnAddCategoryButtonClickListener {
+                    override fun onAddCategoryButtonClick(categoryData: CategoryData?) {
+                        if (categoryData != null) {
+                            adapter?.setCategoryData(categoryData)
+                        }
+                    }
+                })
+            } else {
+                AlertDialog.Builder(context)
+                    .setMessage("登録上限に達したように、登録できません！")
+                    .setTitle("エラー発生")
+                    .setNeutralButton("取消", null)
+                    .create()
+                    .show()
+            }
+
         }
 
     }

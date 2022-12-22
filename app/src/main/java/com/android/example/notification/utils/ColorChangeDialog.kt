@@ -1,13 +1,12 @@
 package com.android.example.notification.utils
 
+import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
+import android.content.DialogInterface
 import android.view.*
 import android.widget.*
 import com.android.example.notification.R
-import com.android.example.notification.room.data.CategoryData
 import com.android.example.notification.ui.category.ColorChangeGridViewAdapter
 
 
@@ -16,6 +15,12 @@ class ColorChangeDialog {
     private var mChangeColorClickListener: OnChangeColorClickListener? = null
 
     private val listItem: ArrayList<Map<String, String>> = ArrayList()
+
+    var totalColors :Array<String> =
+        arrayOf("#FF919191", "#FF6200EE", "#FF000080", "#FF00688B","#FF00EEEE",
+            "#FF05A724", "#FF5CAF5C", "#FFA1DA68", "#FFFFD700", "#FFFF8C00",
+            "#FFE78B02", "#FFE70219", "#FF692D19","#FFF20FEE","#FF3C4A5D",
+            "#FF538B00", "#FF5D4B1D", "#FF3B807A","#FF50344F","#FF513F19")
 
     private fun getRandomColors(colors: ArrayList<String>):ArrayList<String>{
         var colorsList:ArrayList<String> = ArrayList()
@@ -33,16 +38,30 @@ class ColorChangeDialog {
         return colorsList
     }
 
+     fun getColors(colors: ArrayList<String>):ArrayList<String>?{
+        var colorsList:ArrayList<String>? = ArrayList()
+        for (item in totalColors) {
+            //取得した色値が存在しない場合
+            if (!colors.contains(item)) {
+                //色値が追加
+                colorsList?.add(item)
+            }
+        }
+        return colorsList
+    }
+
     fun createColorDialog(context: Context?,colors: ArrayList<String>): Dialog? {
         val inflater = LayoutInflater.from(context)
         val v: View = inflater.inflate(R.layout.dialog_change_color, null)
         val gridView = v.findViewById<View>(R.id.grid) as GridView
-        //ランダム色値を取得
-        val colorsList = getRandomColors(colors)
-        for (i in colorsList.indices) {
-            val map: MutableMap<String, String> = HashMap()
-            map["colors"] = colorsList[i]
-            listItem.add(map)
+        //色値を取得
+        val colorsList = getColors(colors)
+        if(colorsList!=null) {
+            for (i in colorsList.indices) {
+                val map: MutableMap<String, String> = HashMap()
+                map["colors"] = colorsList[i]
+                listItem.add(map)
+            }
         }
         val adapter = ColorChangeGridViewAdapter(context, gridView,listItem)
         gridView.adapter = adapter
@@ -71,6 +90,7 @@ class ColorChangeDialog {
                     changeColor(context,view,position,adapter)
                 }
             }
+
         return changeColorDialog
     }
 

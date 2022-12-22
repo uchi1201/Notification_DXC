@@ -1,5 +1,6 @@
 package com.android.example.notification.utils
 
+import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
 import android.graphics.Color
@@ -33,7 +34,7 @@ class CategoryAddDialog {
     private var categoryData: CategoryData? = null
     private var colorString : String? = null
 
-    fun createAddCategoryDialog(context: Context?): Dialog? {
+    fun createAddCategoryDialog(context: Context?,colorsList: ArrayList<String>): Dialog? {
         val inflater = LayoutInflater.from(context)
         val v: View = inflater.inflate(R.layout.dialog_category_add, null)
         val layout = v
@@ -42,14 +43,8 @@ class CategoryAddDialog {
         categoryEdt = v.findViewById<View>(R.id.category_edt) as EditText
         colorLl = v.findViewById<View>(R.id.color_change_ll) as LinearLayout
         colorText = v.findViewById<View>(R.id.color_change) as TextView
-        val colorInit = ColorUtils().getRandomColorInt()
-        colorText?.setBackgroundColor(colorInit)
-        val colorTemp = colorText?.background as ColorDrawable
-        colorString = "#" + colorTemp.color.toHexString()
-        var colorsList:ArrayList<String> = ArrayList()
-        if(colorString!=null){
-            colorsList.add(colorString!!)
-        }
+
+
         colorLl?.setOnClickListener {
             colorChange(context,colorsList)
         }
@@ -71,7 +66,12 @@ class CategoryAddDialog {
             mAddCategoryButtonClickListener?.onAddCategoryButtonClick(categoryData)
             addCategoryDaoDialog.dismiss()
         }
-
+        val colorInit = getInitColorString(colorsList)
+        if(colorInit != "0") {
+            colorText?.setBackgroundColor(colorInit.toColorInt())
+            val colorTemp = colorText?.background as ColorDrawable
+            colorString = "#" + colorTemp.color.toHexString()
+        }
         val window = addCategoryDaoDialog.window
         val lp = window!!.attributes
         lp.width = WindowManager.LayoutParams.MATCH_PARENT
@@ -101,7 +101,20 @@ class CategoryAddDialog {
         })
     }
 
-
+    private fun getInitColorString(colorsList: ArrayList<String>): String{
+        var colors:ArrayList<String>? = ArrayList()
+        for (item in ColorChangeDialog().totalColors) {
+            if (!colorsList.contains(item)) {
+                colors?.add(item)
+            }
+        }
+        var result = if(colors.isNullOrEmpty()){
+            "0"
+        } else {
+            colors[0]
+        }
+        return result
+    }
     open fun setAddCategoryButtonClickListener(listener: OnAddCategoryButtonClickListener) {
         mAddCategoryButtonClickListener = listener
     }
