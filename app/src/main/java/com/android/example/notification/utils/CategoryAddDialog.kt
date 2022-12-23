@@ -46,6 +46,7 @@ class CategoryAddDialog {
 
 
         colorLl?.setOnClickListener {
+            //登録の色の押下イベント処理、色選択ダイアログを表示
             colorChange(context,colorsList)
         }
 
@@ -58,20 +59,26 @@ class CategoryAddDialog {
                 LinearLayout.LayoutParams.MATCH_PARENT
             )
         )
-
+        //登録ボタンのイベント処理
         addButton?.setOnClickListener {
+            //該当入力したカテゴリーと色を取得
             var a = categoryEdt!!.text.toString()
             var b = colorString.toString()
             categoryData = CategoryData(a, b)
+            //入力したカテゴリーと色は登録ボタンのCallback、カテゴリー管理画面へ戻ってデータを処理
             mAddCategoryButtonClickListener?.onAddCategoryButtonClick(categoryData)
             addCategoryDaoDialog.dismiss()
         }
+        //初期ダイアログを表示時、色の表示は色変更で出るポップアップの第一個色値
         val colorInit = getInitColorString(colorsList)
         if(colorInit != "0") {
+            //色変更で出るポップアップがデータがある場合、色の表示
             colorText?.setBackgroundColor(colorInit.toColorInt())
+            //下記のcolorStringは登録ボタンを押下時、該当選択色を取得設定
             val colorTemp = colorText?.background as ColorDrawable
             colorString = "#" + colorTemp.color.toHexString()
         }
+
         val window = addCategoryDaoDialog.window
         val lp = window!!.attributes
         lp.width = WindowManager.LayoutParams.MATCH_PARENT
@@ -87,7 +94,9 @@ class CategoryAddDialog {
 
     private fun colorChange(context: Context?,colors: ArrayList<String>){
         var colorChangeDialog = ColorChangeDialog()
+        //TextView色を押下して、色変更で出るポップアップを表示
         colorChangeDialog.createColorDialog(context,colors)
+        //色変更で出るポップアップの色を選択した後、TextView色の変更処理
         colorChangeDialog.setChangeColorClickListener(object :
             ColorChangeDialog.OnChangeColorClickListener {
             override fun onChangeColorClick(view:View,position: Int,adapter: ColorChangeGridViewAdapter){

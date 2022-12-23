@@ -40,10 +40,12 @@ class CategoryListViewAdapter(context: Context, dataBase: MyDataBase?,
         holder.bindHolder(items[position])
        var colorList: ArrayList<String> = arrayListOf()
         for(i in items.indices){
+            //既にリストに選択された色を取得
             colorList.add(items[i].color)
         }
         var colorChange =  holder.itemView.findViewById<TextView>(R.id.color_tv)
         colorChange?.setOnClickListener{
+            //色選択ダイアログを表示（選択中のリストPosition、既に存在色リスト）
             colorChangeDialogShow(position,colorList)
         }
         val delBtn = holder.itemView.findViewById<TextView>(R.id.tv_item_delete)
@@ -90,9 +92,12 @@ class CategoryListViewAdapter(context: Context, dataBase: MyDataBase?,
     }
     private fun deleteItem(view: View, position: Int) {
         val deleteDialog = DeleteDialog()
+        //削除ダイアログを作成
         mDeleteDialog = deleteDialog.createDeleteDialog(mContext)
         animation = AnimationUtils.loadAnimation(mContext, R.anim.push_out)
+        //ダイアログ削除処理
         deleteDialog.delete(view,position,mDeleteDialog)
+        //削除ボタンのクリックCallback
         deleteDialog.setDeleteButtonClickListener(object :
             DeleteDialog.OnDeleteButtonClickListener {
             override fun onDeleteButtonClick(view:View,Position: Int){
@@ -105,6 +110,7 @@ class CategoryListViewAdapter(context: Context, dataBase: MyDataBase?,
                     override fun onAnimationRepeat(animation: Animation) {}
                     override fun onAnimationEnd(animation: Animation) {
                         //動画実行完了
+                        //リストを更新
                         items.removeAt(position)
                         notifyDataSetChanged()
                     }
@@ -115,16 +121,22 @@ class CategoryListViewAdapter(context: Context, dataBase: MyDataBase?,
 
     private fun colorChangeDialogShow(colorPosition:Int,colorList: ArrayList<String>){
         var colorChangeDialog = ColorChangeDialog()
+        //ダイアログを作成
         colorChangeDialog.createColorDialog(mContext,colorList)
+        //選択された色のCallback
         colorChangeDialog.setChangeColorClickListener(object :
             ColorChangeDialog.OnChangeColorClickListener {
                 override fun onChangeColorClick(view:View,position: Int,adapter: ColorChangeGridViewAdapter){
+                    //選択された色はリスト表示画面へ戻って色を変更
                     val item = adapter.getItem(position)
                     val colorString = item["colors"]
                     if (colorString != null) {
+                        //該当リストアイテムの色を変更
                         items[colorPosition].color=colorString
+                        //DBデータを更新
                         categoryDao?.updateColorForCategoryData(colorString,items[colorPosition].category)
                     }
+                    //リストへ反映
                     notifyDataSetChanged()
                 }
         })

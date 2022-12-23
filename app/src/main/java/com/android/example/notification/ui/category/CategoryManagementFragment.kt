@@ -53,23 +53,16 @@ class CategoryManagementFragment : Fragment() {
             //DBのデータがない時データ追加
             activity?.let { categoryManagementViewModel?.insertDataBaseData(it.applicationContext) }
         }
+        //DBから全部データを取得
         categoryManagementViewModel?.getAllCategoryData()
-
     }
 
-    override fun onResume() {
-        super.onResume()
-        if(categoryManagementViewModel?.categoryDbData?.size == 0){
-            //DBのデータがない時データ追加
-            activity?.let { categoryManagementViewModel?.insertDataBaseData(it.applicationContext) }
-        }
-    }
 
     private fun initView(){
         val title = binding.titleSetting
         title.title.text = getString(R.string.category_btn)
         val categoryListView: RecyclerView = binding.categoryList
-
+        //カテゴリーのリスト表示
         var init: (View, CategoryData) -> Unit = { v:View, d:CategoryData ->
             var categoryView = v.findViewById<TextView>(R.id.category_tv)
             var colorView=v.findViewById<TextView>(R.id.color_tv)
@@ -86,27 +79,33 @@ class CategoryManagementFragment : Fragment() {
         categoryListView.adapter=adapter
 
         val addBtn = binding.addImg
-
+        //カテゴリー管理画面のAddボタンイベント処理
         addBtn.setOnClickListener {
             val addCategoryAddDialog = CategoryAddDialog()
             var colorList: ArrayList<String> = arrayListOf()
             if (adapter != null) {
                 for(item in adapter.items){
+                    //リスト既に存在の色を抽出、動的色動作用
                     colorList.add(item.color.uppercase())
                 }
             }
+            //リスト存在以外の色を取得
             val colors = ColorChangeDialog().getColors(colorList)
             if (!colors.isNullOrEmpty()){
+                //カテゴリー登録ダイアログを表示
                 addCategoryAddDialog.createAddCategoryDialog(context,colorList)
+                //カテゴリー登録ダイアログの登録ボタンのイベント処理
                 addCategoryAddDialog.setAddCategoryButtonClickListener(object :
                     CategoryAddDialog.OnAddCategoryButtonClickListener {
                     override fun onAddCategoryButtonClick(categoryData: CategoryData?) {
                         if (categoryData != null) {
+                            //登録した後リストの表示とDBデータの更新
                             adapter?.setCategoryData(categoryData)
                         }
                     }
                 })
             } else {
+                //登録上限に達した、エラー発生ダイアログを表示
                 AlertDialog.Builder(context)
                     .setMessage("登録上限に達したように、登録できません！")
                     .setTitle("エラー発生")
