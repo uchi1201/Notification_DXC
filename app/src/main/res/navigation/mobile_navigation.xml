@@ -31,7 +31,16 @@
     <fragment
         android:id="@+id/navigation_manage"
         android:name="com.android.example.notification.ui.notification.NotificationManageFragment"
-        tools:layout="@layout/fragment_notification_manage"/>
+        tools:layout="@layout/fragment_notification_manage">
+    <action
+        android:id="@+id/division_action"
+        app:destination="@id/navigation_division"
+        />
+    </fragment>
+    <fragment
+        android:id="@+id/navigation_division"
+        android:name="com.android.example.notification.ui.notification.division.NotificationDivisionFragment"
+        tools:layout="@layout/fragment_notification_division"/>
     <fragment
         android:id="@+id/navigation_category_manage"
         android:name="com.android.example.notification.ui.category.CategoryManagementFragment"

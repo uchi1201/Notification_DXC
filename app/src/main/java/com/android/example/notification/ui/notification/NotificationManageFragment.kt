@@ -24,6 +24,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -35,6 +36,8 @@ import com.android.example.notification.constant.MyConstant.Companion.CHANNEL_X_
 import com.android.example.notification.data.NotificationBean
 import com.android.example.notification.data.NotificationData
 import com.android.example.notification.databinding.FragmentNotificationManageBinding
+import com.android.example.notification.ui.base.list.BaseRecycleViewAdapter
+import com.android.example.notification.utils.ColorChangeDialog
 
 import com.android.example.notification.utils.CustomDialog
 import com.android.example.notification.utils.FilterDialog
@@ -266,6 +269,12 @@ class NotificationManageFragment : Fragment() {
                 )
             binding.notificationList.layoutManager = LinearLayoutManager(activity)
             binding.notificationList.adapter = adapter
+            adapter.setRecyclerItemClickListener(object :
+                BaseRecycleViewAdapter.OnRecyclerItemClickListener {
+                override fun onRecyclerItemClick(view: View, Position: Int) {
+                    findNavController().navigate(R.id.division_action)
+                }
+                })
         } else{
             binding.notificationList.visibility = View.GONE
             binding.errorMsg.visibility = View.VISIBLE

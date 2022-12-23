@@ -7,19 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentTransaction
-import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import com.android.example.notification.R
 import com.android.example.notification.databinding.FragmentSettingBinding
-import com.android.example.notification.ui.notification.NotificationManageFragment
-import org.xmlpull.v1.XmlPullParserFactory.newInstance
-import java.lang.reflect.Array.newInstance
-import javax.xml.datatype.DatatypeFactory.newInstance
-import javax.xml.parsers.DocumentBuilderFactory.newInstance
-import javax.xml.parsers.SAXParserFactory.newInstance
 
 
 class SettingFragment : Fragment() {
