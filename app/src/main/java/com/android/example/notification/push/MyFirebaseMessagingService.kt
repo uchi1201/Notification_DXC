@@ -67,7 +67,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         views.setTextViewText(R.id.date,messageData?.get("date"))
         views.setTextViewText(R.id.shop_name_txt,messageData?.get("address"))
         views.setTextViewText(R.id.category_tx,messageData?.get("category"))
-        views.setTextViewText(R.id.money_tx,messageData?.get("money"))
+        views.setTextViewText(R.id.money_tx,messageData?.get("money")+"円")
         val penIntent =getPendingIntent(this,messageData)
         val notificationBuilder = NotificationCompat.Builder(this, MyConstant.CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_notifications_black_24dp)

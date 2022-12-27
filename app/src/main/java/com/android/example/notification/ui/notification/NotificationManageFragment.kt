@@ -20,6 +20,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
+import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
@@ -250,15 +251,13 @@ class NotificationManageFragment : Fragment() {
             notificationsListData.add(notificationData)
             var init: (View, NotificationData) -> Unit = { v: View, d: NotificationData ->
                 var dateView = v.findViewById<TextView>(R.id.date)
-                var shopNameView = v.findViewById<TextView>(
-                    R.id.shop_name_txt
-                )
+                var shopNameView = v.findViewById<TextView>(R.id.shop_name_txt)
                 var categoryView = v.findViewById<TextView>(R.id.category_tx)
                 var moneyView = v.findViewById<TextView>(R.id.money_tx)
                 dateView.text = d.date
                 shopNameView.text = d.shopName
                 categoryView.text = d.category
-                moneyView.text = d.money
+                moneyView.text = d.money+"円"
             }
             binding.notificationList.visibility = View.VISIBLE
             binding.errorMsg.visibility = View.GONE
@@ -272,7 +271,14 @@ class NotificationManageFragment : Fragment() {
             adapter.setRecyclerItemClickListener(object :
                 BaseRecycleViewAdapter.OnRecyclerItemClickListener {
                 override fun onRecyclerItemClick(view: View, Position: Int) {
-                    findNavController().navigate(R.id.division_action)
+
+                    val bundle = bundleOf(
+                        "money" to adapter.items[Position].money,
+                        "date" to adapter.items[Position].date,
+                        "shopName" to adapter.items[Position].shopName,
+                        "category" to adapter.items[Position].category
+                    )
+                    findNavController().navigate(R.id.division_action,bundle)
                 }
                 })
         } else{

@@ -15,19 +15,19 @@
         app:cardElevation="12dp"
         android:layout_width="match_parent"
         android:layout_margin="20dp"
-        android:layout_height="200dp"
+        android:layout_height="180dp"
         >
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
             >
             <TextView
                 android:id="@+id/date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
                 android:layout_centerHorizontal="true"
-                android:textSize="30sp"
+                android:textSize="25sp"
                 android:text="2022/09/27  12:00"
                 />
             <EditText
@@ -36,8 +36,9 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/date"
                 android:layout_marginLeft="200dp"
-                android:textSize="35sp"
+                android:textSize="30sp"
                 android:textStyle="bold"
+                android:inputType="number"
                 android:text="2100" />
             <TextView
                 android:layout_width="wrap_content"
@@ -45,8 +46,9 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="20dp"
                 android:layout_toRightOf="@id/money_edit"
-                android:textSize="35sp"
+                android:textSize="30sp"
                 android:textStyle="bold"
+                android:textColor="@color/black"
                 android:layout_alignTop="@id/money_edit"
                 android:text="円"
                 />
@@ -60,14 +62,14 @@
                     android:id="@+id/shop_name_tx"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="30sp"
+                    android:textSize="25sp"
                     android:text="店舗名" />
                 <TextView
                     android:id="@+id/shop_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
-                    android:textSize="30sp"
+                    android:textSize="25sp"
                     android:text="コンビニ" />
 
         </LinearLayout>

@@ -1,16 +1,14 @@
 package com.android.example.notification.ui.notification.division
 
+import android.content.Context
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import androidx.fragment.app.Fragment
 import com.android.example.notification.databinding.FragmentNotificationDivisionBinding
-
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
 /**
  * A simple [Fragment] subclass.
@@ -20,14 +18,72 @@ private const val ARG_PARAM2 = "param2"
 class NotificationDivisionFragment : Fragment() {
     private var _binding: FragmentNotificationDivisionBinding? = null
     private val binding get() = _binding!!
+    private  var categorySpList: ArrayList<String> = ArrayList()
+    private var mCategory:String = ""
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentNotificationDivisionBinding.inflate(inflater, container, false)
+        initView()
 
         return binding.root
     }
+
+    private fun initView() {
+        val money = arguments?.getString("money")
+        val date1 = arguments?.getString("date")
+        val shopName = arguments?.getString("shopName")
+        val category = arguments?.getString("category")
+        binding.date.text = date1
+        binding.moneyEdit.setText(money)
+        binding.shopName.text = shopName
+        val categorySp = binding.categorySp
+        //Spinnerのデータ取得
+        getCategoryList()
+        var categoryAdapter: ArrayAdapter<String>? =
+            context?.let { ArrayAdapter(it,android.R.layout.simple_list_item_1,categorySpList) }
+        //配列アダプタのレイアウトスタイルを設定する
+        categoryAdapter?.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        //ドロップダウンボックスの配列アダプタの設定
+        categorySp.adapter = categoryAdapter
+        //ドロップダウン・ボックスのデフォルトの表示の最初の項目の設定
+        if(categorySpList.contains(category)) {
+            for (index in categorySpList.indices) {
+                if (categorySpList[index] == category) {
+                    categorySp.setSelection(index)
+                }
+            }
+        } else {
+            if (category != null) {
+                categorySpList.add(category)
+                 categorySp.setSelection(categorySpList.size-1)
+            }
+
+        }
+        categorySp.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View, pos: Int, id: Long) {
+                mCategory = categorySp.getItemAtPosition(pos).toString()
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                //Todo
+            }
+
+        }
+
+    }
+
+
+    private fun getCategoryList() {
+        //Todo サーバー側からもらうか
+        //一旦仮データ
+        categorySpList.add("食費")
+        categorySpList.add("水道")
+        categorySpList.add("その他")
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
