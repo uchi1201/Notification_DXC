@@ -8,7 +8,11 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
+import androidx.navigation.Navigation
+import com.android.example.notification.MainApplication
 import com.android.example.notification.databinding.FragmentNotificationDivisionBinding
+import com.android.example.notification.room.NotificationDataBase
+import com.android.example.notification.room.data.NotificationTableData
 
 /**
  * A simple [Fragment] subclass.
@@ -20,12 +24,14 @@ class NotificationDivisionFragment : Fragment() {
     private val binding get() = _binding!!
     private  var categorySpList: ArrayList<String> = ArrayList()
     private var mCategory:String = ""
+    private var dataBase: NotificationDataBase? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentNotificationDivisionBinding.inflate(inflater, container, false)
+        dataBase = MainApplication.instance().notificationDataBase
         initView()
 
         return binding.root
@@ -36,6 +42,7 @@ class NotificationDivisionFragment : Fragment() {
         val date1 = arguments?.getString("date")
         val shopName = arguments?.getString("shopName")
         val category = arguments?.getString("category")
+
         binding.date.text = date1
         binding.moneyEdit.setText(money)
         binding.shopName.text = shopName
@@ -72,6 +79,20 @@ class NotificationDivisionFragment : Fragment() {
             }
 
         }
+
+        binding.addBtn.setOnClickListener {
+            val moneyEdit = binding.moneyEdit.text.toString()
+
+            var notificationTableData = NotificationTableData(
+                shopName = shopName!!,
+                dateTime = date1,
+                category = mCategory,
+                money = moneyEdit
+            )
+            dataBase?.notificationDao()?.insert(notificationTableData)
+            view?.let { it1 -> Navigation.findNavController(it1).navigateUp() }
+        }
+
 
     }
 

@@ -28,8 +28,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.room.Room
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.android.example.notification.MainActivity
+import com.android.example.notification.MainApplication
 import com.android.example.notification.R
 import com.android.example.notification.constant.MyConstant.Companion.CHANNEL_ID
 import com.android.example.notification.constant.MyConstant.Companion.CHANNEL_OTHER_ID
@@ -37,6 +39,10 @@ import com.android.example.notification.constant.MyConstant.Companion.CHANNEL_X_
 import com.android.example.notification.data.NotificationBean
 import com.android.example.notification.data.NotificationData
 import com.android.example.notification.databinding.FragmentNotificationManageBinding
+import com.android.example.notification.room.MyDataBase
+import com.android.example.notification.room.NotificationDataBase
+import com.android.example.notification.room.dao.NotificationDao
+import com.android.example.notification.room.data.NotificationTableData
 import com.android.example.notification.ui.base.list.BaseRecycleViewAdapter
 import com.android.example.notification.utils.ColorChangeDialog
 
@@ -50,14 +56,16 @@ import com.google.android.material.snackbar.Snackbar
  * create an instance of this fragment.
  */
 class NotificationManageFragment : Fragment() {
-    private lateinit var notificationsViewModel: NotificationManageViewModel
+    private  var notificationsViewModel: NotificationManageViewModel? = null
     private var mLoadingDialog: Dialog? = null
     private var _binding: FragmentNotificationManageBinding? = null
     private val binding get() = _binding!!
     private lateinit var frequencylist: Array<String>
     private lateinit var frequencylistSub: Array<String>
-    private val notificationsListData = mutableListOf<NotificationData>()
+    private var notificationsListData = mutableListOf<NotificationTableData>()
     var isNotificationChannelEnable: Boolean = false
+    private var dataBase: NotificationDataBase? = null
+    var notificationDao: NotificationDao? = null
 
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -86,6 +94,7 @@ class NotificationManageFragment : Fragment() {
     ): View? {
         _binding = FragmentNotificationManageBinding.inflate(inflater, container, false)
         val root: View = binding.root
+        dataBase = MainApplication.instance().notificationDataBase
         initData()
         initView()
         notificationChannelCreate()
@@ -109,9 +118,10 @@ class NotificationManageFragment : Fragment() {
         notificationDataSet()
     }
     private fun initData(){
-        notificationsViewModel =
-            ViewModelProvider(this)[NotificationManageViewModel::class.java]
-        activity.let {notificationsViewModel.getNotificationsList()}
+        notificationDao = dataBase?.notificationDao()
+        notificationsViewModel = dataBase?.let { NotificationManageViewModel(it) }
+
+        activity.let {notificationsViewModel?.getNotificationDataFromDB()}
     }
     private fun initView() {
         //PullDownRefresh時DiaLog表示用
@@ -133,7 +143,7 @@ class NotificationManageFragment : Fragment() {
         filterImage.setOnClickListener{
             context?.let { it1 -> filterDialogShow(it1,isNotificationChannelEnable) }
         }
-        notificationsViewModel.loadingLiveData.observe(viewLifecycleOwner) {
+        notificationsViewModel?.loadingLiveData?.observe(viewLifecycleOwner) {
             if (it) {
                 mLoadingDialog = loadingDialog.createLoadingDialog(activity, "Loading")
             } else {
@@ -141,9 +151,9 @@ class NotificationManageFragment : Fragment() {
             }
         }
         swipeRefreshLayout.setOnRefreshListener {
-            notificationsViewModel.getPTRNotificationsList()
+            notificationsViewModel?.getPTRNotificationsList()
         }
-        notificationsViewModel.pullToRefreshLiveData.observe(viewLifecycleOwner) {
+        notificationsViewModel?.pullToRefreshLiveData?.observe(viewLifecycleOwner) {
             swipeRefreshLayout.isRefreshing = it
         }
     }
@@ -243,18 +253,28 @@ class NotificationManageFragment : Fragment() {
         val date1 = arguments?.getString("date")
         val address = arguments?.getString("address")
         val category = arguments?.getString("category")
-        if(arguments!=null){
-            notificationsListData.clear()
+        if(arguments != null) {
             binding.notificationList.visibility = View.VISIBLE
             binding.errorMsg.visibility = View.GONE
-            var notificationData = NotificationData(date = date1!!, shopName = address!!,category = category!!,money = money!!)
-            notificationsListData.add(notificationData)
-            var init: (View, NotificationData) -> Unit = { v: View, d: NotificationData ->
+
+            var notificationTableData = NotificationTableData(
+                shopName = address!!,
+                dateTime = date1,
+                category = category,
+                money = money
+            )
+            //Roomデータベースに追加
+            notificationDao?.insert(notificationTableData)
+        }
+            //Roomデータベースからデータを取得
+            notificationsListData = notificationDao?.getAll() as MutableList<NotificationTableData>
+            if(notificationsListData.isNotEmpty()){
+            var init: (View, NotificationTableData) -> Unit = { v: View, d: NotificationTableData ->
                 var dateView = v.findViewById<TextView>(R.id.date)
                 var shopNameView = v.findViewById<TextView>(R.id.shop_name_txt)
                 var categoryView = v.findViewById<TextView>(R.id.category_tx)
                 var moneyView = v.findViewById<TextView>(R.id.money_tx)
-                dateView.text = d.date
+                dateView.text = d.dateTime
                 shopNameView.text = d.shopName
                 categoryView.text = d.category
                 moneyView.text = d.money+"円"
@@ -264,17 +284,16 @@ class NotificationManageFragment : Fragment() {
             var adapter =
                 NotificationListViewAdapter(
                     R.layout.notification_item,
-                    notificationsListData as ArrayList<NotificationData>, init
+                    notificationsListData as ArrayList<NotificationTableData>, init
                 )
             binding.notificationList.layoutManager = LinearLayoutManager(activity)
             binding.notificationList.adapter = adapter
             adapter.setRecyclerItemClickListener(object :
                 BaseRecycleViewAdapter.OnRecyclerItemClickListener {
                 override fun onRecyclerItemClick(view: View, Position: Int) {
-
                     val bundle = bundleOf(
                         "money" to adapter.items[Position].money,
-                        "date" to adapter.items[Position].date,
+                        "date" to adapter.items[Position].dateTime,
                         "shopName" to adapter.items[Position].shopName,
                         "category" to adapter.items[Position].category
                     )

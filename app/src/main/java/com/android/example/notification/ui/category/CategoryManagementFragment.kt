@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
+import com.android.example.notification.MainApplication
 import com.android.example.notification.R
 import com.android.example.notification.databinding.FragmentCategoryManagementBinding
 import com.android.example.notification.room.MyDataBase
@@ -33,7 +34,7 @@ class CategoryManagementFragment : Fragment() {
     private var _binding: FragmentCategoryManagementBinding? = null
     private val binding get() = _binding!!
     private var categoryManagementViewModel: CategoryManagementViewModel?= null
-    private var dataBase: MyDataBase? = null
+    private var dataBase:MyDataBase? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -41,13 +42,13 @@ class CategoryManagementFragment : Fragment() {
     ): View? {
         _binding = FragmentCategoryManagementBinding.inflate(inflater, container, false)
         val root: View = binding.root
+        dataBase = MainApplication.instance().categoryDataBase
         initData()
         initView()
         return root
     }
 
     private fun initData(){
-        dataBase = context?.let { Room.databaseBuilder(it, MyDataBase::class.java,"myCategory.db").allowMainThreadQueries().build() }
         categoryManagementViewModel = dataBase?.let { CategoryManagementViewModel(it) }
         if(categoryManagementViewModel?.categoryDbData?.size == 0){
             //DBのデータがない時データ追加

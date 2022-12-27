@@ -3,15 +3,21 @@ package com.android.example.notification
 import android.app.Application
 import android.util.Log
 import android.widget.Toast
+import androidx.room.Room
+import com.android.example.notification.room.MyDataBase
+import com.android.example.notification.room.NotificationDataBase
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.messaging.FirebaseMessaging
 
 class MainApplication: Application()  {
 
     var spinnerMonth:String = "1"
-
+    var notificationDataBase:NotificationDataBase? = null
+    var categoryDataBase:MyDataBase? = null
     override fun onCreate() {
         super.onCreate()
+        notificationDataBase = Room.databaseBuilder(this, NotificationDataBase::class.java, "myNotification.db").allowMainThreadQueries().build()
+        categoryDataBase = Room.databaseBuilder(this, MyDataBase::class.java, "myCategory.db").allowMainThreadQueries().build()
         instance = this
         FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
             if (!task.isSuccessful) {
