@@ -250,23 +250,6 @@ class NotificationManageFragment : Fragment() {
         }
     }
     private fun notificationDataSet(){
-        val money = arguments?.getString("money")
-        val date1 = arguments?.getString("date")
-        val address = arguments?.getString("address")
-        val category = arguments?.getString("category")
-        if(arguments != null) {
-            binding.notificationList.visibility = View.VISIBLE
-            binding.errorMsg.visibility = View.GONE
-
-            var notificationTableData = NotificationTableData(
-                shopName = address!!,
-                dateTime = date1,
-                category = category,
-                money = money
-            )
-            //Roomデータベースに追加
-            notificationDao?.insert(notificationTableData)
-        }
             //Roomデータベースからデータを取得
             notificationsListData = notificationDao?.getAll() as MutableList<NotificationTableData>
             if(notificationsListData.isNotEmpty()){

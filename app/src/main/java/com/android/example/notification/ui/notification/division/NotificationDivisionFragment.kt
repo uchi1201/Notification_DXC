@@ -8,11 +8,14 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import com.android.example.notification.MainApplication
 import com.android.example.notification.databinding.FragmentNotificationDivisionBinding
 import com.android.example.notification.room.NotificationDataBase
 import com.android.example.notification.room.data.NotificationTableData
+import com.android.example.notification.ui.budget.BudgetHorizontalChartViewModel
+import com.android.example.notification.ui.notification.NotificationManageViewModel
 
 /**
  * A simple [Fragment] subclass.
@@ -22,9 +25,10 @@ import com.android.example.notification.room.data.NotificationTableData
 class NotificationDivisionFragment : Fragment() {
     private var _binding: FragmentNotificationDivisionBinding? = null
     private val binding get() = _binding!!
-    private  var categorySpList: ArrayList<String> = ArrayList()
+    private  var notificationsViewModel: NotificationDivisionViewModel? = null
     private var mCategory:String = ""
     private var dataBase: NotificationDataBase? = null
+    private var categorySpList: ArrayList<String> = ArrayList()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,25 +36,33 @@ class NotificationDivisionFragment : Fragment() {
     ): View {
         _binding = FragmentNotificationDivisionBinding.inflate(inflater, container, false)
         dataBase = MainApplication.instance().notificationDataBase
+        initData()
         initView()
-
         return binding.root
     }
 
+    private fun initData(){
+        notificationsViewModel = ViewModelProvider(this)[NotificationDivisionViewModel::class.java]
+        categorySpList = notificationsViewModel?.getCategoryList()!!
+    }
+
     private fun initView() {
+        binding.titleSetting.title.text = "振り分け"
         val money = arguments?.getString("money")
         val date1 = arguments?.getString("date")
         val shopName = arguments?.getString("shopName")
         val category = arguments?.getString("category")
-
         binding.date.text = date1
         binding.moneyEdit.setText(money)
         binding.shopName.text = shopName
         val categorySp = binding.categorySp
         //Spinnerのデータ取得
-        getCategoryList()
         var categoryAdapter: ArrayAdapter<String>? =
-            context?.let { ArrayAdapter(it,android.R.layout.simple_list_item_1,categorySpList) }
+            context?.let {
+                ArrayAdapter(
+                    it,android.R.layout.simple_list_item_1,
+                    categorySpList)
+            }
         //配列アダプタのレイアウトスタイルを設定する
         categoryAdapter?.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         //ドロップダウンボックスの配列アダプタの設定
@@ -96,14 +108,6 @@ class NotificationDivisionFragment : Fragment() {
 
     }
 
-
-    private fun getCategoryList() {
-        //Todo サーバー側からもらうか
-        //一旦仮データ
-        categorySpList.add("食費")
-        categorySpList.add("水道")
-        categorySpList.add("その他")
-    }
 
     override fun onDestroyView() {
         super.onDestroyView()

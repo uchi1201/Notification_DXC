@@ -2,7 +2,6 @@ package com.android.example.notification.room.dao
 
 
 import androidx.room.*
-import com.android.example.notification.room.data.CategoryData
 import com.android.example.notification.room.data.NotificationTableData
 
 
@@ -25,4 +24,7 @@ interface NotificationDao {
 
     @Delete
     fun delete( notificationTableData: NotificationTableData?):Int
+
+    @Query("delete from notification_table")
+    fun deleteAll()
 }
