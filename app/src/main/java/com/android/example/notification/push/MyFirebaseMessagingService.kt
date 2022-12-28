@@ -38,7 +38,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     }
     private fun getPendingIntent(context: Context, messageData:Map<String, String>?): PendingIntent? {
 
-        val destId: Int = R.id.navigation_manage
+        val destId: Int = R.id.navigation_home
         val bundle = Bundle()
         bundle.putString("money",messageData?.get("money").toString())
         bundle.putString("date",messageData?.get("date").toString())
@@ -47,7 +47,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
         return NavDeepLinkBuilder(context)
             .setGraph(R.navigation.mobile_navigation)
-            .setDestination(destId)
+            .addDestination(destId)
             .setArguments(bundle)
             .createPendingIntent()
     }
