@@ -9,8 +9,12 @@
         android:id="@+id/navigation_home"
         android:name="com.android.example.notification.ui.home.HomeFragment"
         android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" />
-
+        tools:layout="@layout/fragment_home" >
+    <action
+        android:id="@+id/division_action"
+        app:destination="@id/navigation_division"
+        />
+    </fragment>
     <fragment
         android:id="@+id/navigation_schedule"
         android:name="com.android.example.notification.ui.schedule.ScheduleFragment"

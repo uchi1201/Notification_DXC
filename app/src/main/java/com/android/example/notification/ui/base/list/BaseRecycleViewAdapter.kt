@@ -21,9 +21,9 @@ abstract class BaseRecycleViewAdapter<T>(private val layoutResourceId: Int, val 
     }
 
     override fun onBindViewHolder(holder: BaseViewHolder<T>, position: Int) {
-        holder.bindHolder(items[position])
+        holder.bindHolder(items[items.size-1-position])
         holder.itemView.setOnClickListener {
-            monItemClickListener?.onRecyclerItemClick(holder.itemView,position)
+            monItemClickListener?.onRecyclerItemClick(holder.itemView,items.size-1-position)
         }
     }
 

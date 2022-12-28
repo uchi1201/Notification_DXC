@@ -1,5 +1,6 @@
 package com.android.example.notification.ui.home
 
+import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.android.example.notification.MainApplication
 import com.android.example.notification.R
 import com.android.example.notification.databinding.FragmentHomeBinding
@@ -18,6 +20,8 @@ import com.android.example.notification.room.dao.NotificationDao
 import com.android.example.notification.room.data.NotificationTableData
 import com.android.example.notification.ui.base.list.BaseRecycleViewAdapter
 import com.android.example.notification.ui.notification.NotificationListViewAdapter
+import com.android.example.notification.ui.notification.NotificationManageViewModel
+import com.android.example.notification.utils.LoadingDialogUtils
 import com.google.android.material.card.MaterialCardView
 
 class HomeFragment : Fragment() {
@@ -27,6 +31,8 @@ class HomeFragment : Fragment() {
     private var notificationDao: NotificationDao? = null
     private var dataBase: NotificationDataBase? = null
     private var notificationsListData = mutableListOf<NotificationTableData>()
+    private  var homeViewModel: HomeViewModel? = null
+    private var mLoadingDialog: Dialog? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -47,13 +53,29 @@ class HomeFragment : Fragment() {
 
     private fun initData(){
         notificationDao = dataBase?.notificationDao()
-        val homeViewModel =
+        homeViewModel =
             ViewModelProvider(this)[HomeViewModel::class.java]
     }
 
     private fun initView(){
-
+        //PullDownRefresh時DiaLog表示用
+        var loadingDialog = LoadingDialogUtils()
+        homeViewModel?.loadingLiveData?.observe(viewLifecycleOwner) {
+            if (it) {
+                mLoadingDialog = loadingDialog.createLoadingDialog(activity, "Loading")
+            } else {
+                loadingDialog.closeDialog(mLoadingDialog)
+            }
+        }
+        val swipeRefreshLayout: SwipeRefreshLayout = binding.refresh
+        swipeRefreshLayout.setOnRefreshListener {
+            homeViewModel?.getPTRNotificationsList()
+        }
+        homeViewModel?.pullToRefreshLiveData?.observe(viewLifecycleOwner) {
+            swipeRefreshLayout.isRefreshing = it
+        }
     }
+
     override fun onResume() {
         super.onResume()
         notificationDataSet()
@@ -92,7 +114,6 @@ class HomeFragment : Fragment() {
                     "その他" -> cardView.strokeColor = context?.getColor(R.color.gray)!!
                     else -> cardView.strokeColor = context?.getColor(R.color.gray)!!
                 }
-
             }
             binding.notificationList.visibility = View.VISIBLE
             binding.errorMsg.visibility = View.GONE

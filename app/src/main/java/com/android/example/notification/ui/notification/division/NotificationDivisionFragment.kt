@@ -35,6 +35,7 @@ class NotificationDivisionFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentNotificationDivisionBinding.inflate(inflater, container, false)
+        binding.titleSetting.title.text = "振り分け"
         dataBase = MainApplication.instance().notificationDataBase
         initData()
         initView()
@@ -47,7 +48,6 @@ class NotificationDivisionFragment : Fragment() {
     }
 
     private fun initView() {
-        binding.titleSetting.title.text = "振り分け"
         val money = arguments?.getString("money")
         val date1 = arguments?.getString("date")
         val shopName = arguments?.getString("shopName")
@@ -72,6 +72,7 @@ class NotificationDivisionFragment : Fragment() {
             for (index in categorySpList.indices) {
                 if (categorySpList[index] == category) {
                     categorySp.setSelection(index)
+                    break
                 }
             }
         } else {
