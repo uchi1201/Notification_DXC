@@ -89,7 +89,7 @@ class NotificationDivisionFragment : Fragment() {
                 category = mCategory,
                 money = moneyEdit
             )
-            dataBase?.notificationDao()?.insert(notificationTableData)
+            dataBase?.notificationDao()?.update(notificationTableData)
             view?.let { it1 -> Navigation.findNavController(it1).navigateUp() }
         }
 

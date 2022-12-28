@@ -49,6 +49,7 @@ import com.android.example.notification.utils.ColorChangeDialog
 import com.android.example.notification.utils.CustomDialog
 import com.android.example.notification.utils.FilterDialog
 import com.android.example.notification.utils.LoadingDialogUtils
+import com.google.android.material.card.MaterialCardView
 import com.google.android.material.snackbar.Snackbar
 /**
  * A simple [Fragment] subclass.
@@ -270,6 +271,7 @@ class NotificationManageFragment : Fragment() {
             notificationsListData = notificationDao?.getAll() as MutableList<NotificationTableData>
             if(notificationsListData.isNotEmpty()){
             var init: (View, NotificationTableData) -> Unit = { v: View, d: NotificationTableData ->
+                var cardView = v.findViewById<MaterialCardView>(R.id.card_view)
                 var dateView = v.findViewById<TextView>(R.id.date)
                 var shopNameView = v.findViewById<TextView>(R.id.shop_name_txt)
                 var categoryView = v.findViewById<TextView>(R.id.category_tx)
@@ -278,6 +280,13 @@ class NotificationManageFragment : Fragment() {
                 shopNameView.text = d.shopName
                 categoryView.text = d.category
                 moneyView.text = d.money+"円"
+                when(d.category){
+                    "水道" -> cardView.strokeColor = context?.getColor(R.color.blue)!!
+                    "食費" -> cardView.strokeColor = context?.getColor(R.color.red)!!
+                    "その他" -> cardView.strokeColor = context?.getColor(R.color.gray)!!
+                    else -> cardView.strokeColor = context?.getColor(R.color.gray)!!
+                }
+
             }
             binding.notificationList.visibility = View.VISIBLE
             binding.errorMsg.visibility = View.GONE
