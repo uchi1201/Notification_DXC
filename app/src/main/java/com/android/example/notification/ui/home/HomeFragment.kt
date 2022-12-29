@@ -81,7 +81,7 @@ class HomeFragment : Fragment() {
             binding.moneyEdit.setText(it)
         }
         homeViewModel?.remainMoney?.observe(viewLifecycleOwner){
-            binding.remainMoney.text = it
+            binding.remainMoney.text = it+"円"
         }
     }
 
