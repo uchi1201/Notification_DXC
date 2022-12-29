@@ -83,7 +83,7 @@ class NotificationDivisionFragment : Fragment() {
 
         }
         categorySp.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View, pos: Int, id: Long) {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, pos: Int, id: Long) {
                 mCategory = categorySp.getItemAtPosition(pos).toString()
             }
 
