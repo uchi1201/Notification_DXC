@@ -14,7 +14,8 @@ class HomeViewModel : ViewModel() {
     var notificationsListLiveData = MutableLiveData<NotificationTableData>()
     val loadingLiveData = MutableLiveData<Boolean>()
     val pullToRefreshLiveData = MutableLiveData<Boolean>()
-
+    var currentMoney = MutableLiveData<String>()
+    var remainMoney = MutableLiveData<String>()
 
     fun getPTRNotificationsList() {
         pullToRefreshLiveData.postValue(true)
@@ -25,4 +26,13 @@ class HomeViewModel : ViewModel() {
             loadingLiveData.postValue(false)
         }
     }
+
+    fun getCurrentMoney(money:String){
+        currentMoney.value = money
+    }
+
+    fun getRemainMoney(total:String,current:String){
+        remainMoney.value = (total.toInt() - current.toInt()).toString()
+    }
+
 }

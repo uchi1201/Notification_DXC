@@ -34,6 +34,7 @@ class HomeFragment : Fragment() {
     private var notificationsListData = mutableListOf<NotificationTableData>()
     private  var homeViewModel: HomeViewModel? = null
     private var mLoadingDialog: Dialog? = null
+    private var currentMoney: Int? = 0
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -56,6 +57,7 @@ class HomeFragment : Fragment() {
         notificationDao = dataBase?.notificationDao()
         homeViewModel =
             ViewModelProvider(this)[HomeViewModel::class.java]
+        currentMoney = 0
     }
 
     private fun initView(){
@@ -74,6 +76,12 @@ class HomeFragment : Fragment() {
         }
         homeViewModel?.pullToRefreshLiveData?.observe(viewLifecycleOwner) {
             swipeRefreshLayout.isRefreshing = it
+        }
+        homeViewModel?.currentMoney?.observe(viewLifecycleOwner){
+            binding.moneyEdit.setText(it)
+        }
+        homeViewModel?.remainMoney?.observe(viewLifecycleOwner){
+            binding.remainMoney.text = it
         }
     }
 
@@ -102,7 +110,9 @@ class HomeFragment : Fragment() {
         //一旦テスト用（5個を超えると削除する）
         if(notificationsListData.size>=5){
             notificationDao?.deleteAll()
+            notificationsListData.clear()
         }
+
         if(notificationsListData.isNotEmpty()){
             var init: (View, NotificationTableData) -> Unit = { v: View, d: NotificationTableData ->
                 var cardView = v.findViewById<MaterialCardView>(R.id.card_view)
@@ -120,7 +130,15 @@ class HomeFragment : Fragment() {
                     "その他" -> cardView.strokeColor = context?.getColor(R.color.gray)!!
                     else -> cardView.strokeColor = context?.getColor(R.color.gray)!!
                 }
+
             }
+            for(i in notificationsListData.indices) {
+                currentMoney = notificationsListData[i].money?.toInt()
+                    ?.let { currentMoney?.plus(it) }
+            }
+            homeViewModel?.getCurrentMoney(currentMoney.toString())
+            homeViewModel?.getRemainMoney("20000", currentMoney.toString())
+
             binding.notificationList.visibility = View.VISIBLE
             binding.errorMsg.visibility = View.GONE
             var adapter =
