@@ -32,7 +32,7 @@ class MainActivity : AppCompatActivity() {
 
 
         val navView: BottomNavigationView = binding.navView
-
+        navView.labelVisibilityMode= BottomNavigationView.LABEL_VISIBILITY_LABELED
         val navController = findNavController(R.id.nav_host_fragment_activity_main)
 
         navView.setupWithNavController(navController)

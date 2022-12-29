@@ -97,6 +97,9 @@ class HomeFragment : Fragment() {
         }
         //Roomデータベースからデータを取得
         notificationsListData = notificationDao?.getAll() as MutableList<NotificationTableData>
+        if(notificationsListData.size>=5){
+            notificationDao?.deleteAll()
+        }
         if(notificationsListData.isNotEmpty()){
             var init: (View, NotificationTableData) -> Unit = { v: View, d: NotificationTableData ->
                 var cardView = v.findViewById<MaterialCardView>(R.id.card_view)
@@ -133,7 +136,7 @@ class HomeFragment : Fragment() {
                         "shopName" to adapter.items[Position].shopName,
                         "category" to adapter.items[Position].category
                     )
-                    findNavController().navigate(R.id.division_action,bundle)
+                    findNavController().navigate(R.id.home_to_division_action,bundle)
                 }
             })
         } else{
