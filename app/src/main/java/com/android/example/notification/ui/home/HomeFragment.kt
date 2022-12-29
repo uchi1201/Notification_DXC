@@ -1,6 +1,7 @@
 package com.android.example.notification.ui.home
 
 import android.app.Dialog
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -94,9 +95,11 @@ class HomeFragment : Fragment() {
             )
             //Roomデータベースに追加
             notificationDao?.insert(notificationTableData)
+            arguments = null
         }
         //Roomデータベースからデータを取得
         notificationsListData = notificationDao?.getAll() as MutableList<NotificationTableData>
+        //一旦テスト用（5個を超えると削除する）
         if(notificationsListData.size>=5){
             notificationDao?.deleteAll()
         }

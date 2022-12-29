@@ -17,15 +17,6 @@ class NotificationManageViewModel(dataBase: NotificationDataBase) : ViewModel() 
     private val notificationDao = dataBase.notificationDao()
     var dbNotificationData = ArrayList<NotificationTableData>()
 
-    fun getNotificationsList() {
-        loadingLiveData.postValue(true)
-        viewModelScope.launch {
-            val notificationsData= NetworkApiTest("https://bcc44455-3c2c-4c72-b417-470a1c5e2842.mock.pstmn.io")
-            val requestValue=notificationsData.requestNotificationInfo()
-            notificationsListLiveData.value=requestValue
-            loadingLiveData.postValue(false)
-        }
-    }
 
     fun getNotificationDataFromDB(){
         loadingLiveData.postValue(true)
@@ -39,10 +30,7 @@ class NotificationManageViewModel(dataBase: NotificationDataBase) : ViewModel() 
         pullToRefreshLiveData.postValue(true)
         loadingLiveData.postValue(true)
         viewModelScope.launch {
-            val notificationsData =
-                NetworkApiTest("https://bcc44455-3c2c-4c72-b417-470a1c5e2842.mock.pstmn.io")
-            val requestValue = notificationsData.requestNotificationInfo()
-            notificationsListLiveData.value = requestValue
+            dbNotificationData = notificationDao.getAll() as ArrayList<NotificationTableData>
             pullToRefreshLiveData.postValue(false)
             loadingLiveData.postValue(false)
         }

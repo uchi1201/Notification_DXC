@@ -4,23 +4,23 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.android.example.notification.MainApplication
 import com.android.example.notification.data.NotificationBean
 import com.android.example.notification.network.NetworkApiTest
+import com.android.example.notification.room.data.NotificationTableData
 import kotlinx.coroutines.launch
 
 class HomeViewModel : ViewModel() {
-    private val notificationsListLiveData = MutableLiveData<Result<NotificationBean>>()
+    var notificationsListLiveData = MutableLiveData<NotificationTableData>()
     val loadingLiveData = MutableLiveData<Boolean>()
     val pullToRefreshLiveData = MutableLiveData<Boolean>()
+
 
     fun getPTRNotificationsList() {
         pullToRefreshLiveData.postValue(true)
         loadingLiveData.postValue(true)
         viewModelScope.launch {
-            val notificationsData =
-                NetworkApiTest("https://bcc44455-3c2c-4c72-b417-470a1c5e2842.mock.pstmn.io")
-            val requestValue = notificationsData.requestNotificationInfo()
-            notificationsListLiveData.value = requestValue
+            MainApplication.instance().notificationDataBase?.notificationDao()?.getAll()
             pullToRefreshLiveData.postValue(false)
             loadingLiveData.postValue(false)
         }
