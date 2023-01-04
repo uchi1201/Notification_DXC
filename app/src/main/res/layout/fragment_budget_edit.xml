@@ -74,22 +74,14 @@
                 android:layout_marginLeft="20dp"
                 android:textSize="20sp"
                 android:text="予算総額"/>
-            <EditText
-                android:id="@+id/budget_total"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="150dp"
-                android:textSize="20sp"
-                android:gravity="end"
-                tool:text="24000"
-                />
+
             <TextView
+                android:id="@+id/budget_total"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="20sp"
                 android:layout_marginRight="15dp"
-                android:text="円"/>
+                tool:text="24000円"/>
         </LinearLayout>
         <View
             android:id="@+id/line2_v"
@@ -170,7 +162,7 @@
                 android:layout_gravity="center"
                 android:padding="10dp"
                 android:clickable="false"
-                android:src="@mipmap/icons_add"/>
+                android:src="@mipmap/icons_add_enable"/>
             <Spinner
                 android:id="@+id/category_sp"
                 android:layout_width="0dp"
