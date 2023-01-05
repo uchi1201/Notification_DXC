@@ -126,21 +126,37 @@
             android:layout_marginTop="10dp"
             />
         </LinearLayout>
+        <LinearLayout
+            android:id="@+id/category_list_ll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/category_title_ll"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:orientation="vertical">
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/category_rv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_below="@id/category_title_ll"
-            android:layout_marginBottom="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-             />
+            android:layout_gravity="center"
+            android:visibility="gone"
+            />
+        <TextView
+            android:id="@+id/errorMsg"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:textSize="16sp"
+            android:text="何もしない、登録してくださいね" />
+        </LinearLayout>
         <View
             android:id="@+id/line3_v"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_below="@id/category_rv"
+            android:layout_below="@id/category_list_ll"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:layout_marginTop="10dp"

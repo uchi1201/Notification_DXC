@@ -57,6 +57,8 @@ class HomeFragment : Fragment() {
         notificationDao = dataBase?.notificationDao()
         homeViewModel =
             ViewModelProvider(this)[HomeViewModel::class.java]
+        //Roomデータベースからデータを取得
+        notificationsListData = notificationDao?.getAll() as MutableList<NotificationTableData>
         currentMoney = 0
     }
 
@@ -105,8 +107,7 @@ class HomeFragment : Fragment() {
             notificationDao?.insert(notificationTableData)
             arguments = null
         }
-        //Roomデータベースからデータを取得
-        notificationsListData = notificationDao?.getAll() as MutableList<NotificationTableData>
+
         //一旦テスト用（5個を超えると削除する）
         if(notificationsListData.size>=5){
             notificationDao?.deleteAll()

@@ -31,7 +31,12 @@
         android:id="@+id/navigation_budget"
         android:name="com.android.example.notification.ui.budget.BudgetPagerFragment"
         android:label="@string/title_budget"
-        tools:layout="@layout/fragment_budget_pager" />
+        tools:layout="@layout/fragment_budget_pager" >
+        <action
+            android:id="@+id/edit_action"
+            app:destination="@id/navigation_budget_edit"
+            />
+    </fragment>
     <fragment
         android:id="@+id/navigation_manage"
         android:name="com.android.example.notification.ui.notification.NotificationManageFragment"
@@ -62,4 +67,10 @@
         android:id="@+id/category_action"
         app:destination="@id/navigation_category_manage" />
     </fragment>
+    <fragment
+        android:id="@+id/navigation_budget_edit"
+        android:name="com.android.example.notification.ui.budget.edit.BudgetEditFragment"
+        android:label="@string/title_budget"
+        tools:layout="@layout/fragment_budget_edit"/>
+
 </navigation>

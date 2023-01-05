@@ -7,9 +7,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.android.example.notification.MainApplication
 import com.android.example.notification.R
@@ -109,14 +111,18 @@ class BudgetHorizontalChartFragment :  Fragment()  {
                 //Todo
             }
         }
+        binding.editBtn.setOnClickListener {
+            val bundle = bundleOf("month" to MainApplication.instance().spinnerMonth)
+            findNavController().navigate(R.id.edit_action,bundle)
+        }
 
     }
-
 
     private fun CoroutineScope.doDelayed(timeMillis: Long, block: suspend () -> Unit) = this.launch {
         delay(timeMillis)
         block.invoke()
     }
+
     private fun refreshData(){
         val swipeRefreshLayout: SwipeRefreshLayout = binding.refresh
         swipeRefreshLayout.setOnRefreshListener {
