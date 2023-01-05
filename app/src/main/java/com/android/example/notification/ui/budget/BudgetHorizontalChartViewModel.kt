@@ -162,6 +162,9 @@ class BudgetHorizontalChartViewModel : ViewModel() {
         return results
     }
 
+    private fun insertData(month: String) {
+
+    }
 
     private fun barChartXLabel(): MutableList<String> {
         return mutableListOf("服飾費", "食費", "交際", "定期支払い")
