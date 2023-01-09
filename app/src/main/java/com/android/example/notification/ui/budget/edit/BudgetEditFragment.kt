@@ -5,11 +5,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
+import android.widget.*
 import androidx.core.graphics.toColorInt
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -24,6 +22,7 @@ import com.android.example.notification.room.data.BudgetTableData
 import com.android.example.notification.room.data.CategoryData
 import com.android.example.notification.room.data.NotificationTableData
 import com.android.example.notification.ui.category.CategoryListViewAdapter
+import com.android.example.notification.ui.notification.division.NotificationDivisionViewModel
 
 
 /**
@@ -39,6 +38,8 @@ class BudgetEditFragment : Fragment() {
     private var budgetListData = mutableListOf<BudgetTableData>()
     private var budgetData : BudgetTableData? = null
     private var totalBudget = 0
+    private var categorySpList: ArrayList<String> = ArrayList()
+    private var budgetEditViewModel:BudgetEditViewModel? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -56,6 +57,8 @@ class BudgetEditFragment : Fragment() {
         dataBase =  MainApplication.instance().budgetDataBase
         budgetDao = dataBase?.budgetDao()
         budgetListData = budgetDao?.getAll() as MutableList<BudgetTableData>
+        budgetEditViewModel = ViewModelProvider(this)[BudgetEditViewModel::class.java]
+        categorySpList = budgetEditViewModel?.getCategoryList()!!
     }
 
     private fun initView(){
@@ -97,19 +100,22 @@ class BudgetEditFragment : Fragment() {
         binding.addBtn.setOnClickListener {
             budgetData?.let { it1 -> budgetDao?.insert(it1) }
         }
-    }
-    override fun onHiddenChanged(hidden: Boolean) {
-        super.onHiddenChanged(hidden)
-        if (hidden) {
-            //pause
-        } else {
-            //resume
-            if (MainApplication.instance().isEditBudget){
-                initData()
-                initView()
-                MainApplication.instance().isEditBudget = false
+        //カテゴリ名を選択するSpinner
+        val categorySp = binding.categorySp
+        //Spinnerのデータ取得
+        var categoryAdapter: BudgetCategorySpArrayAdapter<String>? =
+            context?.let {
+                BudgetCategorySpArrayAdapter(
+                    it,android.R.layout.simple_list_item_1,
+                    categorySpList)
             }
-        }
+        //配列アダプタのレイアウトスタイルを設定する
+        categoryAdapter?.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+
+        //ドロップダウンボックスの配列アダプタの設定
+        categorySp.adapter = categoryAdapter
+        categorySp.setSelection(categorySpList.size-1,true)
     }
+
 
 }

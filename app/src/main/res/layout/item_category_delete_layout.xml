@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:clickable="true"
-        android:src="@mipmap/icons_minus"/>
+        android:src="@drawable/delete_category_bg"/>
     <TextView
         android:id="@+id/category_tv"
         android:layout_width="wrap_content"
