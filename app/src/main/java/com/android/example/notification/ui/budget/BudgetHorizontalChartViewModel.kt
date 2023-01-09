@@ -236,15 +236,13 @@ class BudgetHorizontalChartViewModel(dataBase: BudgetDataBase) : ViewModel() {
         barDataSet.valueFormatter =object : ValueFormatter() {
             var index =0
             override fun getFormattedValue(v: Float): String? {
-                if (budgetList != null) {
-                    if(index==budgetList.count()){
-                        index=0
-                    }
+                if(index==budgetList.count()){
+                    index=0
                 }
-                val budget = budgetList?.get(index)?.budget
-                val budgetTotal = budgetList?.get(index)?.budgetTotal
+                val budget = budgetList[index].budget
+                val budgetTotal = budgetList[index].budgetTotal
                 index++
-                return "${budget?.toInt()}/${budgetTotal?.toInt()}"
+                return "${budget.toInt()}/${budgetTotal}"
             }
         }
         val dataSets = ArrayList<IBarDataSet>()

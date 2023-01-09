@@ -16,6 +16,7 @@ class MainApplication: Application()  {
     var notificationDataBase:NotificationDataBase? = null
     var categoryDataBase:MyDataBase? = null
     var budgetDataBase: BudgetDataBase? = null
+    var isEditBudget: Boolean = false
 
     override fun onCreate() {
         super.onCreate()

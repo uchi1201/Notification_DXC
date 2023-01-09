@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.example.notification.MainApplication
 import com.android.example.notification.R
-import com.android.example.notification.databinding.FragmentBudgetBinding
 import com.android.example.notification.databinding.FragmentBudgetEditBinding
 import com.android.example.notification.room.BudgetDataBase
 import com.android.example.notification.room.NotificationDataBase
@@ -90,13 +89,27 @@ class BudgetEditFragment : Fragment() {
         }
         //戻るボタン
         binding.returnBtn.setOnClickListener {
+            MainApplication.instance().isEditBudget = true
             findNavController().navigateUp()
+
         }
         //登録ボタン
         binding.addBtn.setOnClickListener {
             budgetData?.let { it1 -> budgetDao?.insert(it1) }
         }
     }
-
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        if (hidden) {
+            //pause
+        } else {
+            //resume
+            if (MainApplication.instance().isEditBudget){
+                initData()
+                initView()
+                MainApplication.instance().isEditBudget = false
+            }
+        }
+    }
 
 }

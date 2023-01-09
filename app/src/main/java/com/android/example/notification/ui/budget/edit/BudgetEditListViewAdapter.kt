@@ -3,42 +3,39 @@ package com.android.example.notification.ui.budget.edit
 
 import android.app.Dialog
 import android.content.Context
-import android.graphics.Color
-import android.view.MotionEvent
 import android.view.View
 import android.view.animation.Animation
-import android.view.animation.Animation.AnimationListener
 import android.view.animation.AnimationUtils
 import android.widget.ImageView
-import android.widget.TextView
-import androidx.core.content.ContextCompat
-import androidx.core.graphics.toColorInt
+import android.widget.LinearLayout
 import com.android.example.notification.MainApplication
 import com.android.example.notification.R
-import com.android.example.notification.room.MyDataBase
 import com.android.example.notification.room.data.BudgetTableData
-import com.android.example.notification.room.data.CategoryData
 import com.android.example.notification.ui.base.list.BaseRecycleViewAdapter
-import com.android.example.notification.utils.ColorChangeDialog
 import com.android.example.notification.utils.DeleteDialog
-import kotlin.math.abs
 
 
 class BudgetEditListViewAdapter(context: Context, layoutResourceId: Int, items: ArrayList<BudgetTableData>, init: (View, BudgetTableData) -> Unit) :
     BaseRecycleViewAdapter<BudgetTableData>(layoutResourceId, items, init)  {
-    private var view: View? = null
     private var animation: Animation? = null
     private val  mContext = context
     private var mDeleteDialog: Dialog? = null
     val budgetDao = MainApplication.instance().budgetDataBase?.budgetDao()
+    val colors = intArrayOf(0xa9a9a9, 0xFFFFFF)
 
     override fun onBindViewHolder(holder: BaseViewHolder<BudgetTableData>, position: Int) {
         holder.bindHolder(items[position])
+        //行ごとに背景色を変更
+        val colorPos = position % colors.size
+        val itemLL = holder.itemView.findViewById<LinearLayout>(R.id.item_ll)
+        itemLL.setBackgroundColor(colors[colorPos])
+        //[-]削除イベント
         var deleteImg =  holder.itemView.findViewById<ImageView>(R.id.delete_img)
         deleteImg.setOnClickListener {
             deleteItem(it, position)
         }
     }
+
     private fun deleteItem(view: View, position: Int) {
         val deleteDialog = DeleteDialog()
         //削除ダイアログを作成

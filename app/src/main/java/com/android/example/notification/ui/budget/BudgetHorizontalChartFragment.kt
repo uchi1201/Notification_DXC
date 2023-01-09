@@ -9,13 +9,11 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.android.example.notification.MainApplication
 import com.android.example.notification.R
-import com.android.example.notification.data.BudgetValueBean
 import com.android.example.notification.databinding.FragmentBudgetHorizontalChartBinding
 import com.github.mikephil.charting.animation.ChartAnimator
 import com.github.mikephil.charting.charts.HorizontalBarChart
@@ -65,18 +63,20 @@ class BudgetHorizontalChartFragment :  Fragment()  {
     }
     override fun onResume() {
         super.onResume()
-        if (month != MainApplication.instance().spinnerMonth){
+        if (month != MainApplication.instance().spinnerMonth || MainApplication.instance().isEditBudget){
             initData()
             initView()
             initSpinner()
+            MainApplication.instance().isEditBudget = false
         }
     }
+
 
     private fun initData() {
         horizontalViewModel = dataBase?.let { BudgetHorizontalChartViewModel(it) }!!
         activity?.let { horizontalViewModel.getBarData(MainApplication.instance().spinnerMonth) }
-
     }
+
     private fun initView() {
         initTotalChartView()
         initChartView()
@@ -84,6 +84,7 @@ class BudgetHorizontalChartFragment :  Fragment()  {
         setTotalChartViewData()
         refreshData()
     }
+
     private fun initSpinner() {
         //ドロップダウンリストの配列アダプタを宣言する
         val monthArray: Array<String> = resources.getStringArray(R.array.month)
@@ -128,6 +129,7 @@ class BudgetHorizontalChartFragment :  Fragment()  {
     private fun refreshData(){
         val swipeRefreshLayout: SwipeRefreshLayout = binding.refresh
         swipeRefreshLayout.setOnRefreshListener {
+            horizontalViewModel.getBarData(MainApplication.instance().spinnerMonth)
             initTotalChartView()
             initChartView()
             setChartViewData()
@@ -202,21 +204,19 @@ class BudgetHorizontalChartFragment :  Fragment()  {
         xl.position = XAxisPosition.BOTTOM
         xl.setDrawAxisLine(false)
         xl.setDrawGridLines(false)
-        xl.labelCount = 4
+        xl.labelCount = horizontalViewModel.xLabelCategory.size
         xl.textSize = 15f
         xl.granularity = 1f
-
-//        horizontalViewModel.xLabel.observe(viewLifecycleOwner) {
-            xl.valueFormatter = object : ValueFormatter() {
-                override fun getFormattedValue(v: Float): String? {
-                    return try {
-                        horizontalViewModel.xLabelCategory[v.toInt()]
-                    }catch ( e:Exception) {
-                        ""
-                    }
+        //横棒のｘ表示
+        xl.valueFormatter = object : ValueFormatter() {
+            override fun getFormattedValue(v: Float): String? {
+                return try {
+                    horizontalViewModel.xLabelCategory[horizontalViewModel.xLabelCategory.size-v.toInt()-1]
+                }catch ( e:Exception) {
+                    ""
                 }
             }
-//        }
+        }
 
         val yl: YAxis = charView.axisLeft
         yl.setDrawAxisLine(false)
@@ -257,6 +257,7 @@ class BudgetHorizontalChartFragment :  Fragment()  {
         super.onDestroyView()
         _binding = null
     }
+
     class HorizontalBarChartCustomRenderer(
         chart: BarDataProvider, animator: ChartAnimator, viewPortHandler: ViewPortHandler
     ) : HorizontalBarChartRenderer(chart, animator, viewPortHandler) {
