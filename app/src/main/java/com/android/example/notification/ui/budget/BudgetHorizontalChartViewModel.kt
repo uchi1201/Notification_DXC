@@ -3,14 +3,17 @@ package com.android.example.notification.ui.budget
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.android.example.notification.MainApplication
 import com.android.example.notification.data.BudgetGraphData
 import com.android.example.notification.data.BudgetValueBean
+import com.android.example.notification.room.BudgetDataBase
+import com.android.example.notification.room.data.BudgetTableData
 import com.github.mikephil.charting.data.*
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
 import com.github.mikephil.charting.utils.ColorTemplate
 
-class BudgetHorizontalChartViewModel : ViewModel() {
+class BudgetHorizontalChartViewModel(dataBase: BudgetDataBase) : ViewModel() {
 
     //予算総額設定
     private val _totalBarData= MutableLiveData<BarData>().apply {
@@ -20,142 +23,146 @@ class BudgetHorizontalChartViewModel : ViewModel() {
     //予算設定
     val barData= MutableLiveData<BarData>()
     //XのLabel
-    private val _xLabel = MutableLiveData<MutableList<String>>().apply {
-        value = barChartXLabel()
-    }
-    val xLabel:LiveData<MutableList<String>> = _xLabel
+//    private val _xLabel = MutableLiveData<MutableList<String>>().apply {
+//        value = barChartXLabel()
+//    }
+//    val xLabel:LiveData<MutableList<String>> = _xLabel
+     var xLabelCategory = ArrayList<String>()
+
+    private var budgetData = BudgetTableData(category = "", budget = 0.0f, budgetTotal = 0)
+    val budgetDao = dataBase.budgetDao()
 
    //仮データ
     fun createBudgetDataList(month:String):MutableList<BudgetValueBean>{
         val results = mutableListOf<BudgetValueBean>()
         if(month == "1"){
-           val data  =BudgetGraphData (4000f,6000f)
+           val data  =BudgetGraphData ("服飾費",4000f,6000f)
            results.add( BudgetValueBean(data))
-           val data1  =BudgetGraphData (10000f,10000f)
+           val data1  =BudgetGraphData ("食費",10000f,10000f)
            results.add( BudgetValueBean(data1))
-           val data2  =BudgetGraphData (1000f,8800f)
+           val data2  =BudgetGraphData ("交際",1000f,8800f)
            results.add( BudgetValueBean(data2))
-           val data3  =BudgetGraphData (2800f,9200f)
+           val data3  =BudgetGraphData ( "定期支払い",2800f,9200f)
            results.add( BudgetValueBean(data3))
        }
         else if(month == "2"){
-            val data  =BudgetGraphData (3000f,6000f)
+            val data  =BudgetGraphData ("服飾費",3000f,6000f)
             results.add( BudgetValueBean(data))
-            val data1  =BudgetGraphData (2800f,6000f)
+            val data1  =BudgetGraphData ("食費",2800f,6000f)
             results.add( BudgetValueBean(data1))
-            val data2  =BudgetGraphData (5000f,8000f)
+            val data2  =BudgetGraphData ("交際",5000f,8000f)
             results.add( BudgetValueBean(data2))
-            val data3  =BudgetGraphData (3800f,9000f)
+            val data3  =BudgetGraphData ("定期支払い",3800f,9000f)
             results.add( BudgetValueBean(data3))
         }
        else if(month == "3"){
-            val data  =BudgetGraphData (1000f,7000f)
+            val data  =BudgetGraphData ("服飾費",1000f,7000f)
             results.add( BudgetValueBean(data))
-            val data1  =BudgetGraphData (1800f,2000f)
+            val data1  =BudgetGraphData ("食費",1800f,2000f)
             results.add( BudgetValueBean(data1))
-            val data2  =BudgetGraphData (5600f,8800f)
+            val data2  =BudgetGraphData ("交際",5600f,8800f)
             results.add( BudgetValueBean(data2))
-            val data3  =BudgetGraphData (3800f,9200f)
+            val data3  =BudgetGraphData ("定期支払い",3800f,9200f)
             results.add( BudgetValueBean(data3))
         }
         else if(month == "4"){
-            val data  =BudgetGraphData (4000f,6000f)
+            val data  =BudgetGraphData ("服飾費",4000f,6000f)
             results.add( BudgetValueBean(data))
-            val data1  =BudgetGraphData (7800f,10000f)
+            val data1  =BudgetGraphData ("食費",7800f,10000f)
             results.add( BudgetValueBean(data1))
-            val data2  =BudgetGraphData (1000f,8800f)
+            val data2  =BudgetGraphData ("交際",1000f,8800f)
             results.add( BudgetValueBean(data2))
-            val data3  =BudgetGraphData (2800f,9200f)
+            val data3  =BudgetGraphData ("定期支払い",2800f,9200f)
             results.add( BudgetValueBean(data3))
         }
         else if(month == "5"){
-            val data  =BudgetGraphData (1000f,7000f)
+            val data  =BudgetGraphData ("服飾費",1000f,7000f)
             results.add( BudgetValueBean(data))
-            val data1  =BudgetGraphData (1800f,2000f)
+            val data1  =BudgetGraphData ("食費",1800f,2000f)
             results.add( BudgetValueBean(data1))
-            val data2  =BudgetGraphData (5600f,8800f)
+            val data2  =BudgetGraphData ("交際",5600f,8800f)
             results.add( BudgetValueBean(data2))
-            val data3  =BudgetGraphData (3800f,9200f)
+            val data3  =BudgetGraphData ("定期支払い",3800f,9200f)
             results.add( BudgetValueBean(data3))
         }
       else if(month == "6"){
-           val data  =BudgetGraphData (3000f,6000f)
+           val data  =BudgetGraphData ("服飾費",3000f,6000f)
            results.add( BudgetValueBean(data))
-           val data1  =BudgetGraphData (2800f,6000f)
+           val data1  =BudgetGraphData ("食費",2800f,6000f)
            results.add( BudgetValueBean(data1))
-           val data2  =BudgetGraphData (5000f,8000f)
+           val data2  =BudgetGraphData ("交際",5000f,8000f)
            results.add( BudgetValueBean(data2))
-           val data3  =BudgetGraphData (3800f,9000f)
+           val data3  =BudgetGraphData ("定期支払い",3800f,9000f)
            results.add( BudgetValueBean(data3))
        }
        else if(month == "7"){
-           val data  =BudgetGraphData (1000f,7000f)
+           val data  =BudgetGraphData ("服飾費",1000f,7000f)
            results.add( BudgetValueBean(data))
-           val data1  =BudgetGraphData (1800f,2000f)
+           val data1  =BudgetGraphData ("食費",1800f,2000f)
            results.add( BudgetValueBean(data1))
-           val data2  =BudgetGraphData (5600f,8800f)
+           val data2  =BudgetGraphData ("交際",5600f,8800f)
            results.add( BudgetValueBean(data2))
-           val data3  =BudgetGraphData (3800f,9200f)
+           val data3  =BudgetGraphData ("定期支払い",3800f,9200f)
            results.add( BudgetValueBean(data3))
        }
        else if(month == "8"){
-           val data  =BudgetGraphData (4000f,6000f)
+           val data  =BudgetGraphData ("服飾費",4000f,6000f)
            results.add( BudgetValueBean(data))
-           val data1  =BudgetGraphData (7800f,10000f)
+           val data1  =BudgetGraphData ("食費",7800f,10000f)
            results.add( BudgetValueBean(data1))
-           val data2  =BudgetGraphData (1000f,8800f)
+           val data2  =BudgetGraphData ("交際",1000f,8800f)
            results.add( BudgetValueBean(data2))
-           val data3  =BudgetGraphData (2800f,9200f)
+           val data3  =BudgetGraphData ("定期支払い",2800f,9200f)
            results.add( BudgetValueBean(data3))
        }
         else if(month == "9"){
-            val data  =BudgetGraphData (3000f,6000f)
+            val data  =BudgetGraphData ("服飾費",3000f,6000f)
             results.add( BudgetValueBean(data))
-            val data1  =BudgetGraphData (2800f,6000f)
+            val data1  =BudgetGraphData ("食費",2800f,6000f)
             results.add( BudgetValueBean(data1))
-            val data2  =BudgetGraphData (5000f,8000f)
+            val data2  =BudgetGraphData ("交際",5000f,8000f)
             results.add( BudgetValueBean(data2))
-            val data3  =BudgetGraphData (3800f,9000f)
+            val data3  =BudgetGraphData ("定期支払い",3800f,9000f)
             results.add( BudgetValueBean(data3))
         }
         else if(month == "10"){
-            val data  =BudgetGraphData (1000f,7000f)
+            val data  =BudgetGraphData ("服飾費",1000f,7000f)
             results.add( BudgetValueBean(data))
-            val data1  =BudgetGraphData (1800f,2000f)
+            val data1  =BudgetGraphData ("食費",1800f,2000f)
             results.add( BudgetValueBean(data1))
-            val data2  =BudgetGraphData (5600f,8800f)
+            val data2  =BudgetGraphData ("交際",5600f,8800f)
             results.add( BudgetValueBean(data2))
-            val data3  =BudgetGraphData (3800f,9200f)
+            val data3  =BudgetGraphData ("定期支払い",3800f,9200f)
             results.add( BudgetValueBean(data3))
         }
         else if(month == "11"){
-            val data  =BudgetGraphData (4000f,6000f)
+            val data  =BudgetGraphData ("服飾費",4000f,6000f)
             results.add( BudgetValueBean(data))
-            val data1  =BudgetGraphData (7800f,10000f)
+            val data1  =BudgetGraphData ("食費",7800f,10000f)
             results.add( BudgetValueBean(data1))
-            val data2  =BudgetGraphData (1000f,8800f)
+            val data2  =BudgetGraphData ("交際",1000f,8800f)
             results.add( BudgetValueBean(data2))
-            val data3  =BudgetGraphData (2800f,9200f)
+            val data3  =BudgetGraphData ("定期支払い",2800f,9200f)
             results.add( BudgetValueBean(data3))
         }
         else if(month == "12"){
-            val data  =BudgetGraphData (1000f,7000f)
+            val data  =BudgetGraphData ("服飾費",1000f,7000f)
             results.add( BudgetValueBean(data))
-            val data1  =BudgetGraphData (1800f,2000f)
+            val data1  =BudgetGraphData ("食費",1800f,2000f)
             results.add( BudgetValueBean(data1))
-            val data2  =BudgetGraphData (5600f,8800f)
+            val data2  =BudgetGraphData ("交際",5600f,8800f)
             results.add( BudgetValueBean(data2))
-            val data3  =BudgetGraphData (3800f,9200f)
+            val data3  =BudgetGraphData ("定期支払い",3800f,9200f)
             results.add( BudgetValueBean(data3))
         }
        else{
-            val data  =BudgetGraphData (4000f,6000f)
+            val data  =BudgetGraphData ("服飾費",4000f,6000f)
             results.add( BudgetValueBean(data))
-            val data1  =BudgetGraphData (7800f,10000f)
+            val data1  =BudgetGraphData ("食費",7800f,10000f)
             results.add( BudgetValueBean(data1))
-            val data2  =BudgetGraphData (1000f,8800f)
+            val data2  =BudgetGraphData ("交際",1000f,8800f)
             results.add( BudgetValueBean(data2))
-            val data3  =BudgetGraphData (2800f,9200f)
+            val data3  =BudgetGraphData ("定期支払い",2800f,9200f)
             results.add( BudgetValueBean(data3))
        }
 
@@ -164,11 +171,21 @@ class BudgetHorizontalChartViewModel : ViewModel() {
 
     private fun insertData(month: String) {
 
+        var budgetDataList = createBudgetDataList(month)
+        for(item in budgetDataList){
+            budgetData.budget = item.data.budget
+            budgetData.category = item.data.category
+            budgetData.budgetTotal =  item.data.budgetTotal.toInt()
+            budgetDao.insert(budgetData)
+            xLabelCategory.add(item.data.category)
+        }
+
     }
 
-    private fun barChartXLabel(): MutableList<String> {
-        return mutableListOf("服飾費", "食費", "交際", "定期支払い")
-    }
+//    private fun barChartXLabel(): ArrayList<String> {
+//        return xLabelCategory
+//    }
+
     private fun createTotalBarData(): BarData {
         //表示用サンプルデータの予算総額作成
         val total = 20000f
@@ -198,27 +215,36 @@ class BudgetHorizontalChartViewModel : ViewModel() {
         barData.value = createBarData(month)
     }
    private  fun createBarData(month:String): BarData {
-         val  budgetList = createBudgetDataList(month)
+       var budgetList = budgetDao.getAll()
 
-        var entryList = mutableListOf<BarEntry>()
-        for(i in budgetList.indices){
-            entryList.add(
-                BarEntry(i.toFloat(), budgetList[i].data.budget)
-            )
-        }
+       if(budgetList.isEmpty()){
+           insertData(month)
+           budgetList = budgetDao.getAll()
+       }
+
+       var entryList = mutableListOf<BarEntry>()
+
+       for(i in budgetList.indices){
+           entryList.add(
+               BarEntry(i.toFloat(), budgetList[i].budget)
+           )
+       }
+
         val barDataSet = BarDataSet(entryList, "budget")
         barDataSet.setDrawIcons(false)
         barDataSet.colors = ColorTemplate.COLORFUL_COLORS.toList()
         barDataSet.valueFormatter =object : ValueFormatter() {
             var index =0
             override fun getFormattedValue(v: Float): String? {
-                if(index==budgetList.count()){
-                    index=0
+                if (budgetList != null) {
+                    if(index==budgetList.count()){
+                        index=0
+                    }
                 }
-                val budget = budgetList[index].data.budget
-                val budgetTotal = budgetList[index].data.budgetTotal
+                val budget = budgetList?.get(index)?.budget
+                val budgetTotal = budgetList?.get(index)?.budgetTotal
                 index++
-                return "${budget.toInt()}/${budgetTotal.toInt()}"
+                return "${budget?.toInt()}/${budgetTotal?.toInt()}"
             }
         }
         val dataSets = ArrayList<IBarDataSet>()

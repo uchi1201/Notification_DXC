@@ -36,7 +36,7 @@ class BudgetEditListViewAdapter(context: Context, layoutResourceId: Int, items: 
         holder.bindHolder(items[position])
         var deleteImg =  holder.itemView.findViewById<ImageView>(R.id.delete_img)
         deleteImg.setOnClickListener {
-            view?.let { it1 -> deleteItem(it1, position) }
+            deleteItem(it, position)
         }
     }
     private fun deleteItem(view: View, position: Int) {
@@ -52,18 +52,8 @@ class BudgetEditListViewAdapter(context: Context, layoutResourceId: Int, items: 
             override fun onDeleteButtonClick(view:View,Position: Int){
                 //DBのデータを削除
                 budgetDao?.delete(items[position])
-                //viewにアニメーションを設定する
-                view.startAnimation(animation)
-                animation?.setAnimationListener(object : AnimationListener {
-                    override fun onAnimationStart(animation: Animation) {}
-                    override fun onAnimationRepeat(animation: Animation) {}
-                    override fun onAnimationEnd(animation: Animation) {
-                        //動画実行完了
-                        //リストを更新
-                        items.removeAt(position)
-                        notifyDataSetChanged()
-                    }
-                })
+                items.removeAt(position)
+                notifyDataSetChanged()
             }
         })
     }

@@ -10,5 +10,7 @@ data class BudgetTableData(
     @PrimaryKey
     var category: String,
     @ColumnInfo(name = "budget")
-    var budget:String?
+    var budget:Float,
+    @ColumnInfo(name = "budgetTotal")
+    var budgetTotal:Int
 )

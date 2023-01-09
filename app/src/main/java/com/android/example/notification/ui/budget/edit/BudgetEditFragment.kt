@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.graphics.toColorInt
 import androidx.navigation.fragment.findNavController
@@ -38,6 +39,7 @@ class BudgetEditFragment : Fragment() {
     private var dataBase: BudgetDataBase? = null
     private var budgetListData = mutableListOf<BudgetTableData>()
     private var budgetData : BudgetTableData? = null
+    private var totalBudget = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -64,13 +66,18 @@ class BudgetEditFragment : Fragment() {
         if(budgetListData.isEmpty()){
             binding.categoryRv.visibility=View.GONE
             binding.errorMsg.visibility=View.VISIBLE
+
+        } else {
+            binding.categoryRv.visibility=View.VISIBLE
+            binding.errorMsg.visibility=View.GONE
             val categoryListView: RecyclerView = binding.categoryRv
             //カテゴリーのリスト表示
             var init: (View, BudgetTableData) -> Unit = { v:View, d: BudgetTableData ->
                 var categoryTv = v.findViewById<TextView>(R.id.category_tv)
                 categoryTv.text = d.category
                 var budgetEdt=v.findViewById<EditText>(R.id.budget_edt)
-                budgetEdt.setText(d.budget)
+                budgetEdt.setText(d.budgetTotal.toString())
+
             }
             var adapter = context?.let { it1 ->
                 BudgetEditListViewAdapter(it1,R.layout.item_category_delete_layout,
@@ -78,9 +85,8 @@ class BudgetEditFragment : Fragment() {
             }
             categoryListView.layoutManager= LinearLayoutManager(activity)
             categoryListView.adapter=adapter
-        } else {
-            binding.categoryRv.visibility=View.VISIBLE
-            binding.errorMsg.visibility=View.GONE
+
+            binding.budgetTotal.text = totalBudget.toString()
         }
         //戻るボタン
         binding.returnBtn.setOnClickListener {

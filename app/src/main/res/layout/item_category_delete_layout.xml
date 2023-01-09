@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tool="http://schemas.android.com/tools"
+    android:id="@+id/item_ll"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="5dp"
@@ -10,6 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:clickable="true"
         android:src="@mipmap/icons_minus"/>
     <TextView
         android:id="@+id/category_tv"
@@ -25,12 +27,14 @@
         android:id="@+id/budget_edt"
         android:layout_width="200dp"
         android:layout_height="40dp"
-        android:gravity="center"
+        android:gravity="right|center_vertical"
+        android:paddingRight="10dp"
         android:textSize="20sp"
-        android:layout_marginRight="5dp"
+        android:layout_marginRight="10dp"
         android:layout_gravity="center"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
+        android:inputType="number"
         android:background="@drawable/edittext_background"
         tool:text="6000"/>
 </LinearLayout>

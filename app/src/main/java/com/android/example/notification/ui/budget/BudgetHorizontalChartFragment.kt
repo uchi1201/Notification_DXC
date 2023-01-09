@@ -48,6 +48,7 @@ class BudgetHorizontalChartFragment :  Fragment()  {
     private lateinit var charView: HorizontalBarChart
     private lateinit var horizontalViewModel: BudgetHorizontalChartViewModel
     private lateinit var month: String
+    private val dataBase =  MainApplication.instance().budgetDataBase
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -72,7 +73,7 @@ class BudgetHorizontalChartFragment :  Fragment()  {
     }
 
     private fun initData() {
-        horizontalViewModel = ViewModelProvider(this)[BudgetHorizontalChartViewModel::class.java]
+        horizontalViewModel = dataBase?.let { BudgetHorizontalChartViewModel(it) }!!
         activity?.let { horizontalViewModel.getBarData(MainApplication.instance().spinnerMonth) }
 
     }
@@ -98,6 +99,7 @@ class BudgetHorizontalChartFragment :  Fragment()  {
 
         sp.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View, pos: Int, id: Long) {
+                dataBase?.budgetDao()?.deleteAll()
                 MainApplication.instance().spinnerMonth = (pos+1).toString()
                 horizontalViewModel.getBarData(MainApplication.instance().spinnerMonth)
                 initTotalChartView()
@@ -204,17 +206,17 @@ class BudgetHorizontalChartFragment :  Fragment()  {
         xl.textSize = 15f
         xl.granularity = 1f
 
-        horizontalViewModel.xLabel.observe(viewLifecycleOwner) {
+//        horizontalViewModel.xLabel.observe(viewLifecycleOwner) {
             xl.valueFormatter = object : ValueFormatter() {
                 override fun getFormattedValue(v: Float): String? {
                     return try {
-                        it[v.toInt()]
+                        horizontalViewModel.xLabelCategory[v.toInt()]
                     }catch ( e:Exception) {
                         ""
                     }
                 }
             }
-        }
+//        }
 
         val yl: YAxis = charView.axisLeft
         yl.setDrawAxisLine(false)
