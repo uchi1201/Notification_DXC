@@ -170,7 +170,6 @@ class BudgetHorizontalChartViewModel(dataBase: BudgetDataBase) : ViewModel() {
     }
 
     private fun insertData(month: String) {
-
         var budgetDataList = createBudgetDataList(month)
         for(item in budgetDataList){
             budgetData.budget = item.data.budget
@@ -226,7 +225,7 @@ class BudgetHorizontalChartViewModel(dataBase: BudgetDataBase) : ViewModel() {
 
        for(i in budgetList.indices){
            entryList.add(
-               BarEntry(i.toFloat(), budgetList[i].budget)
+               BarEntry(i.toFloat(), budgetList[budgetList.size-1-i].budget)
            )
        }
 
@@ -239,8 +238,8 @@ class BudgetHorizontalChartViewModel(dataBase: BudgetDataBase) : ViewModel() {
                 if(index==budgetList.count()){
                     index=0
                 }
-                val budget = budgetList[index].budget
-                val budgetTotal = budgetList[index].budgetTotal
+                val budget = budgetList[budgetList.size-1-index].budget
+                val budgetTotal = budgetList[budgetList.size-1-index].budgetTotal
                 index++
                 return "${budget.toInt()}/${budgetTotal}"
             }
