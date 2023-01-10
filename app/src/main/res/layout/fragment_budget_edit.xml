@@ -179,8 +179,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:padding="10dp"
-                android:clickable="false"
-                android:src="@mipmap/icons_add_enable"/>
+                android:clickable="true"
+                android:src="@drawable/category_add_bg"/>
             <Spinner
                 android:id="@+id/category_sp"
                 android:layout_width="0dp"

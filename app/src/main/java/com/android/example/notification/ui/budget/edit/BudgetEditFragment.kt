@@ -1,6 +1,9 @@
 package com.android.example.notification.ui.budget.edit
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextUtils
+import android.text.TextWatcher
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -40,6 +43,8 @@ class BudgetEditFragment : Fragment() {
     private var totalBudget = 0
     private var categorySpList: ArrayList<String> = ArrayList()
     private var budgetEditViewModel:BudgetEditViewModel? = null
+    private var isBudgetInput = false
+    private var isSpinnerSelect = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -64,7 +69,33 @@ class BudgetEditFragment : Fragment() {
     private fun initView(){
         val monthTile = arguments?.getString("month")
         binding.titleEdit.title.text = monthTile + "月"
+
         //カテゴリー、予算額のリスト表示
+        initListView()
+
+        //戻るボタン
+        binding.returnBtn.setOnClickListener {
+            MainApplication.instance().isEditBudget = true
+            findNavController().navigateUp()
+
+        }
+        //登録ボタン
+        binding.addBtn.setOnClickListener {
+            budgetData?.let { it1 -> budgetDao?.insert(it1) }
+        }
+
+        //予算額を入力
+        budgetInput()
+
+        //カテゴリ名を選択するSpinner
+        spinnerInit()
+
+        //[+]カテゴリーAdd
+        categoryAddInit()
+
+    }
+
+    private fun initListView(){
         if(budgetListData.isEmpty()){
             binding.categoryRv.visibility=View.GONE
             binding.errorMsg.visibility=View.VISIBLE
@@ -90,20 +121,40 @@ class BudgetEditFragment : Fragment() {
 
             binding.budgetTotal.text = totalBudget.toString()
         }
-        //戻るボタン
-        binding.returnBtn.setOnClickListener {
-            MainApplication.instance().isEditBudget = true
-            findNavController().navigateUp()
+    }
 
-        }
-        //登録ボタン
-        binding.addBtn.setOnClickListener {
-            budgetData?.let { it1 -> budgetDao?.insert(it1) }
-        }
-        //予算額を入力
-        val budgetInput = binding.categoryEdt
+    private fun budgetInput(){
+        val budgetInputEdt = binding.categoryEdt
+        budgetInputEdt.addTextChangedListener(object : TextWatcher {
 
-        //カテゴリ名を選択するSpinner
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                //Todo
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                if(TextUtils.isEmpty(s)){
+                    isBudgetInput = false
+                    binding.addImg.isEnabled = false
+                    binding.addImg.isClickable = false
+                    binding.addImg.setImageDrawable(resources.getDrawable(R.mipmap.icons_add_enable, null))
+                } else {
+                    isBudgetInput = true
+                    if(isSpinnerSelect){
+                        binding.addImg.isEnabled = true
+                        binding.addImg.isClickable = true
+                        binding.addImg.setImageResource(R.drawable.category_add_bg)
+                    }
+                }
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                //Todo
+            }
+
+        })
+    }
+
+    private fun spinnerInit(){
         val categorySp = binding.categorySp
         //Spinnerのデータ取得
         var categoryAdapter: BudgetCategorySpArrayAdapter<String>? =
@@ -118,17 +169,38 @@ class BudgetEditFragment : Fragment() {
         //ドロップダウンボックスの配列アダプタの設定
         categorySp.adapter = categoryAdapter
         categorySp.setSelection(categorySpList.size-1,true)
-        //[+]カテゴリーAdd
-        val plusImg = binding.addImg
-        if (categoryAdapter != null) {
-            if(budgetInput.text.isNotBlank() && categoryAdapter.isInput) {
-                plusImg.isEnabled = true
-                plusImg.setImageDrawable(resources.getDrawable(R.mipmap.icons_add, null))
+        categorySp.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, pos: Int, id: Long) {
+                isSpinnerSelect = true
+                if(isBudgetInput){
+                    binding.addImg.isEnabled = true
+                    binding.addImg.isClickable = true
+                    binding.addImg.setImageResource(R.drawable.category_add_bg)
+                }else{
+                    binding.addImg.isEnabled = false
+                    binding.addImg.isClickable = false
+                    binding.addImg.setImageDrawable(resources.getDrawable(R.mipmap.icons_add_enable, null))
+                }
             }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                //Todo
+            }
+
         }
-
-
     }
 
+    private fun categoryAddInit() {
+        val plusImg = binding.addImg
+        if(isBudgetInput && isSpinnerSelect) {
+            plusImg.isEnabled = true
+            plusImg.isClickable = true
+            plusImg.setImageDrawable(resources.getDrawable(R.mipmap.icons_add, null))
+        } else {
+            plusImg.isEnabled = false
+            plusImg.isClickable = false
+            plusImg.setImageDrawable(resources.getDrawable(R.mipmap.icons_add_enable, null))
+        }
+    }
 
 }
