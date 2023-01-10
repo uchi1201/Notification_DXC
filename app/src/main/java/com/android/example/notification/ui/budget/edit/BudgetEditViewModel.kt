@@ -12,6 +12,7 @@ class BudgetEditViewModel : ViewModel() {
         categorySpList.add("食費")
         categorySpList.add("交際")
         categorySpList.add("定期支払い")
+        categorySpList.add("水道")
         categorySpList.add("カテゴリ名を選択")
         return categorySpList
     }

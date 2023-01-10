@@ -11,6 +11,7 @@ import android.widget.LinearLayout
 import com.android.example.notification.MainApplication
 import com.android.example.notification.R
 import com.android.example.notification.room.data.BudgetTableData
+import com.android.example.notification.room.data.CategoryData
 import com.android.example.notification.ui.base.list.BaseRecycleViewAdapter
 import com.android.example.notification.utils.DeleteDialog
 
@@ -54,4 +55,11 @@ class BudgetEditListViewAdapter(context: Context, layoutResourceId: Int, items: 
             }
         })
     }
+
+    fun setDeleteCategoryData(categoryData: BudgetTableData){
+        items.add(categoryData)
+        budgetDao?.insert(categoryData)
+        notifyDataSetChanged()
+    }
+
 }

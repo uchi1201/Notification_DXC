@@ -39,12 +39,15 @@ class BudgetEditFragment : Fragment() {
     private var budgetDao: BudgetDao? = null
     private var dataBase: BudgetDataBase? = null
     private var budgetListData = mutableListOf<BudgetTableData>()
-    private var budgetData : BudgetTableData? = null
     private var totalBudget = 0
     private var categorySpList: ArrayList<String> = ArrayList()
     private var budgetEditViewModel:BudgetEditViewModel? = null
     private var isBudgetInput = false
     private var isSpinnerSelect = false
+    private var mInputBudget = 0
+    private var mSpinnerCategory = ""
+    private var categoryDelAdapter: BudgetEditListViewAdapter? = null
+    private var budgetTableData: BudgetTableData? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -81,7 +84,8 @@ class BudgetEditFragment : Fragment() {
         }
         //登録ボタン
         binding.addBtn.setOnClickListener {
-            budgetData?.let { it1 -> budgetDao?.insert(it1) }
+            budgetTableData?.let { it1 -> budgetDao?.insert(it1) }
+            findNavController().navigateUp()
         }
 
         //予算額を入力
@@ -112,12 +116,12 @@ class BudgetEditFragment : Fragment() {
                 budgetEdt.setText(d.budgetTotal.toString())
 
             }
-            var adapter = context?.let { it1 ->
+            categoryDelAdapter = context?.let { it1 ->
                 BudgetEditListViewAdapter(it1,R.layout.item_category_delete_layout,
                     budgetListData as ArrayList<BudgetTableData>,init)
             }
             categoryListView.layoutManager= LinearLayoutManager(activity)
-            categoryListView.adapter=adapter
+            categoryListView.adapter=categoryDelAdapter
 
             binding.budgetTotal.text = totalBudget.toString()
         }
@@ -148,7 +152,7 @@ class BudgetEditFragment : Fragment() {
             }
 
             override fun afterTextChanged(s: Editable?) {
-                //Todo
+                mInputBudget = budgetInputEdt.text.toString().toInt()
             }
 
         })
@@ -171,6 +175,7 @@ class BudgetEditFragment : Fragment() {
         categorySp.setSelection(categorySpList.size-1,true)
         categorySp.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, pos: Int, id: Long) {
+                mSpinnerCategory = categorySp.getItemAtPosition(pos).toString()
                 isSpinnerSelect = true
                 if(isBudgetInput){
                     binding.addImg.isEnabled = true
@@ -192,6 +197,7 @@ class BudgetEditFragment : Fragment() {
 
     private fun categoryAddInit() {
         val plusImg = binding.addImg
+        //どちらか一方が 未入力の場合、 ＋ボタンは活性化しない
         if(isBudgetInput && isSpinnerSelect) {
             plusImg.isEnabled = true
             plusImg.isClickable = true
@@ -200,6 +206,13 @@ class BudgetEditFragment : Fragment() {
             plusImg.isEnabled = false
             plusImg.isClickable = false
             plusImg.setImageDrawable(resources.getDrawable(R.mipmap.icons_add_enable, null))
+        }
+        plusImg.setOnClickListener {
+            var category = mSpinnerCategory
+            var budgetTotal = mInputBudget
+            var budget = 0.0f
+            budgetTableData = BudgetTableData(category,budget,budgetTotal)
+            categoryDelAdapter?.setDeleteCategoryData(budgetTableData!!)
         }
     }
 

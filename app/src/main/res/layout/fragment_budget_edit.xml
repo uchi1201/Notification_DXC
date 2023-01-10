@@ -198,6 +198,7 @@
                 android:layout_gravity="center"
                 android:layout_marginLeft="10dp"
                 android:hint="予算額を入力"
+                android:textColorHint="@color/gray"
                 android:gravity="center"
                 android:inputType="number"
                 android:background="@drawable/edittext_background"
