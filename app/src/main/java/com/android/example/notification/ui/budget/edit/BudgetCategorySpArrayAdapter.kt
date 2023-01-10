@@ -14,8 +14,10 @@ class BudgetCategorySpArrayAdapter<T>
     (context: Context?, resource: Int, objects: List<T>?) :
     ArrayAdapter<Any?>(context!!, resource, objects!!) {
     private val arrayList = objects
-    var resourceId = resource
-        override fun getCount(): Int {
+    private var resourceId = resource
+    var isInput = false
+
+    override fun getCount(): Int {
         // don't display last item. It is used as hint.
         val count = super.getCount()
         return if (count > 0) count - 1 else count
@@ -28,10 +30,12 @@ class BudgetCategorySpArrayAdapter<T>
             tv.text = arrayList[position].toString()
             tv.textSize = 15f
             tv.setTextColor(Color.GRAY)
+            isInput = false
         } else {
             tv.text = arrayList?.get(position).toString()
             tv.textSize = 18f
             tv.setTextColor(Color.BLACK)
+            isInput = true
         }
         return convertView
 

@@ -100,6 +100,9 @@ class BudgetEditFragment : Fragment() {
         binding.addBtn.setOnClickListener {
             budgetData?.let { it1 -> budgetDao?.insert(it1) }
         }
+        //予算額を入力
+        val budgetInput = binding.categoryEdt
+
         //カテゴリ名を選択するSpinner
         val categorySp = binding.categorySp
         //Spinnerのデータ取得
@@ -115,6 +118,16 @@ class BudgetEditFragment : Fragment() {
         //ドロップダウンボックスの配列アダプタの設定
         categorySp.adapter = categoryAdapter
         categorySp.setSelection(categorySpList.size-1,true)
+        //[+]カテゴリーAdd
+        val plusImg = binding.addImg
+        if (categoryAdapter != null) {
+            if(budgetInput.text.isNotBlank() && categoryAdapter.isInput) {
+                plusImg.isEnabled = true
+                plusImg.setImageDrawable(resources.getDrawable(R.mipmap.icons_add, null))
+            }
+        }
+
+
     }
 
 
