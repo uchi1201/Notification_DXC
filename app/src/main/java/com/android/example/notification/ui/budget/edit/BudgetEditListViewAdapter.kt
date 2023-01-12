@@ -44,7 +44,7 @@ class BudgetEditListViewAdapter(context: Context, layoutResourceId: Int, items: 
         deleteImg.setOnClickListener {
             deleteItem(it, position)
         }
-        budgetTotal += items[position].budgetTotal
+        budgetTotal += dataList?.get(position)?.budgetTotal!!
         budgetTotalView.text = budgetTotal.toString()
         //budget編集
         var budgetEdit = holder.itemView.findViewById<EditText>(R.id.budget_edt)
