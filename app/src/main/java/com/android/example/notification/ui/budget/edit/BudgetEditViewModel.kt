@@ -1,8 +1,11 @@
 package com.android.example.notification.ui.budget.edit
 
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
 class BudgetEditViewModel : ViewModel() {
+
+    val totalBudget = MutableLiveData<Int>()
 
     fun getCategoryList(): ArrayList<String>{
         //Todo サーバー側からもらうか

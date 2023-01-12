@@ -39,7 +39,6 @@ class BudgetEditFragment : Fragment() {
     private var budgetDao: BudgetDao? = null
     private var dataBase: BudgetDataBase? = null
     private var budgetListData = mutableListOf<BudgetTableData>()
-    private var totalBudget = 0
     private var categorySpList: ArrayList<String> = ArrayList()
     private var budgetEditViewModel:BudgetEditViewModel? = null
     private var isBudgetInput = false
@@ -48,7 +47,7 @@ class BudgetEditFragment : Fragment() {
     private var mSpinnerCategory = ""
     private var categoryDelAdapter: BudgetEditListViewAdapter? = null
     private var budgetTableData: BudgetTableData? = null
-
+    var  totalBudget =0
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -67,6 +66,7 @@ class BudgetEditFragment : Fragment() {
         budgetListData = budgetDao?.getAll() as MutableList<BudgetTableData>
         budgetEditViewModel = ViewModelProvider(this)[BudgetEditViewModel::class.java]
         categorySpList = budgetEditViewModel?.getCategoryList()!!
+
     }
 
     private fun initView(){
@@ -114,16 +114,15 @@ class BudgetEditFragment : Fragment() {
                 categoryTv.text = d.category
                 var budgetEdt=v.findViewById<EditText>(R.id.budget_edt)
                 budgetEdt.setText(d.budgetTotal.toString())
-
             }
             categoryDelAdapter = context?.let { it1 ->
                 BudgetEditListViewAdapter(it1,R.layout.item_category_delete_layout,
-                    budgetListData as ArrayList<BudgetTableData>,init)
+                    budgetListData as ArrayList<BudgetTableData>,init,binding.budgetTotal)
             }
             categoryListView.layoutManager= LinearLayoutManager(activity)
             categoryListView.adapter=categoryDelAdapter
 
-            binding.budgetTotal.text = totalBudget.toString()
+
         }
     }
 
@@ -212,7 +211,8 @@ class BudgetEditFragment : Fragment() {
             var budgetTotal = mInputBudget
             var budget = 0.0f
             budgetTableData = BudgetTableData(category,budget,budgetTotal)
-            categoryDelAdapter?.setDeleteCategoryData(budgetTableData!!)
+            categoryDelAdapter?.addCategoryData(budgetTableData!!)
+            categoryDelAdapter?.notifyDataSetChanged()
         }
     }
 
