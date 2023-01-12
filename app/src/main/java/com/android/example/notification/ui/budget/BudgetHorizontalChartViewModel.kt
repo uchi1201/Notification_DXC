@@ -27,7 +27,6 @@ class BudgetHorizontalChartViewModel(dataBase: BudgetDataBase) : ViewModel() {
 //        value = barChartXLabel()
 //    }
 //    val xLabel:LiveData<MutableList<String>> = _xLabel
-     var xLabelCategory = ArrayList<String>()
 
     private var budgetData = BudgetTableData(category = "", budget = 0.0f, budgetTotal = 0)
     val budgetDao = dataBase.budgetDao()
@@ -176,14 +175,10 @@ class BudgetHorizontalChartViewModel(dataBase: BudgetDataBase) : ViewModel() {
             budgetData.category = item.data.category
             budgetData.budgetTotal =  item.data.budgetTotal.toInt()
             budgetDao.insert(budgetData)
-            xLabelCategory.add(item.data.category)
         }
 
     }
 
-//    private fun barChartXLabel(): ArrayList<String> {
-//        return xLabelCategory
-//    }
 
     private fun createTotalBarData(): BarData {
         //表示用サンプルデータの予算総額作成
@@ -210,9 +205,11 @@ class BudgetHorizontalChartViewModel(dataBase: BudgetDataBase) : ViewModel() {
         //BarDataにBarDataSet格納して返却
         return BarData(dataSets)
     }
+
     fun getBarData(month:String){
         barData.value = createBarData(month)
     }
+
    private  fun createBarData(month:String): BarData {
        var budgetList = budgetDao.getAll()
 
