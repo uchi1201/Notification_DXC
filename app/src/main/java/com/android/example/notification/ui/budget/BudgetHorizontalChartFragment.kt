@@ -61,6 +61,7 @@ class BudgetHorizontalChartFragment :  Fragment()  {
         month = MainApplication.instance().spinnerMonth
         return root
     }
+
     override fun onResume() {
         super.onResume()
         if (month != MainApplication.instance().spinnerMonth || MainApplication.instance().isEditBudget){

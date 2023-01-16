@@ -9,7 +9,7 @@ class BudgetEditViewModel : ViewModel() {
 
     fun getCategoryList(): ArrayList<String>{
         //Todo サーバー側からもらうか
-        //一旦仮データ
+        //カテゴリーSpinner一旦仮データ
         var categorySpList: ArrayList<String> = ArrayList()
         categorySpList.add("服飾費")
         categorySpList.add("食費")

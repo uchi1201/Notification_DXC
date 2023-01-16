@@ -15,10 +15,11 @@ class BudgetCategorySpArrayAdapter<T>
     ArrayAdapter<Any?>(context!!, resource, objects!!) {
     private val arrayList = objects
     private var resourceId = resource
+    //Hintとカテゴリー名入力するかフラグ
     var isInput = false
 
     override fun getCount(): Int {
-        // don't display last item. It is used as hint.
+        //最後のHint「カテゴリ名を選択」はリストに表示しない
         val count = super.getCount()
         return if (count > 0) count - 1 else count
     }
@@ -26,12 +27,14 @@ class BudgetCategorySpArrayAdapter<T>
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val convertView = LayoutInflater.from(parent?.context).inflate(resourceId, parent, false)
         val tv = convertView!!.findViewById(R.id.text1) as TextView
+        //Hint「カテゴリ名を選択」の文字、文字表示サイズ、文字色表示
         if(position == arrayList?.size?.minus(1)) {
             tv.text = arrayList[position].toString()
             tv.textSize = 15f
             tv.setTextColor(Color.GRAY)
             isInput = false
         } else {
+            //Hint以外のカテゴリー表示
             tv.text = arrayList?.get(position).toString()
             tv.textSize = 18f
             tv.setTextColor(Color.BLACK)

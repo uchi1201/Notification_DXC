@@ -44,16 +44,20 @@ class BudgetEditListViewAdapter(context: Context, layoutResourceId: Int, items: 
         deleteImg.setOnClickListener {
             deleteItem(it, position)
         }
+        //予算総額計算
         budgetTotal += dataList?.get(position)?.budgetTotal!!
+        //予算総額設定
         budgetTotalView.text = budgetTotal.toString()
-        //budget編集
+        //リスト中budget編集
         var budgetEdit = holder.itemView.findViewById<EditText>(R.id.budget_edt)
         budgetEdit.addTextChangedListener(object : TextWatcher {
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                //計算総額設定、編集入力前、計算総額は該当の入力ボックスの値を減算する
                 budgetTotal -= if(budgetEdit.text.toString().isNotEmpty()){
                     budgetEdit.text.toString().toInt()
                 } else {
+                    //該当の入力ボックスの値がなし場合、計算総額は０を減算する
                     0
                 }
 
@@ -65,11 +69,14 @@ class BudgetEditListViewAdapter(context: Context, layoutResourceId: Int, items: 
             }
 
             override fun afterTextChanged(s: Editable?) {
+                //該当入力ボックス編集したあと、計算総額を計算する
                 budgetTotal += if(budgetEdit.text.toString().isNotEmpty()){
                     budgetEdit.text.toString().toInt()
                 } else {
+                    //該当の入力ボックスの値がなし場合、計算総額は０をPlusする
                     0
                 }
+                //計算総額TextView設定
                 budgetTotalView.text = budgetTotal.toString()
                 //更新DBデータ処理
                 var budgetEditData = budgetEdit.text.toString()
