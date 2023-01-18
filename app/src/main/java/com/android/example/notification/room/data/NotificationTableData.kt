@@ -4,6 +4,14 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
+/**
+ * 通知テーブルのフィールド定義
+ * @property shopName String
+ * @property dateTime String?
+ * @property category String?
+ * @property money String?
+ * @constructor
+ */
 @Entity(tableName = "notification_table")
 data class NotificationTableData(
     @PrimaryKey

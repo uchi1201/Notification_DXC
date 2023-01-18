@@ -5,11 +5,10 @@ import androidx.lifecycle.ViewModel
 
 class BudgetEditViewModel : ViewModel() {
 
-    val totalBudget = MutableLiveData<Int>()
 
     fun getCategoryList(): ArrayList<String>{
         //Todo サーバー側からもらうか
-        //カテゴリーSpinner一旦仮データ
+        //登録カテゴリーSpinner一旦仮データ
         var categorySpList: ArrayList<String> = ArrayList()
         categorySpList.add("服飾費")
         categorySpList.add("食費")

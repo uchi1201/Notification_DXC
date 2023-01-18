@@ -1,6 +1,7 @@
 package com.android.example.notification
 
 import android.app.Application
+import android.content.Context
 import android.util.Log
 import android.widget.Toast
 import androidx.room.Room
@@ -17,9 +18,12 @@ class MainApplication: Application()  {
     var categoryDataBase:MyDataBase? = null
     var budgetDataBase: BudgetDataBase? = null
     var isEditBudget: Boolean = false
+    var totalBudgetValue = 34000
+    var mainKeyValue = 0
 
     override fun onCreate() {
         super.onCreate()
+        saveData(this,"totalBudgetValue",totalBudgetValue)
         notificationDataBase = Room.databaseBuilder(this, NotificationDataBase::class.java, "myNotification.db").allowMainThreadQueries().build()
         categoryDataBase = Room.databaseBuilder(this, MyDataBase::class.java, "myCategory.db").allowMainThreadQueries().build()
         budgetDataBase = Room.databaseBuilder(this, BudgetDataBase::class.java, "myBudget.db").allowMainThreadQueries().build()
@@ -38,6 +42,22 @@ class MainApplication: Application()  {
             Log.d(TAG, msg)
             Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
         })
+    }
+
+    //存储key对应的数据
+    fun saveData(context: Context, key: String, info: Int) {
+        val sharedPreferences = context.getSharedPreferences(key, MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.putString(key, info.toString())
+        editor.apply()
+    }
+
+    //取key对应的数据
+    fun getData(context: Context, key: String): String? {
+        val result = context.getSharedPreferences(key, MODE_PRIVATE).getString(key, "")
+        return result?.ifEmpty {
+            ""
+        }
     }
 
     companion object {

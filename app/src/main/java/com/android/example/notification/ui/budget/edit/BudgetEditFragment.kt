@@ -104,6 +104,9 @@ class BudgetEditFragment : Fragment() {
 
     }
 
+    /**
+     * 予算額一覧表示
+     */
     private fun initListView(){
         if(budgetListData.isEmpty()){
             //予算集合がない場合、リスト不表示、エラーメッセージ表示
@@ -116,12 +119,12 @@ class BudgetEditFragment : Fragment() {
             binding.errorMsg.visibility=View.GONE
 
             val categoryListView: RecyclerView = binding.categoryRv
-            //予算リスト表示
+            //予算リストItemのレイアウト項目表示設定
             var init: (View, BudgetTableData) -> Unit = { v:View, d: BudgetTableData ->
                 var categoryTv = v.findViewById<TextView>(R.id.category_tv)
-                categoryTv.text = d.category
+                categoryTv.text = d.category//カテゴリー設定
                 var budgetEdt=v.findViewById<EditText>(R.id.budget_edt)
-                budgetEdt.setText(d.budgetTotal.toString())
+                budgetEdt.setText(d.budgetTotal.toString())//予算設定
             }
             //アダプター設定（Itemレイアウト、予算集合、表示項目、予算総額）
             categoryDelAdapter = context?.let { it1 ->
@@ -235,8 +238,6 @@ class BudgetEditFragment : Fragment() {
             budgetTableData = BudgetTableData(category,budget,budgetTotal)
             //RoomでDBを追加する
             categoryDelAdapter?.addCategoryData(budgetTableData!!)
-            //予算一覧List更新
-            categoryDelAdapter?.notifyDataSetChanged()
         }
     }
 

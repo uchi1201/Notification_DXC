@@ -9,8 +9,4 @@ import com.android.example.notification.network.base.BaseNetworkApi
  */
 object NetworkApi : BaseNetworkApi<INetworkService>("https://d664bb3e-e2c0-4643-bfcf-8cb71ce79026.mock.pstmn.io") {
 
-    //お知らせAPIをコール
-//    suspend fun requestNotificationInfo() = getResult {
-//        service.requestNotificationInfo()
-//    }
 }

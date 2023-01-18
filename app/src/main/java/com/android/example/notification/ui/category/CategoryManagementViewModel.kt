@@ -13,7 +13,6 @@ import kotlinx.coroutines.launch
 
 
 class CategoryManagementViewModel(dataBase: MyDataBase)  : ViewModel(){
-    val categoryData = MutableLiveData<CategoryListData>()
     var categoryDbData = ArrayList<CategoryData>()
     private val jsonFileName = "getCategoryListData.json"
     private var readJsonFile= ReadJsonFile(jsonFileName)

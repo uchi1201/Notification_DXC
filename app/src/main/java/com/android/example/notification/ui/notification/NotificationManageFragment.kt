@@ -18,6 +18,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
@@ -36,8 +37,6 @@ import com.android.example.notification.R
 import com.android.example.notification.constant.MyConstant.Companion.CHANNEL_ID
 import com.android.example.notification.constant.MyConstant.Companion.CHANNEL_OTHER_ID
 import com.android.example.notification.constant.MyConstant.Companion.CHANNEL_X_ID
-import com.android.example.notification.data.NotificationBean
-import com.android.example.notification.data.NotificationData
 import com.android.example.notification.databinding.FragmentNotificationManageBinding
 import com.android.example.notification.room.MyDataBase
 import com.android.example.notification.room.NotificationDataBase
@@ -89,6 +88,7 @@ class NotificationManageFragment : Fragment() {
             }
         }
     }
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

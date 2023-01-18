@@ -42,6 +42,7 @@ class CategoryManagementFragment : Fragment() {
     ): View? {
         _binding = FragmentCategoryManagementBinding.inflate(inflater, container, false)
         val root: View = binding.root
+        //DBを取得
         dataBase = MainApplication.instance().categoryDataBase
         initData()
         initView()
@@ -63,13 +64,14 @@ class CategoryManagementFragment : Fragment() {
         val title = binding.titleSetting
         title.title.text = getString(R.string.category_btn)
         val categoryListView: RecyclerView = binding.categoryList
-        //カテゴリーのリスト表示
+        //カテゴリーのリストItemのレイアウト項目表示とデータ設定
         var init: (View, CategoryData) -> Unit = { v:View, d:CategoryData ->
             var categoryView = v.findViewById<TextView>(R.id.category_tv)
             var colorView=v.findViewById<TextView>(R.id.color_tv)
             categoryView.text = d.category
             colorView.setBackgroundColor(d.color.toColorInt())
         }
+        //アダプターを設定（アイテムのitem_category_layout、とinitのレイアウト項目表示とデータを伝える）
         var adapter = context?.let { it1 ->
             categoryManagementViewModel?.categoryDbData?.let {
                 CategoryListViewAdapter(it1,dataBase,R.layout.item_category_layout,
@@ -82,11 +84,12 @@ class CategoryManagementFragment : Fragment() {
         val addBtn = binding.addImg
         //カテゴリー管理画面のAddボタンイベント処理
         addBtn.setOnClickListener {
+            //色登録で出るポップアップ
             val addCategoryAddDialog = CategoryAddDialog()
             var colorList: ArrayList<String> = arrayListOf()
             if (adapter != null) {
                 for(item in adapter.items){
-                    //リスト既に存在の色を抽出、動的色動作用
+                    //リスト既に存在の色を抽出
                     colorList.add(item.color.uppercase())
                 }
             }

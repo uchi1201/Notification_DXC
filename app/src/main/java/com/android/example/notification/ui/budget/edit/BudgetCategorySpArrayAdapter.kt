@@ -9,7 +9,14 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
 
-
+/**
+ * カテゴリープルダウンリストのアダプター
+ * @param T
+ * @property arrayList List<T>?
+ * @property resourceId Int
+ * @property isInput Boolean
+ * @constructor
+ */
 class BudgetCategorySpArrayAdapter<T>
     (context: Context?, resource: Int, objects: List<T>?) :
     ArrayAdapter<Any?>(context!!, resource, objects!!) {
@@ -18,16 +25,29 @@ class BudgetCategorySpArrayAdapter<T>
     //Hintとカテゴリー名入力するかフラグ
     var isInput = false
 
+    /**
+     * 戻るカテゴリーのSpinner　Item表示数量
+     * @return Int
+     */
     override fun getCount(): Int {
         //最後のHint「カテゴリ名を選択」はリストに表示しない
         val count = super.getCount()
         return if (count > 0) count - 1 else count
     }
 
+    /**
+     * Spinner itemのView表示
+     * @param position Int
+     * @param convertView View?
+     * @param parent ViewGroup
+     * @return View
+     */
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val convertView = LayoutInflater.from(parent?.context).inflate(resourceId, parent, false)
         val tv = convertView!!.findViewById(R.id.text1) as TextView
-        //Hint「カテゴリ名を選択」の文字、文字表示サイズ、文字色表示
+        /*
+        Hint「カテゴリ名を選択」の文字、文字表示サイズ、文字色表示
+         */
         if(position == arrayList?.size?.minus(1)) {
             tv.text = arrayList[position].toString()
             tv.textSize = 15f

@@ -20,15 +20,26 @@ import com.android.example.notification.utils.ColorChangeDialog
 import com.android.example.notification.utils.DeleteDialog
 import kotlin.math.abs
 
-
+/**
+ * カテゴリー管理画面のリストアダプター
+ * @property downX Float
+ * @property upX Float
+ * @property view View?
+ * @property deleteTv TextView?
+ * @property animation Animation?
+ * @property mContext Context
+ * @property mDeleteDialog Dialog?
+ * @property mDataBase MyDataBase?
+ * @property categoryDao CategoryDao?
+ * @constructor
+ */
 class CategoryListViewAdapter(context: Context, dataBase: MyDataBase?,
                               layoutResourceId: Int, items: ArrayList<CategoryData>, init: (View, CategoryData) -> Unit) :
     BaseRecycleViewAdapter<CategoryData>(layoutResourceId, items, init)  {
-    private var downX:Float=0.0f
-    private var upX:Float=0.0f
+    private var downX:Float=0.0f//削除スワイプの指x座標
+    private var upX:Float=0.0f//指を上げる時、削除スワイプの指x座標
     private var view: View? = null
     private var deleteTv: TextView? = null
-
     private var animation: Animation? = null
     private val  mContext = context
     private var mDeleteDialog: Dialog? = null
@@ -37,22 +48,27 @@ class CategoryListViewAdapter(context: Context, dataBase: MyDataBase?,
 
 
     override fun onBindViewHolder(holder: BaseViewHolder<CategoryData>, position: Int) {
+        //ItemViewのbindHolder、Item表示用
         holder.bindHolder(items[position])
+        //現在リストの存在したカテゴリー色
        var colorList: ArrayList<String> = arrayListOf()
         for(i in items.indices){
-            //既にリストに選択された色を取得
+            //既にリスト中に選択された色を取得設定
             colorList.add(items[i].color)
         }
+        //カテゴリー後ろの色
         var colorChange =  holder.itemView.findViewById<TextView>(R.id.color_tv)
         colorChange?.setOnClickListener{
             //色選択ダイアログを表示（選択中のリストPosition、既に存在色リスト）
             colorChangeDialogShow(position,colorList)
         }
+        //スワイプ時表示した削除ボタン
         val delBtn = holder.itemView.findViewById<TextView>(R.id.tv_item_delete)
+        //Itemのtouch
         holder.itemView.setOnTouchListener OnTouchListener@{ v, event ->
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
-                    //指x座標の取得
+                    //指x座標
                     downX = event.x
                     deleteTv?.visibility = View.GONE
                 }
@@ -90,6 +106,12 @@ class CategoryListViewAdapter(context: Context, dataBase: MyDataBase?,
 
         }
     }
+
+    /**
+     * 削除確認ダイアログ
+     * @param view View
+     * @param position Int　選択Itemの位置
+     */
     private fun deleteItem(view: View, position: Int) {
         val deleteDialog = DeleteDialog()
         //削除ダイアログを作成
@@ -110,8 +132,9 @@ class CategoryListViewAdapter(context: Context, dataBase: MyDataBase?,
                     override fun onAnimationRepeat(animation: Animation) {}
                     override fun onAnimationEnd(animation: Animation) {
                         //動画実行完了
-                        //リストを更新
+                        //リストの該当ItemをRemove
                         items.removeAt(position)
+                        //リスト更新
                         notifyDataSetChanged()
                     }
                 })
@@ -119,6 +142,11 @@ class CategoryListViewAdapter(context: Context, dataBase: MyDataBase?,
         })
     }
 
+    /**
+     *　色変更で出るポップアップ
+     * @param colorPosition Int
+     * @param colorList ArrayList<String>　リスト中に既に存在の色リスト
+     */
     private fun colorChangeDialogShow(colorPosition:Int,colorList: ArrayList<String>){
         var colorChangeDialog = ColorChangeDialog()
         //ダイアログを作成
@@ -129,11 +157,12 @@ class CategoryListViewAdapter(context: Context, dataBase: MyDataBase?,
                 override fun onChangeColorClick(view:View,position: Int,adapter: ColorChangeGridViewAdapter){
                     //選択された色はリスト表示画面へ戻って色を変更
                     val item = adapter.getItem(position)
+                    //ポップアップ中選択した色値を設定
                     val colorString = item["colors"]
                     if (colorString != null) {
                         //該当リストアイテムの色を変更
                         items[colorPosition].color=colorString
-                        //DBデータを更新
+                        //変更した色がDBデータに更新
                         categoryDao?.updateColorForCategoryData(colorString,items[colorPosition].category)
                     }
                     //リストへ反映
@@ -142,8 +171,14 @@ class CategoryListViewAdapter(context: Context, dataBase: MyDataBase?,
         })
     }
 
+    /**
+     * カテゴリーに対して色を設定
+     * @param categoryData CategoryData
+     */
     fun setCategoryData(categoryData: CategoryData){
+        //リストItemを追加
         items.add(categoryData)
+        //DBに追加
         categoryDao?.insert(categoryData)
         notifyDataSetChanged()
     }

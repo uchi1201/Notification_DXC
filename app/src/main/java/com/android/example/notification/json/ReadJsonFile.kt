@@ -8,6 +8,11 @@ import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.io.InputStream
 
+/**
+ * Jsonファイルを読み込む
+ * @property fileName String　ファイル名
+ * @constructor
+ */
 class ReadJsonFile(var fileName: String) {
     fun <T> getCategoryListData(context: Context,classOfT: Class<T>):T? {
         var gson = Gson()
