@@ -100,6 +100,10 @@ class HomeFragment : Fragment() {
         homeViewModel?.remainMoney?.observe(viewLifecycleOwner){
             binding.remainMoney.text = it+"円"
         }
+        //通知送信テスト
+        binding.notificationSend.setOnClickListener {
+            findNavController().navigate(R.id.notification_test)
+        }
     }
 
     override fun onResume() {

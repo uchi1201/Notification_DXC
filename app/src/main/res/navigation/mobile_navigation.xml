@@ -14,6 +14,9 @@
         android:id="@+id/home_to_division_action"
         app:destination="@id/navigation_division"
         />
+        <action
+            android:id="@+id/test"
+            app:destination="@id/notification_test"/>
     </fragment>
     <fragment
         android:id="@+id/navigation_schedule"
@@ -72,5 +75,8 @@
         android:name="com.android.example.notification.ui.budget.edit.BudgetEditFragment"
         android:label="@string/title_budget"
         tools:layout="@layout/fragment_budget_edit"/>
+<fragment
+    android:id="@+id/notification_test"
+    android:name="com.android.example.notification.NotificationSendTestFragment"/>
 
 </navigation>
