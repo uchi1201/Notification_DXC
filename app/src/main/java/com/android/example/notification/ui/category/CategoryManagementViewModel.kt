@@ -18,14 +18,20 @@ class CategoryManagementViewModel(dataBase: MyDataBase)  : ViewModel(){
     private var readJsonFile= ReadJsonFile(jsonFileName)
     private val categoryDao = dataBase.categoryDao()
 
-
+    /**
+     * DBにデータを追加
+     * @param context Context
+     */
     fun insertDataBaseData(context: Context){
         val result = readJsonFile.getCategoryListData(context, CategoryListData::class.java)
         for(item in result?.data?.dataList!!){
             categoryDao.insert(item)
         }
     }
-
+    /**
+     * DB中にデータを検索
+     * @param context Context
+     */
     fun getAllCategoryData(){
         categoryDbData = categoryDao.getAll() as ArrayList<CategoryData>
     }

@@ -34,6 +34,12 @@ class CategoryAddDialog {
     private var categoryData: CategoryData? = null
     private var colorString : String? = null
 
+    /**
+     *「＋」押下で上のポップアップを作成
+     * @param context Context?
+     * @param colorsList ArrayList<String>
+     * @return Dialog?
+     */
     fun createAddCategoryDialog(context: Context?,colorsList: ArrayList<String>): Dialog? {
         val inflater = LayoutInflater.from(context)
         val v: View = inflater.inflate(R.layout.dialog_category_add, null)
@@ -49,7 +55,7 @@ class CategoryAddDialog {
             //登録の色の押下イベント処理、色選択ダイアログを表示
             colorChange(context,colorsList)
         }
-
+        //色変更で出るポップアップを表示
         val addCategoryDaoDialog = Dialog(context!!)
         addCategoryDaoDialog.setCancelable(true)
         addCategoryDaoDialog.setCanceledOnTouchOutside(true)
@@ -91,7 +97,11 @@ class CategoryAddDialog {
         return addCategoryDaoDialog
     }
 
-
+    /**
+     * カテゴリ一覧にカテゴリー色を変更ポップアップを表示
+     * @param context Context?
+     * @param colors ArrayList<String>
+     */
     private fun colorChange(context: Context?,colors: ArrayList<String>){
         var colorChangeDialog = ColorChangeDialog()
         //TextView色を押下して、色変更で出るポップアップを表示
@@ -101,6 +111,7 @@ class CategoryAddDialog {
             ColorChangeDialog.OnChangeColorClickListener {
             override fun onChangeColorClick(view:View,position: Int,adapter: ColorChangeGridViewAdapter){
                 val item = adapter.getItem(position)
+                //該当選択した色値を取得Background色を設定
                 colorString = item["colors"]
                 val color = colorString?.toColorInt()
                 if (color != null) {
@@ -110,13 +121,20 @@ class CategoryAddDialog {
         })
     }
 
+    /**
+     *登録初期ダイアログを表示
+     * @param colorsList ArrayList<String>
+     * @return String
+     */
     private fun getInitColorString(colorsList: ArrayList<String>): String{
         var colors:ArrayList<String>? = ArrayList()
+        //カテゴリ一覧に存在しない色を取得
         for (item in ColorChangeDialog().totalColors) {
             if (!colorsList.contains(item)) {
                 colors?.add(item)
             }
         }
+       //色の表示は色変更で出るポップアップの第一個色値
         var result = if(colors.isNullOrEmpty()){
             "0"
         } else {

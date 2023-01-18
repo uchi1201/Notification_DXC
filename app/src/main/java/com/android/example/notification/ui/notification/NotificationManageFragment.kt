@@ -67,6 +67,9 @@ class NotificationManageFragment : Fragment() {
     private var dataBase: NotificationDataBase? = null
     var notificationDao: NotificationDao? = null
 
+    /**
+     * 初期化時全部ＯＮになるため、通知許可リクエスト許可のダイアログ表示と選択
+     */
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isGranted: Boolean ->
@@ -95,13 +98,17 @@ class NotificationManageFragment : Fragment() {
     ): View? {
         _binding = FragmentNotificationManageBinding.inflate(inflater, container, false)
         val root: View = binding.root
+        //通知管理画面のＤＢを取得
         dataBase = MainApplication.instance().notificationDataBase
         initData()
         initView()
+        //支払通知Channelを作成
         notificationChannelCreate()
+        //その他通知Channelを作成
         notificationOtherChannelCreate()
+        //別のxxxx通知通知Channelを作成
         notificationXChannelCreate()
-        // 通知権限確認
+        // 通知権限確認Onを許可
         val notificationPermission = ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.POST_NOTIFICATIONS)
         if (notificationPermission != PackageManager.PERMISSION_GRANTED) {
             requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
@@ -110,40 +117,49 @@ class NotificationManageFragment : Fragment() {
     }
     override fun onResume() {
         super.onResume()
+        //支払通知Swich活性化設定
         isNotificationChannelEnable = checkNotificationsChannelEnabled(requireContext(),CHANNEL_ID)
         binding.paySwitch.isChecked = isNotificationChannelEnable
+        //その他通知Swich活性化設定
         isNotificationChannelEnable = checkNotificationsChannelEnabled(requireContext(),CHANNEL_OTHER_ID)
         binding.otherSwitch.isChecked = isNotificationChannelEnable
+        //xxxx通知Swich活性化設定
         isNotificationChannelEnable = checkNotificationsChannelEnabled(requireContext(),CHANNEL_X_ID)
         binding.xSwitch.isChecked = isNotificationChannelEnable
+        //通知データを設定
         notificationDataSet()
     }
     private fun initData(){
+        //Roomでデータ通知Daoを取得
         notificationDao = dataBase?.notificationDao()
         notificationsViewModel = dataBase?.let { NotificationManageViewModel(it) }
-
+        //DBの通知データを全部検索
         activity.let {notificationsViewModel?.getNotificationDataFromDB()}
+        //通知名クリックで設定用ポップアップ表示用（毎月、毎週、毎日）
+        frequencylist = resources.getStringArray(R.array.frequency)
+        //初期化時毎月の時日付、毎週の時曜日を設定
+        frequencylistSub= resources.getStringArray(R.array.week)
     }
     private fun initView() {
-        //PullDownRefresh時DiaLog表示用
-        var loadingDialog = LoadingDialogUtils()
-        val swipeRefreshLayout: SwipeRefreshLayout = binding.refresh
-        frequencylist = resources.getStringArray(R.array.frequency)
-        frequencylistSub= resources.getStringArray(R.array.week)
-
+        //タイトル設定
         val title = binding.titleSetting
         title.title.text = getString(R.string.notification_btn)
+        //PullDownRefresh時DiaLog表示用
+        var loadingDialog = LoadingDialogUtils()
 
+        //支払通知Textview
         val payText = binding.payTxt
-        val filterImage = binding.filterIv
         //通知名クリックで設定用ポップアップ表示
         payText.setOnClickListener{
             context?.let { it1 -> dialogShow(it1) }
         }
+        //フィールドイメージ
+        val filterImage = binding.filterIv
         //押下でフィルタ用ポップアップ表示
         filterImage.setOnClickListener{
             context?.let { it1 -> filterDialogShow(it1,isNotificationChannelEnable) }
         }
+        //読み込み中ダイアログ表示
         notificationsViewModel?.loadingLiveData?.observe(viewLifecycleOwner) {
             if (it) {
                 mLoadingDialog = loadingDialog.createLoadingDialog(activity, "Loading")
@@ -151,13 +167,20 @@ class NotificationManageFragment : Fragment() {
                 loadingDialog.closeDialog(mLoadingDialog)
             }
         }
+        //プルダウンのイベント処理、データを再取得
+        val swipeRefreshLayout: SwipeRefreshLayout = binding.refresh
         swipeRefreshLayout.setOnRefreshListener {
             notificationsViewModel?.getPTRNotificationsList()
         }
+        //読み込み中回転等アイコン表示
         notificationsViewModel?.pullToRefreshLiveData?.observe(viewLifecycleOwner) {
             swipeRefreshLayout.isRefreshing = it
         }
     }
+
+    /**
+     * 支払通知Channelの作成
+     */
     private fun notificationChannelCreate(){
         // Create the NotificationChannel
         val name = getString(R.string.channel_name)
@@ -174,12 +197,14 @@ class NotificationManageFragment : Fragment() {
             // 通知許可確認
             val notificationPermission = ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.POST_NOTIFICATIONS)
             if (notificationPermission != PackageManager.PERMISSION_GRANTED) {
+                //Appの通知権限がない場合、システムの通知設定へ遷移
                 val intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
                     putExtra(Settings.EXTRA_APP_PACKAGE, "com.android.example.notification")
                 }
                 startActivity(intent)
             }
             else {
+                //システム通知チャネルを開く
                 val intent = Intent(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS).apply {
                     putExtra(Settings.EXTRA_APP_PACKAGE, "com.android.example.notification")
                     putExtra(Settings.EXTRA_CHANNEL_ID, CHANNEL_ID)
@@ -188,8 +213,11 @@ class NotificationManageFragment : Fragment() {
             }
         }
     }
+    /**
+     * その他通知Channelの作成
+     */
     private fun notificationOtherChannelCreate(){
-        // Create the NotificationOtherChannel
+        // 通知チャンネル設定
         val name = getString(R.string.other_notify)
         val descriptionText = getString(R.string.channel_other_description)
         val importance = NotificationManager.IMPORTANCE_DEFAULT
@@ -197,19 +225,23 @@ class NotificationManageFragment : Fragment() {
         mChannel.description = descriptionText
         val notificationManager = context?.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.createNotificationChannel(mChannel)
+        //チャンネルのオン/オフ取得設定
         val isNotificationChannelEnable = checkNotificationsChannelEnabled(requireContext(),CHANNEL_OTHER_ID)
         //スイッチ設定
         binding.otherSwitch.isChecked = isNotificationChannelEnable
+        //その他スイッチイベント処理
         binding.otherSwitch.setOnClickListener {
             // 通知許可確認
             val notificationPermission = ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.POST_NOTIFICATIONS)
             if (notificationPermission != PackageManager.PERMISSION_GRANTED) {
+                //Appの通知権限がない場合、システムの通知設定へ遷移
                 val intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
                     putExtra(Settings.EXTRA_APP_PACKAGE, "com.android.example.notification")
                 }
                 startActivity(intent)
             }
             else {
+                //システム通知チャネルを開く
                 val intent = Intent(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS).apply {
                     putExtra(Settings.EXTRA_APP_PACKAGE, "com.android.example.notification")
                     putExtra(Settings.EXTRA_CHANNEL_ID, CHANNEL_OTHER_ID)
@@ -218,7 +250,9 @@ class NotificationManageFragment : Fragment() {
             }
         }
     }
-
+    /**
+     * xxxx通知Channelの作成
+     */
     private fun notificationXChannelCreate(){
         // Create the NotificationOtherChannel
         val name = "XXX通知"
@@ -249,54 +283,79 @@ class NotificationManageFragment : Fragment() {
             }
         }
     }
+
+    /**
+     * fireBaseからもらう通知を設定
+     */
     private fun notificationDataSet(){
             //Roomデータベースからデータを取得
             notificationsListData = notificationDao?.getAll() as MutableList<NotificationTableData>
             if(notificationsListData.isNotEmpty()){
-            var init: (View, NotificationTableData) -> Unit = { v: View, d: NotificationTableData ->
-                var cardView = v.findViewById<MaterialCardView>(R.id.card_view)
-                var dateView = v.findViewById<TextView>(R.id.date)
-                var shopNameView = v.findViewById<TextView>(R.id.shop_name_txt)
-                var categoryView = v.findViewById<TextView>(R.id.category_tx)
-                var moneyView = v.findViewById<TextView>(R.id.money_tx)
-                dateView.text = d.dateTime
-                shopNameView.text = d.shopName
-                categoryView.text = d.category
-                moneyView.text = d.money+"円"
-                when(d.category){
-                    "水道" -> cardView.strokeColor = context?.getColor(R.color.blue)!!
-                    "食費" -> cardView.strokeColor = context?.getColor(R.color.red)!!
-                    "その他" -> cardView.strokeColor = context?.getColor(R.color.gray)!!
-                    else -> cardView.strokeColor = context?.getColor(R.color.gray)!!
-                }
+                //通知一覧リストビュー表示
+                binding.notificationList.visibility = View.VISIBLE
+                binding.errorMsg.visibility = View.GONE
+                //通知一覧表示
+                notificationListShow()
 
-            }
-            binding.notificationList.visibility = View.VISIBLE
-            binding.errorMsg.visibility = View.GONE
-            var adapter =
-                NotificationListViewAdapter(
-                    R.layout.notification_item,
-                    notificationsListData as ArrayList<NotificationTableData>, init
-                )
-            binding.notificationList.layoutManager = LinearLayoutManager(activity)
-            binding.notificationList.adapter = adapter
-            adapter.setRecyclerItemClickListener(object :
-                BaseRecycleViewAdapter.OnRecyclerItemClickListener {
-                override fun onRecyclerItemClick(view: View, Position: Int) {
-                    val bundle = bundleOf(
-                        "money" to adapter.items[Position].money,
-                        "date" to adapter.items[Position].dateTime,
-                        "shopName" to adapter.items[Position].shopName,
-                        "category" to adapter.items[Position].category
-                    )
-                    findNavController().navigate(R.id.division_action,bundle)
-                }
-                })
         } else{
+            //エラー提示メッセージを表示
             binding.notificationList.visibility = View.GONE
             binding.errorMsg.visibility = View.VISIBLE
         }
     }
+
+    /**
+     * 通知一覧表示
+     */
+    private fun notificationListShow(){
+        //リストのアイテム項目表示とデータを設定
+        var init: (View, NotificationTableData) -> Unit = { v: View, d: NotificationTableData ->
+            var cardView = v.findViewById<MaterialCardView>(R.id.card_view)
+            var dateView = v.findViewById<TextView>(R.id.date)
+            var shopNameView = v.findViewById<TextView>(R.id.shop_name_txt)
+            var categoryView = v.findViewById<TextView>(R.id.category_tx)
+            var moneyView = v.findViewById<TextView>(R.id.money_tx)
+            dateView.text = d.dateTime
+            shopNameView.text = d.shopName
+            categoryView.text = d.category
+            moneyView.text = d.money+"円"
+            //カテゴリーにより、枠色応じた色になっている。
+            //青＝水道
+            //赤＝食費
+            //灰＝その他
+            when(d.category){
+                "水道" -> cardView.strokeColor = context?.getColor(R.color.blue)!!
+                "食費" -> cardView.strokeColor = context?.getColor(R.color.red)!!
+                "その他" -> cardView.strokeColor = context?.getColor(R.color.gray)!!
+                else -> cardView.strokeColor = context?.getColor(R.color.gray)!!
+            }
+
+        }
+        //リストのアダプター設定
+        var adapter =
+            NotificationListViewAdapter(
+                R.layout.notification_item,
+                notificationsListData as ArrayList<NotificationTableData>, init
+            )
+        binding.notificationList.layoutManager = LinearLayoutManager(activity)
+        binding.notificationList.adapter = adapter
+        //リストアイテムの押下イベント処理
+        adapter.setRecyclerItemClickListener(object :
+            BaseRecycleViewAdapter.OnRecyclerItemClickListener {
+            override fun onRecyclerItemClick(view: View, Position: Int) {
+                //該当クリックしたItemのデータを取得して、振り分け画面に伝える
+                val bundle = bundleOf(
+                    "money" to adapter.items[Position].money,
+                    "date" to adapter.items[Position].dateTime,
+                    "shopName" to adapter.items[Position].shopName,
+                    "category" to adapter.items[Position].category
+                )
+                //振り分け画面へ遷移
+                findNavController().navigate(R.id.division_action,bundle)
+            }
+        })
+    }
+
     /**
      * 通知が有効かどうかを判断する（単一のメッセージチャネルではない）
      * @return true 開ける
@@ -318,19 +377,36 @@ class NotificationManageFragment : Fragment() {
         return checkNotificationsEnabled() &&
                 channel.importance != NotificationManager.IMPORTANCE_NONE
     }
+
+    /**
+     * 通知名クリックで設定用ポップアップ表示
+     * @param context Context
+     */
     private fun dialogShow(context:Context){
         var customDialog = CustomDialog()
+        //SharedPreferencesにKey"sp_nameのデータを取得表示
         val sp: SharedPreferences = context.getSharedPreferences("sp_name", Context.MODE_PRIVATE)
+        //毎月、毎週、毎日
         val freqIndex = sp.getInt("freqIndex", 0)
+        //毎月の時日付、毎週の時曜日、毎日の時選択不可
+        //支払い通知は設定不可
         val freqIndexSub = sp.getInt("freqIndexSub", 0)
         val frequencyDialog = customDialog.createDialog(freqIndex,freqIndexSub,context,R.style.CustomDialog)
+        //ダイアログの設定ボタンを押下イベント処理
         customDialog.settingInfo(context,frequencyDialog)
     }
+
+    /**
+     * フィールドイメージ押下でフィルタ用ポップアップ表示
+     * @param context Context
+     * @param isPayCheck Boolean
+     */
     private fun filterDialogShow(context:Context,isPayCheck:Boolean){
         var filterDialog = FilterDialog()
         var indexList= arrayListOf <Map<String, Int>>()
         var index = mutableMapOf <String, Int>()
         val sp: SharedPreferences = context.getSharedPreferences("sp_filter", Context.MODE_PRIVATE)
+        //フィルタ用ポップアップの期間、種類、カテゴリのSharedPreferencesに設定
         val startIndex = sp.getInt("dateStart", 0)
         index["dateStart"] = startIndex
         indexList.add(index)
@@ -346,6 +422,7 @@ class NotificationManageFragment : Fragment() {
         val frequencyDialog = filterDialog.createDialog(indexList,context,R.style.CustomDialog,isPayCheck)
         filterDialog.settingInfo(context,frequencyDialog)
     }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

@@ -35,19 +35,26 @@ class NotificationDivisionFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentNotificationDivisionBinding.inflate(inflater, container, false)
+        //タイトル設定
         binding.titleSetting.title.text = "振り分け"
+        //DBを取得
         dataBase = MainApplication.instance().notificationDataBase
         initData()
         initView()
         return binding.root
     }
 
+    /**
+     * データを初期化
+     */
     private fun initData(){
         notificationsViewModel = ViewModelProvider(this)[NotificationDivisionViewModel::class.java]
+        //DB中の全部データを検索
         categorySpList = notificationsViewModel?.getCategoryList()!!
     }
 
     private fun initView() {
+        //遷移元画面からデータを取得設定
         val money = arguments?.getString("money")
         val date1 = arguments?.getString("date")
         val shopName = arguments?.getString("shopName")
@@ -55,8 +62,9 @@ class NotificationDivisionFragment : Fragment() {
         binding.date.text = date1
         binding.moneyEdit.setText(money)
         binding.shopName.text = shopName
+        //カテゴリー選択Spinner
         val categorySp = binding.categorySp
-        //Spinnerのデータ取得
+        //Spinnerのアダプター設定（Itemのデータとレイアウト設定）
         var categoryAdapter: ArrayAdapter<String>? =
             context?.let {
                 ArrayAdapter(
@@ -68,7 +76,9 @@ class NotificationDivisionFragment : Fragment() {
         //ドロップダウンボックスの配列アダプタの設定
         categorySp.adapter = categoryAdapter
         //ドロップダウン・ボックスのデフォルトの表示の最初の項目の設定
+        //DB中データのカテゴリーに遷移元画面からもらうカテゴリーを含めているかを判断
         if(categorySpList.contains(category)) {
+            //含めている場合、Spinnerの表示設定
             for (index in categorySpList.indices) {
                 if (categorySpList[index] == category) {
                     categorySp.setSelection(index)
@@ -76,14 +86,17 @@ class NotificationDivisionFragment : Fragment() {
                 }
             }
         } else {
+            //含めていない場合、遷移元画面からもらうカテゴリーを追加表示
             if (category != null) {
                 categorySpList.add(category)
                  categorySp.setSelection(categorySpList.size-1)
             }
 
         }
+        //カテゴリーSpinnerを選択イベント処理
         categorySp.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, pos: Int, id: Long) {
+                //選択したカテゴリーを保存して登録用
                 mCategory = categorySp.getItemAtPosition(pos).toString()
             }
 
@@ -92,23 +105,35 @@ class NotificationDivisionFragment : Fragment() {
             }
 
         }
-
-        binding.addBtn.setOnClickListener {
-            val moneyEdit = binding.moneyEdit.text.toString()
-
-            var notificationTableData = NotificationTableData(
-                shopName = shopName!!,
-                dateTime = date1,
-                category = mCategory,
-                money = moneyEdit
-            )
-            dataBase?.notificationDao()?.update(notificationTableData)
-            view?.let { it1 -> Navigation.findNavController(it1).navigateUp() }
+        //データを登録
+        if (shopName != null) {
+            if (date1 != null) {
+                categoryAdd(shopName,date1)
+            }
         }
-
 
     }
 
+    /**
+     * 選択したカテゴリーを登録
+     */
+    private fun categoryAdd(shopName: String,date:String){
+        //登録ボタンを押下イベント処理
+        binding.addBtn.setOnClickListener {
+            val moneyEdit = binding.moneyEdit.text.toString()
+            //画面のデータを取得設定
+            var notificationTableData = NotificationTableData(
+                shopName = shopName!!,
+                dateTime = date,
+                category = mCategory,
+                money = moneyEdit
+            )
+            //DBのデータを更新
+            dataBase?.notificationDao()?.update(notificationTableData)
+            //遷移元画面へ遷移
+            view?.let { it1 -> Navigation.findNavController(it1).navigateUp() }
+        }
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()

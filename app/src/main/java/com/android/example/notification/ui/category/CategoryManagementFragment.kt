@@ -83,6 +83,7 @@ class CategoryManagementFragment : Fragment() {
 
         val addBtn = binding.addImg
         //カテゴリー管理画面のAddボタンイベント処理
+        //新規登録していくと、選択できる色が減っていき（ポップアップに表示する色が動的に変化し）
         addBtn.setOnClickListener {
             //色登録で出るポップアップ
             val addCategoryAddDialog = CategoryAddDialog()

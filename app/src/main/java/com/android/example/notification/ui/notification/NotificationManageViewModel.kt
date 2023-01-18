@@ -13,7 +13,9 @@ class NotificationManageViewModel(dataBase: NotificationDataBase) : ViewModel() 
     private val notificationDao = dataBase.notificationDao()
     var dbNotificationData = ArrayList<NotificationTableData>()
 
-
+    /**
+     * DBのデータを全部検索
+     */
     fun getNotificationDataFromDB(){
         loadingLiveData.postValue(true)
         viewModelScope.launch {
@@ -22,6 +24,9 @@ class NotificationManageViewModel(dataBase: NotificationDataBase) : ViewModel() 
         }
     }
 
+    /**
+     * プルダウンのデータを再読み込み
+     */
     fun getPTRNotificationsList() {
         pullToRefreshLiveData.postValue(true)
         loadingLiveData.postValue(true)
