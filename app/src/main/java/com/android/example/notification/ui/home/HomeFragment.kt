@@ -68,8 +68,6 @@ class HomeFragment : Fragment() {
         notificationDao = dataBase?.notificationDao()
         homeViewModel =
             ViewModelProvider(this)[HomeViewModel::class.java]
-        //データベースからデータを取得
-        notificationsListData = notificationDao?.getAll() as MutableList<NotificationTableData>
         //今月の利用額の初期化
         currentMoney = 0
     }
@@ -120,6 +118,7 @@ class HomeFragment : Fragment() {
      * DBのデータを追加
      */
     private fun notificationDataSet(){
+
         //fireBaseのPush通知のメッセージデータを取得
         val money = arguments?.getString("money")
         val date1 = arguments?.getString("date")
@@ -137,12 +136,8 @@ class HomeFragment : Fragment() {
             //Push通知がなし場合、データを重複追加するためにargumentsがNullを設定
             arguments = null
         }
-
-        //一旦テスト用（5個を超えると削除する）
-//        if(notificationsListData.size>=5){
-//            notificationDao?.deleteAll()
-//            notificationsListData.clear()
-//        }
+        //Roomデータベースからデータを取得
+        notificationsListData = notificationDao?.getAll() as MutableList<NotificationTableData>
         //今月の利用額と残りの表示
         for(i in notificationsListData.indices) {
             //通知のリストから金額を抽出して計算する
