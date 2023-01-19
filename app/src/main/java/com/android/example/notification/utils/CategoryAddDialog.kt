@@ -142,6 +142,7 @@ class CategoryAddDialog {
         }
         return result
     }
+    //登録ボタンのイベント
     open fun setAddCategoryButtonClickListener(listener: OnAddCategoryButtonClickListener) {
         mAddCategoryButtonClickListener = listener
     }

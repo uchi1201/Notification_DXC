@@ -15,31 +15,21 @@ class ColorChangeDialog {
     private var mChangeColorClickListener: OnChangeColorClickListener? = null
 
     private val listItem: ArrayList<Map<String, String>> = ArrayList()
-
+   // 色変更ポップアップの色値
     var totalColors :Array<String> =
         arrayOf("#FF919191", "#FF6200EE", "#FF000080", "#FF00688B","#FF00EEEE",
             "#FF05A724", "#FF5CAF5C", "#FFA1DA68", "#FFFFD700", "#FFFF8C00",
             "#FFE78B02", "#FFE70219", "#FF692D19","#FFF20FEE","#FF3C4A5D",
             "#FF538B00", "#FF5D4B1D", "#FF3B807A","#FF50344F","#FF513F19")
 
-    private fun getRandomColors(colors: ArrayList<String>):ArrayList<String>{
-        var colorsList:ArrayList<String> = ArrayList()
-        var colorUtils = ColorUtils()
-        for (i in 1..20) {
-            //20個のランダム色値を取得
-            var color = colorUtils.getRandColor()
-            //取得した色値が存在する場合は再取得
-            while (colors.contains(color)) {
-                color = colorUtils.getRandColor()
-            }
-            //色値が追加
-            colorsList.add(color)
-        }
-        return colorsList
-    }
-
+    /**
+     * 使用している色は選択できないため、その以外色を取得
+     * @param colors ArrayList<String>
+     * @return ArrayList<String>?
+     */
      fun getColors(colors: ArrayList<String>):ArrayList<String>?{
         var colorsList:ArrayList<String>? = ArrayList()
+        //全体の色から使用している色以外の色を抽出
         for (item in totalColors) {
             //取得した色値が存在しない場合
             if (!colors.contains(item)) {
@@ -50,22 +40,16 @@ class ColorChangeDialog {
         return colorsList
     }
 
+    /**
+     * 色変更で出るポップアップ
+     * @param context Context?
+     * @param colors ArrayList<String>
+     * @return Dialog?
+     */
     fun createColorDialog(context: Context?,colors: ArrayList<String>): Dialog? {
         val inflater = LayoutInflater.from(context)
         val v: View = inflater.inflate(R.layout.dialog_change_color, null)
-        val gridView = v.findViewById<View>(R.id.grid) as GridView
-        //色値を取得
-        val colorsList = getColors(colors)
-        if(colorsList!=null) {
-            for (i in colorsList.indices) {
-                val map: MutableMap<String, String> = HashMap()
-                map["colors"] = colorsList[i]
-                listItem.add(map)
-            }
-        }
-        val adapter = ColorChangeGridViewAdapter(context, gridView,listItem)
-        gridView.adapter = adapter
-
+        //色変更で出るポップアップを設定
         val changeColorDialog = Dialog(context!!)
         changeColorDialog.setCancelable(true)
         changeColorDialog.setCanceledOnTouchOutside(true)
@@ -83,21 +67,39 @@ class ColorChangeDialog {
         window.attributes = lp
         window.setWindowAnimations(R.style.PopWindowAnimStyle)
         changeColorDialog.show()
+        //ポップアップの色GridViewListのアダプター設定
+        setColorGridViewAdapter(context,v,changeColorDialog,colors)
+        return changeColorDialog
+    }
+
+    private fun setColorGridViewAdapter(context: Context?, v: View,dialog:Dialog,colors: ArrayList<String>){
+        val gridView = v.findViewById<View>(R.id.grid) as GridView
+        //未選択の色を取得
+        val colorsList = getColors(colors)
+        if(colorsList!=null) {
+            for (i in colorsList.indices) {
+                val map: MutableMap<String, String> = HashMap()
+                map["colors"] = colorsList[i]
+                listItem.add(map)
+            }
+        }
+        //アダプター設定
+        val adapter = ColorChangeGridViewAdapter(context, gridView,listItem)
+        gridView.adapter = adapter
+        //選択色の押下処理
         gridView.onItemClickListener =
             AdapterView.OnItemClickListener { _, view, position, _ ->
-                changeColorDialog.dismiss()
+                //選択した後ダイアログを閉じる
+                dialog.dismiss()
                 if (view != null) {
+                    //選択した色を遷移元画面に伝える
                     changeColor(context,view,position,adapter)
                 }
             }
-
-        return changeColorDialog
     }
 
     private fun changeColor(context: Context?,view:View, position: Int,adapter: ColorChangeGridViewAdapter) {
         mChangeColorClickListener?.onChangeColorClick(view,position,adapter)
-
-
     }
 
 

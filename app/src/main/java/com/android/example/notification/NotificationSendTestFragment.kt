@@ -145,7 +145,7 @@ class NotificationSendTestFragment : Fragment() {
         val bundle = Bundle()
         bundle.putString("money",messageData?.get("money").toString())
         bundle.putString("date",messageData?.get("date").toString())
-        bundle.putString("address",messageData?.get("shopName").toString())
+        bundle.putString("shopName",messageData?.get("shopName").toString())
         bundle.putString("category",messageData?.get("category").toString())
         //目的画面へ遷移
         return NavDeepLinkBuilder(context)
@@ -159,7 +159,7 @@ class NotificationSendTestFragment : Fragment() {
         //Appのpackageと表示したいレイアウトを伝え設定
         val views = RemoteViews("com.android.example.notification", R.layout.layout_notification)
         views.setTextViewText(R.id.date,messageData?.get("date"))
-        views.setTextViewText(R.id.shop_name_txt,messageData?.get("address"))
+        views.setTextViewText(R.id.shop_name_txt,messageData?.get("shopName"))
         views.setTextViewText(R.id.category_tx,messageData?.get("category"))
         views.setTextViewText(R.id.money_tx,messageData?.get("money")+"円")
         //取得遷移先のIntent
