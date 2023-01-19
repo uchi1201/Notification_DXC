@@ -73,6 +73,12 @@ class CustomDialog{
         return dialog
     }
 
+    /**
+     * 毎月の時日付、毎週の時曜日、毎日の時選択不可
+     * @param context Context
+     * @param position Int
+     * @param frequencySubIndex Int
+     */
     private fun  frequencySubCreate(context: Context,position:Int,frequencySubIndex:Int){
         frequencyListSub = when(position){
             0-> context.resources.getStringArray(R.array.day)
@@ -98,6 +104,11 @@ class CustomDialog{
         }
     }
 
+    /**
+     * 設定した毎月の時日付、毎週の時曜日、毎日の時などを保存
+     * @param context Context
+     * @param dialog Dialog?
+     */
     fun settingInfo(context: Context,dialog: Dialog?){
         settingButton?.setOnClickListener {
             //SharedPreferencesインスタンスを取得 sp_name：ファイル名
