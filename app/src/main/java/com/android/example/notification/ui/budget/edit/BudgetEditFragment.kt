@@ -169,7 +169,11 @@ class BudgetEditFragment : Fragment() {
 
             override fun afterTextChanged(s: Editable?) {
                 //入力した予算を保存
-                mInputBudget = budgetInputEdt.text.toString().toInt()
+                var input = budgetInputEdt.text.toString()
+                if(input.isEmpty()){
+                    input = "0"
+                }
+                mInputBudget = input.toInt()
             }
 
         })
