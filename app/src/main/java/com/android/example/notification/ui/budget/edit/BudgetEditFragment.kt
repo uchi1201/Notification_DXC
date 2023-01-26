@@ -17,7 +17,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.android.example.notification.MainApplication
 import com.android.example.notification.R
 import com.android.example.notification.databinding.FragmentBudgetEditBinding
-import com.android.example.notification.room.BudgetDataBase
+import com.android.example.notification.room.MyDataBase
 import com.android.example.notification.room.NotificationDataBase
 import com.android.example.notification.room.dao.BudgetDao
 import com.android.example.notification.room.dao.NotificationDao
@@ -37,7 +37,7 @@ class BudgetEditFragment : Fragment() {
     private var _binding: FragmentBudgetEditBinding? = null
     private val binding get() = _binding!!
     private var budgetDao: BudgetDao? = null
-    private var dataBase: BudgetDataBase? = null
+    private var dataBase: MyDataBase? = null
     private var budgetListData = mutableListOf<BudgetTableData>()
     private var categorySpList: ArrayList<String> = ArrayList()
     private var budgetEditViewModel:BudgetEditViewModel? = null
@@ -62,7 +62,7 @@ class BudgetEditFragment : Fragment() {
 
     private fun initData(){
         //DBを取得
-        dataBase =  MainApplication.instance().budgetDataBase
+        dataBase =  MainApplication.instance().categoryDataBase
         //Daoを設定
         budgetDao = dataBase?.budgetDao()
         //DBから予算データ集合を取得（カテゴリー、予算、各予算総額）

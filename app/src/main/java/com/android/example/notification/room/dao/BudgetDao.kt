@@ -11,10 +11,10 @@ interface BudgetDao {
     @Query("SELECT * FROM budget_table")
     fun getAll(): List<BudgetTableData>
     //categoryによりデータリストを検索
-    @Query("SELECT * FROM budget_table WHERE category IN (:budgetList)")
+    @Query("SELECT * FROM budget_table WHERE budget_category IN (:budgetList)")
     fun loadAllByNumbers(budgetList: List<String>): List<BudgetTableData>
     //categoryによりデータを検索
-    @Query("SELECT * FROM budget_table WHERE category  = :category")
+    @Query("SELECT * FROM budget_table WHERE budget_category  = :category")
     fun findByNumber(category: String): BudgetTableData
     //DBにデータを追加
     @Insert(onConflict = OnConflictStrategy.REPLACE)

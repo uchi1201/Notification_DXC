@@ -1,19 +1,20 @@
 package com.android.example.notification.ui.budget
 
+import android.graphics.Color
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.android.example.notification.MainApplication
 import com.android.example.notification.data.BudgetGraphData
 import com.android.example.notification.data.BudgetValueBean
-import com.android.example.notification.room.BudgetDataBase
+import com.android.example.notification.room.MyDataBase
 import com.android.example.notification.room.data.BudgetTableData
 import com.github.mikephil.charting.data.*
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
 import com.github.mikephil.charting.utils.ColorTemplate
 
-class BudgetHorizontalChartViewModel(dataBase: BudgetDataBase) : ViewModel() {
+class BudgetHorizontalChartViewModel(dataBase: MyDataBase) : ViewModel() {
 
     //予算総額設定
     private val _totalBarData= MutableLiveData<BarData>().apply {
@@ -30,6 +31,7 @@ class BudgetHorizontalChartViewModel(dataBase: BudgetDataBase) : ViewModel() {
 
     private var budgetData = BudgetTableData(category = "", budget = 0.0f, budgetTotal = 0)
     val budgetDao = dataBase.budgetDao()
+    val budgetCategoryDao = dataBase.budgetCategoryDao()
 
    //仮データ
     fun createBudgetDataList(month:String):MutableList<BudgetValueBean>{
@@ -39,7 +41,7 @@ class BudgetHorizontalChartViewModel(dataBase: BudgetDataBase) : ViewModel() {
            results.add( BudgetValueBean(data))
            val data1  =BudgetGraphData ("食費",10000f,10000f)
            results.add( BudgetValueBean(data1))
-           val data2  =BudgetGraphData ("交際",1000f,8800f)
+           val data2  =BudgetGraphData ("交際費",1000f,8800f)
            results.add( BudgetValueBean(data2))
            val data3  =BudgetGraphData ( "定期支払い",2800f,9200f)
            results.add( BudgetValueBean(data3))
@@ -49,7 +51,7 @@ class BudgetHorizontalChartViewModel(dataBase: BudgetDataBase) : ViewModel() {
             results.add( BudgetValueBean(data))
             val data1  =BudgetGraphData ("食費",2800f,6000f)
             results.add( BudgetValueBean(data1))
-            val data2  =BudgetGraphData ("交際",5000f,8000f)
+            val data2  =BudgetGraphData ("交際費",5000f,8000f)
             results.add( BudgetValueBean(data2))
             val data3  =BudgetGraphData ("定期支払い",3800f,9000f)
             results.add( BudgetValueBean(data3))
@@ -59,7 +61,7 @@ class BudgetHorizontalChartViewModel(dataBase: BudgetDataBase) : ViewModel() {
             results.add( BudgetValueBean(data))
             val data1  =BudgetGraphData ("食費",1800f,2000f)
             results.add( BudgetValueBean(data1))
-            val data2  =BudgetGraphData ("交際",5600f,8800f)
+            val data2  =BudgetGraphData ("交際費",5600f,8800f)
             results.add( BudgetValueBean(data2))
             val data3  =BudgetGraphData ("定期支払い",3800f,9200f)
             results.add( BudgetValueBean(data3))
@@ -69,7 +71,7 @@ class BudgetHorizontalChartViewModel(dataBase: BudgetDataBase) : ViewModel() {
             results.add( BudgetValueBean(data))
             val data1  =BudgetGraphData ("食費",7800f,10000f)
             results.add( BudgetValueBean(data1))
-            val data2  =BudgetGraphData ("交際",1000f,8800f)
+            val data2  =BudgetGraphData ("交際費",1000f,8800f)
             results.add( BudgetValueBean(data2))
             val data3  =BudgetGraphData ("定期支払い",2800f,9200f)
             results.add( BudgetValueBean(data3))
@@ -79,7 +81,7 @@ class BudgetHorizontalChartViewModel(dataBase: BudgetDataBase) : ViewModel() {
             results.add( BudgetValueBean(data))
             val data1  =BudgetGraphData ("食費",1800f,2000f)
             results.add( BudgetValueBean(data1))
-            val data2  =BudgetGraphData ("交際",5600f,8800f)
+            val data2  =BudgetGraphData ("交際費",5600f,8800f)
             results.add( BudgetValueBean(data2))
             val data3  =BudgetGraphData ("定期支払い",3800f,9200f)
             results.add( BudgetValueBean(data3))
@@ -89,7 +91,7 @@ class BudgetHorizontalChartViewModel(dataBase: BudgetDataBase) : ViewModel() {
            results.add( BudgetValueBean(data))
            val data1  =BudgetGraphData ("食費",2800f,6000f)
            results.add( BudgetValueBean(data1))
-           val data2  =BudgetGraphData ("交際",5000f,8000f)
+           val data2  =BudgetGraphData ("交際費",5000f,8000f)
            results.add( BudgetValueBean(data2))
            val data3  =BudgetGraphData ("定期支払い",3800f,9000f)
            results.add( BudgetValueBean(data3))
@@ -99,7 +101,7 @@ class BudgetHorizontalChartViewModel(dataBase: BudgetDataBase) : ViewModel() {
            results.add( BudgetValueBean(data))
            val data1  =BudgetGraphData ("食費",1800f,2000f)
            results.add( BudgetValueBean(data1))
-           val data2  =BudgetGraphData ("交際",5600f,8800f)
+           val data2  =BudgetGraphData ("交際費",5600f,8800f)
            results.add( BudgetValueBean(data2))
            val data3  =BudgetGraphData ("定期支払い",3800f,9200f)
            results.add( BudgetValueBean(data3))
@@ -109,7 +111,7 @@ class BudgetHorizontalChartViewModel(dataBase: BudgetDataBase) : ViewModel() {
            results.add( BudgetValueBean(data))
            val data1  =BudgetGraphData ("食費",7800f,10000f)
            results.add( BudgetValueBean(data1))
-           val data2  =BudgetGraphData ("交際",1000f,8800f)
+           val data2  =BudgetGraphData ("交際費",1000f,8800f)
            results.add( BudgetValueBean(data2))
            val data3  =BudgetGraphData ("定期支払い",2800f,9200f)
            results.add( BudgetValueBean(data3))
@@ -119,7 +121,7 @@ class BudgetHorizontalChartViewModel(dataBase: BudgetDataBase) : ViewModel() {
             results.add( BudgetValueBean(data))
             val data1  =BudgetGraphData ("食費",2800f,6000f)
             results.add( BudgetValueBean(data1))
-            val data2  =BudgetGraphData ("交際",5000f,8000f)
+            val data2  =BudgetGraphData ("交際費",5000f,8000f)
             results.add( BudgetValueBean(data2))
             val data3  =BudgetGraphData ("定期支払い",3800f,9000f)
             results.add( BudgetValueBean(data3))
@@ -129,7 +131,7 @@ class BudgetHorizontalChartViewModel(dataBase: BudgetDataBase) : ViewModel() {
             results.add( BudgetValueBean(data))
             val data1  =BudgetGraphData ("食費",1800f,2000f)
             results.add( BudgetValueBean(data1))
-            val data2  =BudgetGraphData ("交際",5600f,8800f)
+            val data2  =BudgetGraphData ("交際費",5600f,8800f)
             results.add( BudgetValueBean(data2))
             val data3  =BudgetGraphData ("定期支払い",3800f,9200f)
             results.add( BudgetValueBean(data3))
@@ -139,7 +141,7 @@ class BudgetHorizontalChartViewModel(dataBase: BudgetDataBase) : ViewModel() {
             results.add( BudgetValueBean(data))
             val data1  =BudgetGraphData ("食費",7800f,10000f)
             results.add( BudgetValueBean(data1))
-            val data2  =BudgetGraphData ("交際",1000f,8800f)
+            val data2  =BudgetGraphData ("交際費",1000f,8800f)
             results.add( BudgetValueBean(data2))
             val data3  =BudgetGraphData ("定期支払い",2800f,9200f)
             results.add( BudgetValueBean(data3))
@@ -149,7 +151,7 @@ class BudgetHorizontalChartViewModel(dataBase: BudgetDataBase) : ViewModel() {
             results.add( BudgetValueBean(data))
             val data1  =BudgetGraphData ("食費",1800f,2000f)
             results.add( BudgetValueBean(data1))
-            val data2  =BudgetGraphData ("交際",5600f,8800f)
+            val data2  =BudgetGraphData ("交際費",5600f,8800f)
             results.add( BudgetValueBean(data2))
             val data3  =BudgetGraphData ("定期支払い",3800f,9200f)
             results.add( BudgetValueBean(data3))
@@ -159,7 +161,7 @@ class BudgetHorizontalChartViewModel(dataBase: BudgetDataBase) : ViewModel() {
             results.add( BudgetValueBean(data))
             val data1  =BudgetGraphData ("食費",7800f,10000f)
             results.add( BudgetValueBean(data1))
-            val data2  =BudgetGraphData ("交際",1000f,8800f)
+            val data2  =BudgetGraphData ("交際費",1000f,8800f)
             results.add( BudgetValueBean(data2))
             val data3  =BudgetGraphData ("定期支払い",2800f,9200f)
             results.add( BudgetValueBean(data3))
@@ -211,32 +213,34 @@ class BudgetHorizontalChartViewModel(dataBase: BudgetDataBase) : ViewModel() {
     }
 
    private  fun createBarData(month:String): BarData {
-       var budgetList = budgetDao.getAll()
+       var budgetCategoryList = budgetCategoryDao.getAll()
 
-       if(budgetList.isEmpty()){
+       if(budgetCategoryList.isEmpty()){
            insertData(month)
-           budgetList = budgetDao.getAll()
+           budgetCategoryList = budgetCategoryDao.getAll()
        }
 
        var entryList = mutableListOf<BarEntry>()
+       var colorList = mutableListOf<Int>()
 
-       for(i in budgetList.indices){
+       for(i in budgetCategoryList.indices){
            entryList.add(
-               BarEntry(i.toFloat(), budgetList[budgetList.size-1-i].budget)
+               BarEntry(i.toFloat(), budgetCategoryList[budgetCategoryList.size-1-i].budgetTableData!!.budget)
            )
+           colorList.add(Color.parseColor(budgetCategoryList[budgetCategoryList.size-1-i].categoryData!!.color))
        }
 
         val barDataSet = BarDataSet(entryList, "budget")
         barDataSet.setDrawIcons(false)
-        barDataSet.colors = ColorTemplate.COLORFUL_COLORS.toList()
+        barDataSet.colors = colorList
         barDataSet.valueFormatter =object : ValueFormatter() {
             var index =0
             override fun getFormattedValue(v: Float): String? {
-                if(index==budgetList.count()){
+                if(index==budgetCategoryList.count()){
                     index=0
                 }
-                val budget = budgetList[budgetList.size-1-index].budget
-                val budgetTotal = budgetList[budgetList.size-1-index].budgetTotal
+                val budget = budgetCategoryList[budgetCategoryList.size-1-index].budgetTableData!!.budget
+                val budgetTotal = budgetCategoryList[budgetCategoryList.size-1-index].budgetTableData!!.budgetTotal
                 index++
                 return "${budget.toInt()}/${budgetTotal}"
             }

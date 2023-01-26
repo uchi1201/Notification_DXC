@@ -1,5 +1,6 @@
 package com.android.example.notification.ui.budget
 
+import android.graphics.Color
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.android.example.notification.data.*
@@ -253,7 +254,13 @@ class BudgetViewModel : ViewModel() {
         //②PieDataSetにデータ格納
         val pieDataSet = PieDataSet(entryList, "")
         //③DataSetのフォーマット指定
-        pieDataSet.colors = ColorTemplate.COLORFUL_COLORS.toList()
+        //pieDataSet.colors = ColorTemplate.COLORFUL_COLORS.toList()
+        pieDataSet.colors = listOf(
+            Color.parseColor("#FF5D4B1D"),
+            Color.parseColor("#FFF20FEE"),
+            Color.parseColor("#FFFFD700"),
+            Color.parseColor("#FFC12552")
+        )
 
         //④PieDataにPieDataSet格納して返却
         return PieData(pieDataSet)

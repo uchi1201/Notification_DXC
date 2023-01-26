@@ -10,10 +10,10 @@ import com.android.example.notification.room.data.BudgetTableData
 import com.android.example.notification.room.data.CategoryData
 import com.android.example.notification.room.data.NotificationTableData
 
-/**
- * 予算DBの作成
- */
-@Database(entities = [BudgetTableData::class], version = 1,exportSchema = false)
-abstract class BudgetDataBase : RoomDatabase() {
-    abstract fun budgetDao(): BudgetDao
-}
+///**
+// * 予算DBの作成
+// */
+//@Database(entities = [BudgetTableData::class], version = 1,exportSchema = false)
+//abstract class BudgetDataBase : RoomDatabase() {
+//    abstract fun budgetDao(): BudgetDao
+//}

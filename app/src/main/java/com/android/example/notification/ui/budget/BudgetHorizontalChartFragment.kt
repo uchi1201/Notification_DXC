@@ -46,7 +46,7 @@ class BudgetHorizontalChartFragment :  Fragment()  {
     private lateinit var charView: HorizontalBarChart
     private lateinit var horizontalViewModel: BudgetHorizontalChartViewModel
     private lateinit var month: String
-    private val dataBase =  MainApplication.instance().budgetDataBase
+    private val dataBase =  MainApplication.instance().categoryDataBase
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -186,7 +186,8 @@ class BudgetHorizontalChartFragment :  Fragment()  {
         totalCharView.invalidate()
     }
     private fun initChartView() {
-        var budgetList = dataBase?.budgetDao()?.getAll()
+        //var budgetList = dataBase?.budgetDao()?.getAll()
+        var budgetCategoryList = dataBase?.budgetCategoryDao()?.getAll()
         charView = binding.categoryChar
         charView.setDrawBarShadow(true)
         charView.renderer = HorizontalBarChartCustomRenderer(charView, charView.animator, charView.viewPortHandler)
@@ -204,14 +205,14 @@ class BudgetHorizontalChartFragment :  Fragment()  {
         xl.position = XAxisPosition.BOTTOM
         xl.setDrawAxisLine(false)
         xl.setDrawGridLines(false)
-        xl.labelCount = budgetList?.size!!
+        xl.labelCount = budgetCategoryList?.size!!
         xl.textSize = 15f
         xl.granularity = 1f
         //横棒のｘ表示
         xl.valueFormatter = object : ValueFormatter() {
             override fun getFormattedValue(v: Float): String? {
                 return try {
-                    budgetList[budgetList.size-v.toInt()-1].category
+                    budgetCategoryList[budgetCategoryList.size-1-v.toInt()].categoryData!!.category
                 }catch ( e:Exception) {
                     ""
                 }

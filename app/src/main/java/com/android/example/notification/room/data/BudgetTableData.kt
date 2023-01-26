@@ -14,9 +14,8 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "budget_table")
 data class BudgetTableData(
     @PrimaryKey
+    @ColumnInfo(name = "budget_category")
     var category: String,
-    @ColumnInfo(name = "budget")
     var budget:Float,
-    @ColumnInfo(name = "budgetTotal")
     var budgetTotal:Int
 )

@@ -39,7 +39,7 @@ class BudgetEditListViewAdapter(context: Context, layoutResourceId: Int, items: 
     //削除確認ダイアログ
     private var mDeleteDialog: Dialog? = null
     //DBのDaoを取得して、テーブルに操作用
-    val budgetDao = MainApplication.instance().budgetDataBase?.budgetDao()
+    val budgetDao = MainApplication.instance().categoryDataBase?.budgetDao()
     //リストのItemのBackground色, 1行おきにグレー表示
     val colors = intArrayOf(0xa9a9a9, 0xFFFFFF)
     //予算総額

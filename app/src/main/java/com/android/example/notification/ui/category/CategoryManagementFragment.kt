@@ -51,12 +51,17 @@ class CategoryManagementFragment : Fragment() {
 
     private fun initData(){
         categoryManagementViewModel = dataBase?.let { CategoryManagementViewModel(it) }
+
+        //DBから全部データを取得
+        categoryManagementViewModel?.getAllCategoryData()
+
         if(categoryManagementViewModel?.categoryDbData?.size == 0){
             //DBのデータがない時データ追加
             activity?.let { categoryManagementViewModel?.insertDataBaseData(it.applicationContext) }
+
+            //DBから全部データを取得
+            categoryManagementViewModel?.getAllCategoryData()
         }
-        //DBから全部データを取得
-        categoryManagementViewModel?.getAllCategoryData()
     }
 
 
