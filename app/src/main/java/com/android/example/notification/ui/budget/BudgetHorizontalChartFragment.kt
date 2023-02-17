@@ -70,6 +70,10 @@ class BudgetHorizontalChartFragment :  Fragment()  {
             initSpinner()
             MainApplication.instance().isEditBudget = false
         }
+        else
+        {
+            refreshView()
+        }
     }
 
     private fun initData() {
@@ -129,17 +133,21 @@ class BudgetHorizontalChartFragment :  Fragment()  {
     private fun refreshData(){
         val swipeRefreshLayout: SwipeRefreshLayout = binding.refresh
         swipeRefreshLayout.setOnRefreshListener {
-            horizontalViewModel.getBarData(MainApplication.instance().spinnerMonth)
-            initTotalChartView()
-            initChartView()
-            setChartViewData()
-            setTotalChartViewData()
-            totalCharView.notifyDataSetChanged()
-            charView.notifyDataSetChanged()
+            refreshView()
             lifecycleScope.doDelayed(800L){
                 swipeRefreshLayout.isRefreshing = false
             }
         }
+    }
+
+    private fun refreshView(){
+        horizontalViewModel.getBarData(MainApplication.instance().spinnerMonth)
+        initTotalChartView()
+        initChartView()
+        setChartViewData()
+        setTotalChartViewData()
+        totalCharView.notifyDataSetChanged()
+        charView.notifyDataSetChanged()
     }
 
     private fun initTotalChartView() {

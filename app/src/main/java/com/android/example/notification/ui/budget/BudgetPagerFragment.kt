@@ -22,6 +22,7 @@ class BudgetPagerFragment : Fragment() {
 
     private val binding get() = _binding!!
 
+    private var budgetHorizontalChartFragment: Fragment? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -38,6 +39,11 @@ class BudgetPagerFragment : Fragment() {
         return root
     }
 
+    override fun onResume() {
+        super.onResume()
+        budgetHorizontalChartFragment?.onResume()
+    }
+
     private inner class PagerAdapter(fa: FragmentActivity) : FragmentStateAdapter(fa) {
         // ページ数を取得
         override fun getItemCount(): Int = 2
@@ -49,6 +55,12 @@ class BudgetPagerFragment : Fragment() {
                 1->BudgetFragment()
                 else ->BudgetFragment()
             }
+
+            if (position == 0)
+            {
+                budgetHorizontalChartFragment = fragment
+            }
+
             return fragment
         }
 
